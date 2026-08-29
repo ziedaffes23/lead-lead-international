@@ -1,0 +1,13 @@
+/* Final layout pass: one natural document scrollbar, no hidden route overflow, and compact page rhythm. */
+html,body,#root{min-height:100%;margin:0}
+html,body{overflow-x:hidden;overflow-y:auto}
+main.game-page,main.registration-site,main.game-home{height:auto!important;min-height:100dvh;overflow-x:hidden!important;overflow-y:visible!important}
+main.game-home.game-home--single-screen{display:flex;min-height:100dvh;height:auto!important;overflow:visible!important}
+main.game-home.game-home--single-screen>.world-hero{min-height:calc(100dvh - 4rem);height:auto;overflow:visible}
+.registration-site{padding-bottom:1rem!important}
+.registration-site .register-header{margin-bottom:clamp(1.25rem,3vw,2.5rem)!important}
+.registration-site .register-layout{gap:clamp(1.25rem,3vw,3rem)!important}
+.registration-site>.conference-footer{margin-top:1rem!important}
+.game-page .trial-command-deck{margin-bottom:.8rem!important}
+.game-page .game-after{margin-top:1rem!important;padding-bottom:.5rem!important}
+@media(max-width:760px){.registration-site .register-header{margin-bottom:1.25rem!important}.registration-site .register-layout{gap:1.25rem!important}}

@@ -1,0 +1,364 @@
+/* Home visual refresh: blue night, cyan accents, and restrained game HUD motion. */
+.game-home--single-screen {
+  --home-night: #071321;
+  --home-panel: rgba(8, 25, 46, 0.9);
+  --home-panel-deep: rgba(6, 18, 36, 0.94);
+  --home-blue: #69c7ff;
+  --home-blue-bright: #d7f4ff;
+  --home-ember: #51bfff;
+  --home-amber: #9ee8ff;
+  --home-mint: #9df7e0;
+  --home-text: #f2fbff;
+  --home-muted: #a8c0d5;
+  --home-line: rgba(105, 199, 255, 0.25);
+
+  --game-gold: var(--home-ember) !important;
+  --game-gold-bright: var(--home-amber) !important;
+  --game-cyan: var(--home-blue) !important;
+  --game-text: var(--home-text) !important;
+  --game-muted: var(--home-muted) !important;
+  --game-line: var(--home-line) !important;
+  background:
+    radial-gradient(circle at 80% 15%, rgba(31, 107, 170, 0.15), transparent 30rem),
+    var(--home-night);
+}
+
+.game-home--single-screen .home-route-atmosphere {
+  z-index: 1;
+  inset: 8rem 0 0;
+  opacity: 0.86;
+  filter: drop-shadow(0 0 0.7rem rgba(105, 199, 255, 0.14));
+}
+
+.game-home--single-screen .home-route-atmosphere i {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(105, 199, 255, 0.48), rgba(81, 191, 255, 0.18), transparent) !important;
+  animation: home-signal-travel 10s ease-in-out infinite;
+}
+
+.game-home--single-screen .home-route-atmosphere i:nth-child(1) {
+  animation-delay: -1.8s;
+}
+
+.game-home--single-screen .home-route-atmosphere i:nth-child(2) {
+  background: linear-gradient(90deg, transparent, rgba(81, 191, 255, 0.52), rgba(158, 232, 255, 0.16), transparent) !important;
+  animation-duration: 13s;
+  animation-delay: -6s;
+}
+
+.game-home--single-screen .home-route-atmosphere i:nth-child(3) {
+  animation-duration: 16s;
+  animation-delay: -10s;
+}
+
+.game-home--single-screen .world-hero {
+  background:
+    radial-gradient(circle at 78% 22%, rgba(81, 191, 255, 0.1), transparent 18rem),
+    linear-gradient(112deg, rgba(6, 17, 33, 0.98), rgba(9, 26, 49, 0.88) 56%, rgba(6, 18, 36, 0.95));
+}
+
+.game-home--single-screen .world-hero::before {
+  inset: 0;
+  opacity: 0.55;
+  background:
+    linear-gradient(90deg, transparent 0 12%, rgba(105, 199, 255, 0.2) 12.1% 12.2%, transparent 12.3% 68%, rgba(81, 191, 255, 0.22) 68.1% 68.2%, transparent 68.3%),
+    linear-gradient(180deg, transparent 0 28%, rgba(105, 199, 255, 0.13) 28.1% 28.2%, transparent 28.3% 72%, rgba(158, 232, 255, 0.1) 72.1% 72.2%, transparent 72.3%);
+  mask-image: linear-gradient(90deg, #000, transparent 96%);
+  animation: home-grid-flicker 8s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__backdrop {
+  filter: brightness(0.37) saturate(0.72) hue-rotate(14deg) contrast(1.16) !important;
+  transform: scale(1.07) !important;
+  animation: home-backdrop-drift 22s ease-in-out infinite alternate;
+}
+
+.game-home--single-screen .world-hero__backdrop::after {
+  background:
+    linear-gradient(92deg, rgba(4, 13, 27, 0.95), rgba(11, 31, 56, 0.5) 47%, rgba(6, 18, 36, 0.8)),
+    linear-gradient(0deg, rgba(4, 13, 27, 0.98), transparent 48%, rgba(18, 74, 122, 0.32));
+}
+
+.game-home--single-screen .world-hero__grid {
+  opacity: 0.42;
+  background-image:
+    linear-gradient(rgba(105, 199, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(81, 191, 255, 0.12) 1px, transparent 1px);
+  background-size: 4.8rem 4.8rem;
+  animation: home-grid-drift 24s linear infinite;
+}
+
+.game-home--single-screen .world-hero__moon {
+  background:
+    radial-gradient(circle at 36% 34%, rgba(255, 250, 239, 0.92) 0 2%, rgba(215, 244, 255, 0.72) 14%, rgba(105, 199, 255, 0.28) 43%, transparent 70%);
+  box-shadow: 0 0 7rem rgba(105, 199, 255, 0.34), 0 0 13rem rgba(81, 191, 255, 0.08);
+  animation: home-moon-float 9s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__sentinel {
+  animation: home-sentinel-hover 7s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__sentinel .sentinel-aura {
+  background: radial-gradient(circle, rgba(81, 191, 255, 0.36), rgba(105, 199, 255, 0.1) 42%, transparent 72%);
+  animation: home-aura-breathe 4.8s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__sentinel .sentinel-glyph {
+  color: var(--home-amber);
+  text-shadow: 0 0 1.2rem rgba(158, 232, 255, 0.9);
+  animation: home-glyph-pulse 3.2s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__coordinates,
+.game-home--single-screen .world-hero__hud {
+  color: rgba(215, 244, 255, 0.58) !important;
+}
+
+.game-home--single-screen .world-hero__copy {
+  animation: home-copy-arrive 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.game-home--single-screen .mission-console {
+  border-color: rgba(105, 199, 255, 0.56) !important;
+  background:
+    linear-gradient(145deg, rgba(9, 31, 58, 0.94), rgba(6, 18, 36, 0.96)) !important;
+  box-shadow:
+    0 2rem 4rem rgba(0, 0, 0, 0.46),
+    inset 0 0 2.5rem rgba(105, 199, 255, 0.1),
+    0 0 2rem rgba(81, 191, 255, 0.08) !important;
+  animation: home-console-arrive 950ms 160ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.game-home--single-screen .mission-console::before,
+.game-home--single-screen .mission-console::after {
+  border-color: var(--home-ember);
+  animation: home-corner-pulse 3.8s ease-in-out infinite;
+}
+
+.game-home--single-screen .mission-console__top {
+  border-bottom-color: rgba(105, 199, 255, 0.24);
+}
+
+.game-home--single-screen .mission-console__top b,
+.game-home--single-screen .mission-console__footer span:last-child strong {
+  color: var(--home-mint);
+}
+
+.game-home--single-screen .mission-console__radar {
+  background:
+    radial-gradient(circle, rgba(81, 191, 255, 0.22), transparent 62%),
+    repeating-radial-gradient(circle, transparent 0 23%, rgba(105, 199, 255, 0.24) 24% 24.5%);
+  box-shadow: inset 0 0 1.5rem rgba(105, 199, 255, 0.12), 0 0 1.5rem rgba(81, 191, 255, 0.1);
+  animation: home-radar-glow 4.5s ease-in-out infinite;
+}
+
+.game-home--single-screen .mission-console__radar::before,
+.game-home--single-screen .mission-console__radar::after {
+  background: linear-gradient(90deg, transparent, var(--home-ember), transparent);
+  animation: home-radar-sweep 4s linear infinite;
+}
+
+.game-home--single-screen .mission-console__radar::after {
+  background: linear-gradient(transparent, var(--home-blue), transparent);
+  animation-delay: -2s;
+}
+
+.game-home--single-screen .mission-console__progress i {
+  background: rgba(105, 199, 255, 0.18);
+}
+
+.game-home--single-screen .mission-console__progress i b {
+  background: linear-gradient(90deg, var(--home-ember), var(--home-amber)) !important;
+  box-shadow: 0 0 0.8rem rgba(81, 191, 255, 0.58);
+  animation: home-progress-glow 2.6s ease-in-out infinite;
+}
+
+.game-home--single-screen .mission-console__missions button {
+  border-color: rgba(105, 199, 255, 0.32);
+  background: rgba(11, 10, 29, 0.62);
+  color: var(--home-blue-bright);
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.game-home--single-screen .mission-console__missions button:hover,
+.game-home--single-screen .mission-console__missions button:focus-visible {
+  border-color: rgba(81, 191, 255, 0.86);
+  background: linear-gradient(135deg, rgba(23, 70, 113, 0.56), rgba(9, 34, 67, 0.84));
+  box-shadow: 0 0.75rem 1.4rem rgba(0, 0, 0, 0.22), 0 0 1rem rgba(81, 191, 255, 0.12);
+  transform: translateY(-3px) scale(1.015);
+}
+
+.game-home--single-screen .world-hero__actions .game-primary {
+  border-color: rgba(158, 232, 255, 0.9) !important;
+  background: linear-gradient(135deg, #7de4ff, #2d70ff) !important;
+  color: #041425 !important;
+  box-shadow: 0 0.9rem 2rem rgba(27, 109, 222, 0.26), 0 0 1.2rem rgba(158, 232, 255, 0.12);
+  animation: home-cta-breathe 3.8s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__actions .game-secondary {
+  border-color: rgba(105, 199, 255, 0.76) !important;
+  background: rgba(7, 28, 58, 0.7) !important;
+  color: var(--home-blue-bright) !important;
+}
+
+.game-home--single-screen .world-hero__actions .game-primary:hover,
+.game-home--single-screen .world-hero__actions .game-secondary:hover {
+  filter: brightness(1.12) saturate(1.08);
+  box-shadow: 0 1rem 2.2rem rgba(0, 0, 0, 0.3), 0 0 1.5rem rgba(81, 191, 255, 0.2);
+}
+
+.game-home--single-screen .world-hero__facts span {
+  transition: transform 220ms ease, color 220ms ease;
+}
+
+.game-home--single-screen .world-hero__facts span:hover {
+  transform: translateY(-3px);
+}
+
+.game-home--single-screen .world-hero__facts span::before {
+  background: linear-gradient(180deg, var(--home-ember), transparent);
+}
+
+.game-home--single-screen .world-hero__facts b {
+  color: rgba(255, 248, 241, 0.9);
+}
+
+.game-home--single-screen .world-hero__copy::before {
+  background: linear-gradient(180deg, var(--home-ember), var(--home-blue) 68%, transparent) !important;
+  box-shadow: 0 0 1.6rem rgba(81, 191, 255, 0.3) !important;
+  animation: home-rail-glow 4s ease-in-out infinite;
+}
+
+.game-home--single-screen .world-hero__directive {
+  color: var(--home-amber) !important;
+}
+
+.game-home--single-screen .world-hero__directive i {
+  background: linear-gradient(90deg, var(--home-ember), transparent);
+  animation: home-line-sweep 2.8s ease-in-out infinite;
+}
+
+@keyframes home-signal-travel {
+  0%, 100% { opacity: 0.2; transform: translate3d(-2%, 0, 0) rotate(-11deg) scaleX(0.92); }
+  50% { opacity: 0.9; transform: translate3d(2%, -0.35rem, 0) rotate(-11deg) scaleX(1.02); }
+}
+
+@keyframes home-copy-arrive {
+  from { opacity: 0; transform: translate3d(-1.5rem, 1rem, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes home-console-arrive {
+  from { opacity: 0; transform: translate3d(1.5rem, 1rem, 0) scale(0.97); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes home-backdrop-drift {
+  from { transform: scale(1.07) translate3d(-0.6%, 0, 0); }
+  to { transform: scale(1.11) translate3d(0.7%, -0.8%, 0); }
+}
+
+@keyframes home-grid-drift {
+  from { background-position: 0 0; }
+  to { background-position: 4.8rem 2.4rem; }
+}
+
+@keyframes home-grid-flicker {
+  0%, 100% { opacity: 0.34; }
+  48% { opacity: 0.58; }
+  54% { opacity: 0.44; }
+}
+
+@keyframes home-moon-float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-0.6rem, 0.75rem, 0) scale(1.025); }
+}
+
+@keyframes home-sentinel-hover {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-0.35rem, -0.55rem, 0); }
+}
+
+@keyframes home-aura-breathe {
+  0%, 100% { opacity: 0.45; transform: scale(0.96); }
+  50% { opacity: 0.78; transform: scale(1.06); }
+}
+
+@keyframes home-glyph-pulse {
+  0%, 100% { opacity: 0.68; transform: scale(0.94); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes home-corner-pulse {
+  0%, 100% { opacity: 0.58; }
+  50% { opacity: 1; }
+}
+
+@keyframes home-radar-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes home-radar-glow {
+  0%, 100% { filter: saturate(0.92); }
+  50% { filter: saturate(1.28); }
+}
+
+@keyframes home-progress-glow {
+  0%, 100% { filter: brightness(0.95); }
+  50% { filter: brightness(1.28); }
+}
+
+@keyframes home-cta-breathe {
+  0%, 100% { box-shadow: 0 0.9rem 2rem rgba(27, 109, 222, 0.22), 0 0 1.2rem rgba(158, 232, 255, 0.1); }
+  50% { box-shadow: 0 1rem 2.3rem rgba(27, 109, 222, 0.32), 0 0 1.8rem rgba(158, 232, 255, 0.2); }
+}
+
+@keyframes home-rail-glow {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+@keyframes home-line-sweep {
+  0%, 100% { opacity: 0.45; transform: scaleX(0.7); transform-origin: left; }
+  50% { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+@media (max-width: 720px) {
+  .game-home--single-screen .world-hero__backdrop {
+    animation-duration: 28s;
+  }
+
+  .game-home--single-screen .world-hero__moon {
+    right: 4%;
+    opacity: 0.64;
+  }
+
+  .game-home--single-screen .world-hero__copy,
+  .game-home--single-screen .mission-console {
+    animation-duration: 700ms;
+  }
+}
+
+@media (max-width: 720px) {
+  .game-home--single-screen .home-route-atmosphere {
+    inset: 6rem 0 0;
+  }
+
+  .game-home--single-screen .home-route-atmosphere i {
+    opacity: 0.62;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-home--single-screen *,
+  .game-home--single-screen *::before,
+  .game-home--single-screen *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}

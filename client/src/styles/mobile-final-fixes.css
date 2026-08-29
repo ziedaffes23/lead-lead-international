@@ -1,0 +1,78 @@
+/* Final mobile pass: compact, readable, touch-friendly layouts without horizontal overflow. */
+@media(max-width:700px){
+  html,body{overflow-x:hidden!important}
+  .conference-nav{width:calc(100% - 1rem)!important;max-width:none!important;margin:.5rem!important;padding:.55rem .7rem!important;box-sizing:border-box!important}
+  .conference-nav .game-brand img{width:3.7rem!important;height:2.35rem!important}
+  .conference-nav .game-brand span{font-size:.48rem!important;letter-spacing:.08em!important}
+  .conference-nav .game-brand small{font-size:.36rem!important}
+  .conference-nav .game-nav__links{min-width:0!important;gap:.3rem!important}
+  .conference-nav .game-nav__links>a,.conference-nav .game-nav__links>button{min-width:0!important;white-space:nowrap!important}
+  .game-home .world-hero{min-height:calc(100dvh - 3rem)!important;padding:5.2rem 1rem 2rem!important;box-sizing:border-box!important}
+  .game-home .world-hero__copy{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
+  .game-home .world-hero h1{font-size:clamp(2.7rem,15vw,4.2rem)!important;line-height:.86!important}
+  .game-home .world-hero__facts{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.55rem!important}
+  .game-home .world-hero__actions{display:grid!important;grid-template-columns:1fr!important;width:min(100%,22rem)!important}
+  .game-home .game-primary,.game-home .game-secondary{width:100%!important;min-height:3rem!important}
+  .game-home .mission-console{display:none!important}
+  .game-home .world-hero__sentinel{right:-2rem!important;bottom:-1rem!important;opacity:.3!important;transform:scale(.7)!important;transform-origin:bottom right!important}
+  .game-page .trial-command-deck{display:grid!important;grid-template-columns:1fr!important;gap:1rem!important;margin:4.5rem .75rem 1rem!important;padding:1.1rem!important}
+  .game-page .trial-command-deck__heading h1{font-size:clamp(2.5rem,13vw,4rem)!important}
+  .game-page .trial-command-deck__panel{width:100%!important;box-sizing:border-box!important}
+  .game-page .game-chase-frame{margin:0 .75rem!important;min-height:22rem!important;overflow:visible!important}
+  .game-page .game-after{display:flex!important;justify-content:center!important;margin:1rem .75rem!important}
+  .game-page .game-after button{width:100%!important;min-height:3rem!important}
+  .registration-site{padding:4.5rem .65rem .5rem!important}
+  .registration-site .register-header{margin-bottom:1rem!important}
+  .registration-site .register-header img{width:4.3rem!important;height:2.7rem!important}
+  .registration-site .register-layout{display:block!important;padding:0!important}
+  .registration-site .dossier-intro{display:none!important}
+  .registration-site .dossier-panel{width:100%!important;box-sizing:border-box!important;padding:1rem!important}
+  .registration-site .form-grid.two{grid-template-columns:1fr!important}
+  .registration-site .dossier-progress{width:100%!important;box-sizing:border-box!important}
+  .registration-site .registration-receipt{padding:1.5rem 1rem!important;min-height:20rem!important}
+  .registration-site>.conference-footer{margin-left:calc(50% - 50vw)!important}
+  .conference-section-page__main,.conference-section-page__route{padding-left:1rem!important;padding-right:1rem!important}
+  .conference-section-page .section-intro-row{display:block!important}
+  .conference-section-page .section-intro-row__copy{margin-top:1rem!important}
+  .conference-section-page .faction-grid,.conference-section-page .leaderboard-grid{grid-template-columns:1fr!important}
+  .conference-section-page .faction-card{min-height:12rem!important}
+}
+@media(max-width:390px){
+  .conference-nav{margin:.35rem!important;width:calc(100% - .7rem)!important;padding:.45rem .5rem!important}
+  .conference-nav .game-brand img{width:3.1rem!important;height:2rem!important}
+  .game-home .world-hero{padding-top:4.7rem!important}
+  .registration-site .dossier-panel{padding:.8rem!important}
+}
+
+/* Shared mobile navigation: brand/status row plus a full-width scrollable link row. */
+@media(max-width:700px){
+  .conference-nav{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;row-gap:.45rem!important}
+  .conference-nav .game-brand{min-width:0!important;display:flex!important;align-items:center!important;gap:.5rem!important}
+  .conference-nav .game-brand span{min-width:0!important;overflow:hidden!important}
+  .conference-nav .game-brand b,.conference-nav .game-brand small{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .conference-nav .game-nav__status{justify-self:end!important;margin:0!important;font-size:.36rem!important;white-space:nowrap!important}
+  .conference-nav .game-nav__links{grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:.3rem!important;width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;padding:.15rem 0 .25rem!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important}
+  .conference-nav .game-nav__links::-webkit-scrollbar{display:none!important}
+  .conference-nav .game-nav__links>a,.conference-nav .game-nav__links>button{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:2.15rem!important;padding:.52rem .68rem!important;font-size:.44rem!important;letter-spacing:.09em!important;white-space:nowrap!important}
+  .conference-nav .game-nav__links .game-nav__register{margin-left:auto!important;padding-inline:.8rem!important;border-color:rgba(231,183,100,.7)!important}
+}
+@media(max-width:390px){
+  .conference-nav{row-gap:.35rem!important}
+  .conference-nav .game-nav__links>a,.conference-nav .game-nav__links>button{min-height:2rem!important;padding:.45rem .58rem!important;font-size:.4rem!important}
+}
+
+/* Keep every navigation destination visible on mobile; do not hide links behind horizontal scrolling. */
+@media(max-width:700px){
+  .conference-nav .game-nav__links{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:.3rem!important;overflow:visible!important;padding:.15rem 0 0!important}
+  .conference-nav .game-nav__links>a,.conference-nav .game-nav__links>button{width:100%!important;box-sizing:border-box!important;min-width:0!important;justify-content:center!important;text-align:center!important}
+  .conference-nav .game-nav__links .game-nav__register{margin-left:0!important}
+}
+@media(max-width:390px){
+  .conference-nav .game-nav__links{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.3rem!important}
+}
+
+/* The opening route also receives the shared navigation; keep it above the cinematic layer. */
+.intro-route{position:relative;min-height:100dvh;background:#05080d;overflow:hidden}
+.intro-route>.conference-nav{position:fixed!important;top:0;left:0;right:0;z-index:100!important}
+.intro-route>.cinematic-shell{position:absolute;z-index:1;inset:0}
+@media(max-width:700px){.intro-route>.conference-nav{position:fixed!important}.intro-route>.cinematic-shell{min-height:100dvh}.intro-route .cinematic-controls{top:5.6rem!important}.intro-route .cinematic-loader{top:5.6rem!important;left:1rem!important;width:calc(100vw - 2rem)!important}}

@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: lead-lead-cinematic-intro
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: OAUTH_SERVER_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: BUILT_IN_FORGE_API_URL
+        sync: false
+      - key: BUILT_IN_FORGE_API_KEY
+        sync: false
+      - key: VITE_APP_ID
+        sync: false
+      - key: VITE_APP_TITLE
+        value: Lead&Lead2K26
+      - key: VITE_SHEETS_WEB_APP_URL
+        value: https://script.google.com/macros/s/AKfycbwnRQqEqaSZ0SmzZlxdRO3Es1yQjHj3pGQwtiU948RpgNpGlOWJr2l_IFp8T9rsEkhMKg/exec
+      - key: DATABASE_URL
+        sync: false
+      - key: DRIZZLE_DATABASE_URL
+        sync: false

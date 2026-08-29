@@ -1,0 +1,180 @@
+/* Moonlit Relic Chase style contract: asymmetric cinematic framing, indigo-black depth,
+   Relic Gold highlights, and unmodified official-logo presentation after the impact. */
+.cinematic-shell {
+  --relic-gold: #c7a262;
+  --night: #05080d;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--night);
+  color: #f1eee4;
+  isolation: isolate;
+}
+
+.cinematic-stage,
+.cinematic-canvas,
+.cinematic-vignette,
+.cinematic-impact {
+  position: absolute;
+  inset: 0;
+}
+
+.cinematic-stage {
+  z-index: 0;
+  background-color: var(--night);
+  background-position: center;
+  background-size: cover;
+  opacity: 0.72;
+  filter: saturate(0.62) contrast(1.14) brightness(0.82);
+}
+
+.cinematic-canvas { z-index: 1; display: block; width: 100%; height: 100%; }
+
+.cinematic-vignette {
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 45%, transparent 0 28%, rgba(3, 5, 8, 0.24) 55%, rgba(0, 0, 0, 0.86) 100%),
+    linear-gradient(180deg, rgba(1, 3, 7, 0.28), transparent 32%, rgba(1, 2, 5, 0.52));
+  transition: opacity 900ms var(--ease-cinematic);
+}
+
+.cinematic-vignette.is-quiet { opacity: 0.86; }
+
+.cinematic-motion-lines {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  background:
+    linear-gradient(161deg, transparent 0 46%, rgba(168, 191, 216, 0.14) 46.15% 46.3%, transparent 46.5%),
+    linear-gradient(19deg, transparent 0 46%, rgba(168, 191, 216, 0.14) 46.15% 46.3%, transparent 46.5%),
+    linear-gradient(90deg, transparent 0 49.88%, rgba(199, 162, 98, 0.32) 49.95% 50.05%, transparent 50.12%);
+  mix-blend-mode: screen;
+}
+
+.cinematic-relic-signal {
+  position: absolute;
+  z-index: 4;
+  top: 44%;
+  left: 50%;
+  width: 1px;
+  height: 28vh;
+  opacity: 0.26;
+  background: linear-gradient(180deg, transparent, rgba(255, 225, 151, 0.9), transparent);
+  box-shadow: 0 0 2.4rem rgba(199, 162, 98, 0.55);
+  transform: translateX(-50%) perspective(20rem) rotateX(62deg);
+}
+
+.cinematic-loader {
+  position: absolute;
+  z-index: 6;
+  top: clamp(1.5rem, 4vw, 4.2rem);
+  left: clamp(1.3rem, 4vw, 4.8rem);
+  width: min(18rem, calc(100vw - 2.6rem));
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: 0.16em;
+  color: rgba(234, 235, 230, 0.9);
+  transition: opacity 680ms var(--ease-cinematic), transform 680ms var(--ease-cinematic);
+}
+
+.cinematic-loader.is-ready { opacity: 0; transform: translateY(-0.6rem); pointer-events: none; }
+.cinematic-loader p { margin: 0 0 0.8rem; font-size: 0.68rem; }
+.loader-dots { display: inline-block; width: 1.65rem; overflow: hidden; vertical-align: bottom; animation: dot-flicker 1.2s steps(4, end) infinite; }
+.loader-rule { height: 1px; width: 100%; background: rgba(255, 255, 255, 0.22); overflow: hidden; }
+.loader-rule span { display: block; height: 100%; background: var(--relic-gold); box-shadow: 0 0 12px rgba(199, 162, 98, 0.7); transition: width 380ms var(--ease-cinematic); }
+.cinematic-loader small { display: block; margin-top: 0.68rem; color: rgba(230, 230, 220, 0.5); font-size: 0.54rem; letter-spacing: 0.12em; }
+
+.cinematic-impact {
+  z-index: 7;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 246, 210, 0.97) 0%, rgba(199, 162, 98, 0.52) 12%, rgba(12, 14, 20, 0) 54%);
+  transform: scale(0.6);
+}
+
+.cinematic-impact img { width: min(74vw, 56rem); opacity: 0; transform: scale(0.25); mix-blend-mode: screen; }
+.cinematic-impact.is-active { animation: impact-flash 820ms cubic-bezier(0.15, 0.85, 0.25, 1) both; }
+.cinematic-impact.is-active img { animation: impact-spark 820ms cubic-bezier(0.15, 0.85, 0.25, 1) both; }
+
+.cinematic-reveal {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.45rem;
+  padding: 3rem 1.5rem 2rem;
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+}
+
+.cinematic-reveal.is-active { visibility: visible; }
+.reveal-streak { position: absolute; top: 38%; left: -20%; width: 140%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(199, 162, 98, 0.08) 32%, rgba(255, 231, 167, 0.92) 50%, rgba(199, 162, 98, 0.08) 68%, transparent 100%); transform: rotate(-8deg); box-shadow: 0 0 24px rgba(199, 162, 98, 0.45); animation: streak-sweep 1.75s var(--ease-cinematic) both; }.presentation-lockup{position:relative;z-index:1;display:grid;justify-items:center;gap:.72rem}.thyna-seal{display:grid;place-items:center;width:6.9rem;height:6.9rem;margin-bottom:.05rem;border:1px solid rgba(234,224,201,.45);border-radius:50%;box-shadow:inset 0 0 0 .34rem rgba(199,162,98,.08),0 0 1.8rem rgba(199,162,98,.14)}.official-logo{width:5.35rem;height:4.35rem;object-fit:contain}.thyna-intro-mark{filter:brightness(0) invert(1) drop-shadow(0 0 .45rem rgba(255,255,255,.34))}.presentation-line{display:flex;align-items:center;gap:.85rem;color:#eee4cf;font:500 .58rem/1 "IBM Plex Mono",monospace;letter-spacing:.28em}.presentation-line i{display:block;width:2.7rem;height:1px;background:linear-gradient(90deg,transparent,#caa363)}.presentation-line i:last-child{background:linear-gradient(90deg,#caa363,transparent)}.presentation-lockup>p{margin:.35rem 0 0;color:#caa363;font:500 .52rem/1 "IBM Plex Mono",monospace;letter-spacing:.23em}.presentation-lockup h1{max-width:min(82vw,48rem);margin:0;color:#f2e8d2;font:600 clamp(2.75rem,8vw,6.4rem)/.88 "Cinzel",serif;letter-spacing:-.045em;text-shadow:0 .24rem 1rem rgba(0,0,0,.55)}.presentation-lockup h1 em{color:#caa363;font-style:normal}.presentation-lockup h1 small{display:block;margin-top:.6rem;color:#d9c08c;font-size:clamp(.85rem,1.6vw,1.35rem);letter-spacing:.42em}.reveal-subtitle{display:flex;align-items:center;gap:.85rem;color:rgba(238,232,215,.75);font-family:"IBM Plex Mono",monospace;font-size:clamp(.5rem,.9vw,.62rem);letter-spacing:.15em}.reveal-subtitle i{display:block;width:2.1rem;height:1px;background:rgba(199,162,98,.85)}.reveal-subtitle strong{color:#e8d8ad;font-weight:500;}
+.enter-button { position: relative; display: inline-flex; align-items: center; gap: 1.6rem; margin-top: 0.75rem; padding: 0.8rem 0.1rem 0.8rem 1.12rem; overflow: hidden; border: 1px solid rgba(216, 193, 139, 0.62); border-radius: 0; background: rgba(7, 10, 14, 0.38); color: #f3ead3; font-family: "Cinzel", serif; font-size: 0.74rem; letter-spacing: 0.26em; transition: background 180ms var(--ease-cinematic), border-color 180ms var(--ease-cinematic), transform 180ms var(--ease-cinematic); }
+.enter-button::before { position: absolute; inset: 0; content: ""; transform: translateX(-102%); background: linear-gradient(90deg, transparent, rgba(199, 162, 98, 0.28), transparent); transition: transform 420ms var(--ease-cinematic); }
+.enter-button span, .enter-button b { position: relative; z-index: 1; }
+.enter-button b { padding: 0.8rem 0.78rem; border-left: 1px solid rgba(216, 193, 139, 0.32); font-family: "IBM Plex Mono", monospace; font-size: 0.9rem; font-weight: 400; }
+.enter-button:hover { border-color: #f1d58c; background: rgba(199, 162, 98, 0.14); transform: translateY(-2px); }
+.enter-button:hover::before { transform: translateX(102%); }
+.enter-button:active { transform: scale(0.97); }
+.enter-button:focus-visible { outline: 2px solid #f1d58c; outline-offset: 5px; }
+
+.cinematic-fallback-note { position: absolute; z-index: 9; right: clamp(1.3rem, 4vw, 4.8rem); bottom: 1.8rem; max-width: 20rem; color: rgba(240, 235, 223, 0.55); font-family: "IBM Plex Mono", monospace; font-size: 0.58rem; line-height: 1.6; letter-spacing: 0.06em; text-align: right; }
+
+@keyframes dot-flicker { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes impact-flash { 0% { opacity: 0; transform: scale(0.3); } 18% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0; transform: scale(1.95); } }
+@keyframes impact-spark { 0% { opacity: 0; transform: scale(0.2) rotate(0deg); } 20% { opacity: 0.95; } 100% { opacity: 0; transform: scale(1.9) rotate(15deg); } }
+@keyframes streak-sweep { from { opacity: 0; transform: translateX(-38%) rotate(-8deg); } 38% { opacity: 1; } to { opacity: 0; transform: translateX(38%) rotate(-8deg); } }
+
+@media (max-width: 600px) {
+  .cinematic-loader { top: 1.3rem; left: 1.2rem; }
+  .reveal-subtitle { gap: 0.55rem; letter-spacing: 0.15em; }
+  .reveal-subtitle i { width: 1.1rem; }
+  .thyna-seal{width:5.65rem;height:5.65rem}.official-logo{width:4.35rem;height:3.55rem}.presentation-line{font-size:.5rem;letter-spacing:.2em}.presentation-line i{width:1.5rem}.presentation-lockup h1{font-size:clamp(2.5rem,13vw,4rem)}
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-dots, .reveal-streak, .cinematic-impact.is-active, .cinematic-impact.is-active img { animation: none; }
+  .cinematic-reveal, .cinematic-loader, .enter-button, .loader-rule span { transition-duration: 0.01ms; }
+}
+.cinematic-skip { position: absolute; z-index: 10; top: clamp(1rem, 3vw, 2.2rem); right: clamp(1rem, 3vw, 2.8rem); padding: .7rem .85rem; border: 1px solid rgba(216,193,139,.46); background: rgba(5,8,13,.5); color: rgba(241,238,228,.78); font: 500 .52rem/1 "IBM Plex Mono", monospace; letter-spacing: .13em; cursor: pointer; transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease; }
+.cinematic-skip span { margin-left: .35rem; color: #f1d58c; font-size: .78rem; }
+.cinematic-skip:hover, .cinematic-skip:focus-visible { border-color: #f1d58c; background: rgba(199,162,98,.16); color: #fff3d7; transform: translateY(-1px); }
+.cinematic-skip:focus-visible { outline: 2px solid #f1d58c; outline-offset: 4px; }
+.cinematic-shell.is-static .cinematic-motion-lines, .cinematic-shell.is-static .cinematic-relic-signal { opacity: .12; }
+.cinematic-shell.is-static .cinematic-reveal { opacity: 1; visibility: visible; }
+.cinematic-shell.is-static .reveal-streak { animation: none; opacity: .22; }
+.cinematic-shell.is-static .enter-button { margin-top: .85rem; }
+@media (max-width: 600px) { .cinematic-skip { top: 1rem; right: 1rem; font-size: .46rem; } }
+
+.cinematic-controls { position: absolute; z-index: 10; top: clamp(1rem, 3vw, 2.2rem); right: clamp(1rem, 3vw, 2.8rem); display: flex; align-items: center; gap: .55rem; }
+.cinematic-controls button { cursor: pointer; }
+.cinematic-music { display: inline-flex; align-items: center; gap: .45rem; padding: .7rem .8rem; border: 1px solid rgba(158, 216, 244, .38); background: rgba(5, 8, 13, .5); color: rgba(241, 238, 228, .78); font: 500 .52rem/1 "IBM Plex Mono", monospace; letter-spacing: .1em; transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease; }
+.cinematic-music span { color: #9ed7ed; font-size: .72rem; line-height: 1; }
+.cinematic-music:hover:not(:disabled), .cinematic-music:focus-visible { border-color: #9ed7ed; background: rgba(77, 155, 195, .16); color: #f1eee4; transform: translateY(-1px); }
+.cinematic-music:focus-visible, .cinematic-skip:focus-visible { outline: 2px solid #f1d58c; outline-offset: 4px; }
+.cinematic-music:disabled { cursor: not-allowed; opacity: .52; }
+.cinematic-controls .cinematic-skip { position: static; }
+@media (max-width: 600px) {
+  .cinematic-controls { top: 1rem; right: 1rem; gap: .35rem; }
+  .cinematic-music { padding: .65rem .55rem; font-size: .44rem; letter-spacing: .07em; }
+  .cinematic-controls .cinematic-skip { font-size: .44rem; }
+}
+
+/* Clean intro brand lockup: preserve the emblem proportions without the oversized circular seal. */
+.thyna-seal{width:7.2rem;height:4.35rem;margin-bottom:.1rem;border:1px solid rgba(234,224,201,.34);border-radius:.2rem;background:rgba(3,8,15,.42);box-shadow:inset 0 0 0 .22rem rgba(199,162,98,.07),0 0 1.4rem rgba(199,162,98,.1)}
+.thyna-intro-mark{width:6.1rem;height:3.45rem;object-fit:contain;filter:drop-shadow(0 0 .55rem rgba(255,255,255,.2))}
+.presentation-line{margin-top:.15rem}
+.presentation-line span{white-space:nowrap}
+@media(max-width:600px){.thyna-seal{width:5.8rem;height:3.55rem}.thyna-intro-mark{width:4.9rem;height:2.8rem}.presentation-line{gap:.55rem}.presentation-line i{width:1.35rem}}
+
+/* LC Thyna intro mark: larger, clean, and proportionally contained. */
+.thyna-seal{width:9.2rem;height:6rem;margin-bottom:.15rem;border:0;border-radius:0;background:transparent;box-shadow:none}
+.thyna-intro-mark{width:8.4rem;height:5.25rem;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 0 .7rem rgba(255,255,255,.28))}
+@media(max-width:600px){.thyna-seal{width:7.2rem;height:4.7rem}.thyna-intro-mark{width:6.6rem;height:4.15rem}}

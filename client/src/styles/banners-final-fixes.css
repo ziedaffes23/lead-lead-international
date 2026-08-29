@@ -1,0 +1,12 @@
+/* Banner lock: banners stay still, aligned, and slightly larger on every route. */
+.banner-section,.banner-section *,.committee-banner,.committee-banner *{animation-play-state:paused!important}
+.conference-site .banner-section:before,.conference-site .banner-section:after{animation:none!important;transform:none!important}
+.conference-site .banner-section:before{opacity:.22!important}
+.conference-site .banner-section:after{opacity:.3!important}
+.conference-site .banner-row{gap:1rem;overflow-x:auto;padding-bottom:1rem}
+.conference-site .committee-banner{min-height:14.5rem;padding:1.4rem 1rem;transition:none!important;transform:none!important}
+.conference-site .committee-banner:nth-child(even){margin-top:0!important}
+.conference-site .committee-banner:before{transform:rotate(16deg)!important;transition:none!important;opacity:.14}
+.conference-site .committee-banner:hover,.conference-site .committee-banner:focus-within{transform:none!important;border-color:rgba(231,202,139,.68)}
+.conference-site .committee-banner:hover:before,.conference-site .committee-banner:focus-within:before{transform:rotate(16deg)!important}
+@media(max-width:700px){.conference-site .committee-banner{min-height:13.5rem;padding:1.2rem .9rem}.conference-site .banner-row{gap:.75rem}}

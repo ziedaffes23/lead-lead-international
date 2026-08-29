@@ -1,0 +1,198 @@
+/* Shared mobile refinement layer. Structural overrides stay here so route-specific art and desktop styling remain unchanged. */
+@media (max-width: 700px) {
+  .game-page,
+  .registration-site {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .game-page .conference-nav,
+  .registration-site .conference-nav {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .game-page .trial-command-deck,
+  .game-page .game-chase-frame,
+  .game-page .game-after {
+    margin-right: .75rem;
+    margin-left: .75rem;
+  }
+
+  .registration-site .register-layout {
+    padding-right: .9rem;
+    padding-left: .9rem;
+  }
+
+  .registration-site .dossier-progress {
+    gap: .35rem;
+    font-size: .43rem;
+  }
+
+  .registration-site .dossier-progress span {
+    gap: .24rem;
+  }
+
+  .registration-site .dossier-progress b {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: .42rem;
+  }
+
+  .registration-site .dossier-progress em {
+    min-width: .35rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .conference-section-page {
+    padding-bottom: 0;
+  }
+
+  .conference-section-page .mobile-register-dock {
+    display: none;
+  }
+
+  .conference-section-page__main {
+    padding-top: 3.4rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .conference-section-page__route {
+    padding-top: 3.4rem;
+    padding-bottom: 3.4rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .conference-nav .game-nav__links {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .2rem .3rem;
+  }
+
+  .conference-nav .game-nav__links > a,
+  .conference-nav .game-nav__links > button {
+    min-height: 2rem;
+    padding: .38rem 0;
+    font-size: .36rem !important;
+    letter-spacing: .08em;
+  }
+
+  .conference-nav .game-nav__links > a[aria-current="page"]::after {
+    width: .18rem;
+    height: .18rem;
+    margin-left: .2rem;
+  }
+
+  .conference-nav .game-nav__links .theme-toggle {
+    min-height: 2rem;
+    padding: .28rem .18rem;
+    font-size: .3rem !important;
+  }
+
+  .conference-nav .game-nav__links .game-nav__register {
+    padding: .36rem .2rem;
+    font-size: .34rem !important;
+  }
+}
+
+@media (max-width: 620px) and (max-height: 700px) {
+  .game-home--single-screen > .world-hero {
+    padding: 1.2rem .9rem .7rem;
+  }
+
+  .game-home--single-screen .world-hero__copy {
+    padding-bottom: .2rem;
+  }
+
+  .game-home--single-screen .game-kicker {
+    gap: .45rem;
+    margin-bottom: .55rem;
+    font-size: .45rem;
+    letter-spacing: .1em;
+  }
+
+  .game-home--single-screen .game-kicker i {
+    width: 1.5rem;
+  }
+
+  .game-home--single-screen .world-hero h1 {
+    font-size: clamp(2.55rem, 13vw, 3.25rem);
+    line-height: .8;
+    letter-spacing: -.07em;
+  }
+
+  .game-home--single-screen .world-hero h1 small {
+    margin-top: .55rem;
+    font-size: .58rem;
+    letter-spacing: .28em;
+  }
+
+  .game-home--single-screen .world-hero__directive {
+    gap: .5rem;
+    margin: .55rem 0 -.1rem;
+    font-size: .5rem;
+    letter-spacing: .13em;
+  }
+
+  .game-home--single-screen .world-hero__directive i {
+    width: 2.6rem;
+  }
+
+  .game-home--single-screen .world-hero__facts {
+    gap: .45rem .65rem;
+    padding: .55rem 0;
+  }
+
+  .game-home--single-screen .world-hero__facts span {
+    gap: .2rem;
+  }
+
+  .game-home--single-screen .world-hero__facts small {
+    font-size: .36rem;
+    letter-spacing: .1em;
+  }
+
+  .game-home--single-screen .world-hero__facts b {
+    font-size: .48rem;
+    line-height: 1.1;
+    letter-spacing: .04em;
+  }
+
+  .game-home--single-screen .world-hero__actions {
+    gap: .45rem;
+    margin-top: .75rem;
+  }
+
+  .game-home--single-screen .game-primary,
+  .game-home--single-screen .game-secondary {
+    min-height: 2.45rem;
+    padding-left: .7rem;
+    font-size: .48rem;
+    letter-spacing: .08em;
+  }
+
+  .game-home--single-screen .game-primary b,
+  .game-home--single-screen .game-secondary b {
+    min-width: 1.9rem;
+    font-size: .85rem;
+  }
+
+  .game-home--single-screen .mission-console {
+    display: none;
+  }
+
+  .game-home--single-screen .world-hero__beacon {
+    top: 14rem;
+    right: -.85rem;
+    transform: scale(.72);
+    transform-origin: right top;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-page .conference-nav,
+  .registration-site .conference-nav {
+    scroll-behavior: auto;
+  }
+}

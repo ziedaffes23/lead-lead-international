@@ -1,0 +1,178 @@
+.game-frame__hud {
+  position: absolute;
+  z-index: 5;
+  top: 0.75rem;
+  right: 0.9rem;
+  left: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: none;
+}
+
+.game-frame__lives {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid rgba(158, 216, 244, 0.35);
+  background: rgba(4, 13, 22, 0.78);
+  color: #dceaf0;
+  box-shadow:
+    0 0.7rem 1.8rem rgba(0, 0, 0, 0.28),
+    inset 0 1px rgba(255, 255, 255, 0.08);
+  font:
+    600 0.58rem/1 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.14em;
+}
+
+.game-frame__lives strong {
+  color: #f0d48e;
+  font-size: 0.72rem;
+}
+
+.game-frame__lives > div {
+  display: flex;
+  gap: 0.18rem;
+}
+
+.game-frame__lives i {
+  color: rgba(220, 234, 240, 0.25);
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 0.7;
+}
+
+.game-frame__lives i.is-full {
+  color: #ffe09a;
+  text-shadow: 0 0 0.9rem rgba(255, 213, 120, 0.8);
+}
+
+.game-frame__start {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.5rem;
+  padding: 0.65rem 0.7rem 0.65rem 0.9rem;
+  border: 1px solid rgba(237, 195, 105, 0.72);
+  border-left: 3px solid #e5b85f;
+  background: linear-gradient(
+    105deg,
+    rgba(128, 82, 22, 0.88),
+    rgba(54, 39, 22, 0.9)
+  );
+  color: #f6e4bd;
+  box-shadow:
+    0 0.7rem 1.6rem rgba(0, 0, 0, 0.34),
+    inset 0 1px rgba(255, 245, 208, 0.18);
+  font:
+    700 0.62rem/1 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.game-frame__start b {
+  display: grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  place-items: center;
+  border-left: 1px solid rgba(255, 228, 166, 0.36);
+  color: #ffe8b2;
+  font-size: 1rem;
+}
+
+.game-frame__start:hover {
+  border-color: #ffe8b2;
+  background: linear-gradient(
+    105deg,
+    rgba(172, 115, 32, 0.96),
+    rgba(82, 54, 22, 0.96)
+  );
+  transform: translateY(-2px);
+}
+
+.game-frame__start:focus-visible {
+  outline: 2px solid #fff1c9;
+  outline-offset: 3px;
+}
+
+.game-overlay {
+  z-index: 4;
+}
+
+.game-overlay--over {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 8, 12, 0.9),
+    rgba(13, 9, 14, 0.72),
+    rgba(26, 8, 12, 0.9)
+  );
+}
+
+.game-overlay--over h2 {
+  color: #ffd0a8;
+  text-shadow: 0 0 1.5rem rgba(255, 135, 101, 0.28);
+}
+
+@media (max-width: 560px) {
+  .game-frame__hud {
+    top: 0.55rem;
+    right: 0.55rem;
+    left: 0.55rem;
+    gap: 0.5rem;
+  }
+
+  .game-frame__lives {
+    gap: 0.35rem;
+    padding: 0.42rem 0.45rem;
+    font-size: 0.5rem;
+  }
+
+  .game-frame__lives i {
+    font-size: 0.8rem;
+  }
+
+  .game-frame__start {
+    min-height: 2.15rem;
+    padding: 0.52rem 0.5rem 0.52rem 0.68rem;
+    font-size: 0.52rem;
+  }
+
+  .game-frame__start b {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+.game-page .game-frame {
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 960 / 440 !important;
+}
+
+.game-page .game-overlay {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.game-page.chase-game .game-frame .game-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+.game-page.chase-game .game-frame .game-frame__hud {
+  position: absolute !important;
+  top: 0.75rem !important;
+  right: 0.9rem !important;
+  bottom: auto !important;
+  left: 0.9rem !important;
+}

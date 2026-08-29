@@ -1,0 +1,1876 @@
+/*
+ * Shared layout system
+ *
+ * This file is intentionally imported last by each active route. The project
+ * contains several historical visual passes; these rules provide one stable
+ * geometry layer while leaving the cinematic artwork and interactions intact.
+ */
+
+:root {
+  --layout-gutter: clamp(1rem, 3.8vw, 4.5rem);
+  --layout-max: 92rem;
+  --layout-line: rgba(161, 193, 207, 0.2);
+  --layout-panel: rgba(6, 21, 34, 0.78);
+  --layout-gold: #e7b764;
+  --layout-cream: #f3eee0;
+}
+
+html,
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.game-home,
+.game-page,
+.registration-site,
+.cinematic-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+.game-home > :not(.game-home__background):not(.home-route-atmosphere),
+.game-page > :not(.cinematic-background):not(.route-entry-wipe):not(.route-pressure-lines),
+.registration-site > :not(.cinematic-background):not(.route-entry-wipe):not(.route-pressure-lines):not(.register-backdrop):not(.register-rails):not(.dossier-relic-route):not(.register-relic-trace) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Shared header */
+.conference-nav {
+  position: relative !important;
+  z-index: 20 !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(8rem, 1fr) auto !important;
+  align-items: center !important;
+  gap: clamp(0.8rem, 2.2vw, 2.5rem) !important;
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  min-height: 4.2rem !important;
+  margin: 0 auto !important;
+  padding: 0.75rem 0 !important;
+  border-bottom: 1px solid var(--layout-line) !important;
+}
+
+.conference-nav .game-brand {
+  display: inline-flex !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  color: var(--layout-cream) !important;
+}
+
+.conference-nav .game-brand img {
+  flex: 0 0 auto !important;
+  width: clamp(2rem, 3vw, 3.15rem) !important;
+  height: clamp(2rem, 3vw, 3.15rem) !important;
+  object-fit: contain !important;
+}
+
+.conference-nav .game-brand span {
+  display: grid !important;
+  min-width: 0 !important;
+  gap: 0.15rem !important;
+}
+
+.conference-nav .game-brand b,
+.conference-nav .game-brand small {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.conference-nav .game-brand b {
+  color: var(--layout-cream) !important;
+  font-size: clamp(0.58rem, 0.7vw, 0.78rem) !important;
+  letter-spacing: 0.12em !important;
+}
+
+.conference-nav .game-brand small {
+  color: rgba(162, 200, 214, 0.72) !important;
+  font-size: clamp(0.42rem, 0.48vw, 0.58rem) !important;
+  letter-spacing: 0.1em !important;
+}
+
+.conference-nav .game-nav__status {
+  justify-self: start !important;
+  min-width: 0 !important;
+  color: rgba(189, 218, 224, 0.7) !important;
+  font-size: clamp(0.4rem, 0.5vw, 0.56rem) !important;
+  letter-spacing: 0.12em !important;
+  white-space: nowrap !important;
+}
+
+.conference-nav .game-nav__status i {
+  display: inline-block !important;
+  width: 0.42rem !important;
+  height: 0.42rem !important;
+  margin-right: 0.42rem !important;
+  border-radius: 50% !important;
+  background: #78e0a7 !important;
+  box-shadow: 0 0 0.7rem rgba(120, 224, 167, 0.8) !important;
+}
+
+.conference-nav .game-nav__status span {
+  margin-left: 0.25rem !important;
+  color: rgba(189, 218, 224, 0.45) !important;
+}
+
+.conference-nav .game-nav__links {
+  display: flex !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: clamp(0.55rem, 1.25vw, 1.35rem) !important;
+  overflow: visible !important;
+}
+
+.conference-nav .game-nav__links a,
+.conference-nav .game-nav__register {
+  flex: 0 0 auto !important;
+  color: rgba(209, 224, 225, 0.78) !important;
+  font-size: clamp(0.43rem, 0.55vw, 0.62rem) !important;
+  letter-spacing: 0.13em !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.conference-nav .game-nav__links a:hover,
+.conference-nav .game-nav__links a[aria-current="page"],
+.conference-nav .game-nav__register:hover,
+.conference-nav .game-nav__register[aria-current="page"] {
+  color: var(--layout-gold) !important;
+}
+
+.conference-nav .game-nav__register {
+  min-height: 2rem !important;
+  padding: 0.58rem 0.82rem !important;
+  border: 1px solid rgba(231, 183, 100, 0.72) !important;
+  background: rgba(231, 183, 100, 0.08) !important;
+}
+
+/* Home: stable two-column hero that becomes a readable stack. */
+.game-home--single-screen {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.game-home--single-screen > .world-hero {
+  display: grid !important;
+  flex: 1 1 auto !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.92fr) !important;
+  align-items: center !important;
+  gap: clamp(2rem, 7vw, 8rem) !important;
+  width: min(calc(100% - 2 * var(--layout-gutter)), 96rem) !important;
+  min-height: 0 !important;
+  margin: 0 auto !important;
+  padding: clamp(3rem, 8vh, 6.5rem) 0 clamp(2.5rem, 6vh, 5rem) !important;
+}
+
+.world-hero__copy,
+.mission-console {
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.world-hero__copy {
+  width: min(100%, 42rem) !important;
+}
+
+.world-hero__copy h1 {
+  max-width: 7ch !important;
+  font-size: clamp(4.3rem, 8vw, 8.2rem) !important;
+  line-height: 0.82 !important;
+}
+
+.world-hero__facts {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0.9rem 1.2rem !important;
+  width: 100% !important;
+}
+
+.world-hero__facts span {
+  min-width: 0 !important;
+}
+
+.world-hero__facts b {
+  overflow-wrap: anywhere !important;
+}
+
+.world-hero__actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem !important;
+}
+
+.world-hero__actions > * {
+  min-width: min(100%, 14rem) !important;
+}
+
+.mission-console {
+  justify-self: end !important;
+  width: min(100%, 27rem) !important;
+  margin: 0 !important;
+}
+
+.game-home--single-screen > .conference-footer {
+  flex: 0 0 auto !important;
+}
+
+/* Shared content pages */
+.conference-section-page__main {
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  min-height: 0 !important;
+  margin: 0 auto !important;
+  padding: clamp(4.5rem, 9vh, 7.5rem) 0 clamp(3.5rem, 8vh, 7rem) !important;
+}
+
+.conference-section-page__main .section-intro-row {
+  width: 100% !important;
+  max-width: none !important;
+  margin-bottom: clamp(2.2rem, 5vh, 4.5rem) !important;
+}
+
+.conference-section-page__main .section-intro-row h1 {
+  max-width: 14ch !important;
+  font-size: clamp(3.6rem, 6.4vw, 6.8rem) !important;
+  line-height: 0.9 !important;
+}
+
+.quest-cards,
+.skill-grid,
+.faction-grid,
+.leaderboard-grid,
+.readiness-grid {
+  width: 100% !important;
+  min-width: 0 !important;
+  align-items: stretch !important;
+}
+
+.quest-cards,
+.skill-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: clamp(0.8rem, 1.6vw, 1.5rem) !important;
+}
+
+.quest-card,
+.skill-node,
+.faction-card,
+.leaderboard-card,
+.readiness-card {
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.quest-card,
+.skill-node {
+  min-height: 13rem !important;
+}
+
+.faction-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: clamp(0.65rem, 1.15vw, 1.2rem) !important;
+}
+
+.faction-card,
+.faction-card__trigger {
+  width: 100% !important;
+  min-height: 15.5rem !important;
+}
+
+.faction-card__trigger {
+  min-width: 0 !important;
+}
+
+.leaderboard-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: clamp(0.8rem, 1.6vw, 1.5rem) !important;
+}
+
+.leaderboard-card {
+  min-height: 18rem !important;
+}
+
+.leaderboard-status,
+.leaderboard-empty {
+  width: 100% !important;
+  min-height: 13rem !important;
+}
+
+.readiness-layout {
+  display: grid !important;
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1.28fr) !important;
+  align-items: start !important;
+  gap: clamp(1.2rem, 3vw, 3rem) !important;
+}
+
+.readiness-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.85rem !important;
+}
+
+.route-deck {
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  padding: clamp(3.4rem, 8vh, 6rem) 0 !important;
+}
+
+.route-deck__actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.8rem !important;
+}
+
+.route-deck__actions > * {
+  min-width: min(100%, 16rem) !important;
+}
+
+.conference-footer {
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.6rem 1rem !important;
+  width: 100% !important;
+  min-height: 3.4rem !important;
+  padding: 1rem var(--layout-gutter) !important;
+  text-align: center !important;
+}
+
+.conference-footer span {
+  white-space: normal !important;
+}
+
+/* Rooftop trial: keep the canvas fluid and the briefing readable. */
+.game-page {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.trial-command-deck {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr) !important;
+  align-items: end !important;
+  gap: clamp(1.5rem, 5vw, 5rem) !important;
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  margin: 0 auto !important;
+  padding: clamp(4rem, 8vh, 7rem) 0 clamp(2rem, 4vh, 3.5rem) !important;
+}
+
+.trial-command-deck__heading,
+.trial-command-deck__panel {
+  min-width: 0 !important;
+}
+
+.trial-command-deck__heading h1 {
+  max-width: 8ch !important;
+  font-size: clamp(3.9rem, 7.2vw, 7rem) !important;
+  line-height: 0.86 !important;
+}
+
+.trial-command-deck__panel {
+  width: 100% !important;
+}
+
+.game-chase-frame {
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  margin: 0 auto !important;
+}
+
+.rooftop-run,
+.game-frame {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.game-frame {
+  aspect-ratio: 960 / 440 !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.game-canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: cover !important;
+}
+
+.game-after {
+  width: min(calc(100% - 2 * var(--layout-gutter)), 42rem) !important;
+  margin: clamp(1.5rem, 4vh, 3rem) auto clamp(2.5rem, 5vh, 4rem) !important;
+  text-align: center !important;
+}
+
+/* Registration: predictable dossier columns and full-width controls. */
+.registration-site {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 0 1rem !important;
+}
+
+.registration-site .register-layout {
+  display: grid !important;
+  grid-template-columns: minmax(15rem, 0.58fr) minmax(0, 1.42fr) !important;
+  align-items: start !important;
+  gap: clamp(1.25rem, 4vw, 4rem) !important;
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  margin: 0 auto !important;
+  padding: clamp(3rem, 7vh, 6rem) 0 !important;
+}
+
+.registration-site .dossier-intro {
+  position: sticky !important;
+  top: 1.5rem !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+.registration-site .dossier-intro h1 {
+  max-width: 9ch !important;
+  font-size: clamp(3rem, 5.6vw, 5.7rem) !important;
+  line-height: 0.9 !important;
+}
+
+.registration-site .dossier-panel {
+  min-width: 0 !important;
+  width: 100% !important;
+  padding: clamp(1.25rem, 3.2vw, 3rem) !important;
+}
+
+.registration-site .dossier-heading h2 {
+  max-width: 14ch !important;
+  font-size: clamp(2rem, 4.2vw, 4.2rem) !important;
+  line-height: 0.95 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.registration-site .registration-step,
+.registration-site form {
+  min-width: 0 !important;
+}
+
+.registration-site .form-grid.two {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+.registration-site .form-grid.two > label,
+.registration-site .attachment-grid > label {
+  min-width: 0 !important;
+}
+
+.registration-site input,
+.registration-site select,
+.registration-site textarea {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.registration-site .attachment-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0.8rem !important;
+}
+
+.registration-site .registration-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+}
+
+.registration-site .registration-actions > * {
+  min-width: min(100%, 11rem) !important;
+}
+
+.registration-site > .conference-footer {
+  width: 100% !important;
+  max-width: none !important;
+  margin: auto 0 0 !important;
+}
+
+/* Narrow layout breakpoints */
+@media (max-width: 960px) {
+  .conference-nav {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    gap: 0.85rem 1.3rem !important;
+  }
+
+  .conference-nav .game-nav__links {
+    grid-column: 1 / -1 !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    padding-top: 0.25rem !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  .conference-nav .game-nav__links::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__register {
+    display: inline-flex !important;
+  }
+
+  .game-home--single-screen > .world-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.75fr) !important;
+    gap: 2rem !important;
+  }
+
+  .quest-cards,
+  .skill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .faction-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .registration-site .register-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .registration-site .dossier-intro {
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --layout-gutter: 1rem;
+  }
+
+  .conference-nav {
+    min-height: 0 !important;
+    padding: 0.7rem 0 0.6rem !important;
+  }
+
+  .conference-nav .game-nav__status {
+    justify-self: end !important;
+    font-size: 0.4rem !important;
+  }
+
+  .conference-nav .game-nav__links {
+    gap: 1rem !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__register {
+    font-size: 0.48rem !important;
+  }
+
+  .game-home--single-screen {
+    min-height: 100dvh !important;
+  }
+
+  .game-home--single-screen > .world-hero {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-content: start !important;
+    width: min(calc(100% - 2rem), 42rem) !important;
+    padding: 3.5rem 0 2.5rem !important;
+  }
+
+  .world-hero__copy h1 {
+    font-size: clamp(3.9rem, 16vw, 6.2rem) !important;
+  }
+
+  .world-hero__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.8rem !important;
+  }
+
+  .world-hero__actions,
+  .route-deck__actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .world-hero__actions > *,
+  .route-deck__actions > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .mission-console {
+    justify-self: stretch !important;
+    width: 100% !important;
+    margin-top: 0.75rem !important;
+  }
+
+  .conference-section-page__main,
+  .route-deck {
+    width: min(calc(100% - 2rem), 42rem) !important;
+  }
+
+  .conference-section-page__main {
+    padding: 3.7rem 0 3.5rem !important;
+  }
+
+  .conference-section-page__main .section-intro-row {
+    margin-bottom: 2rem !important;
+  }
+
+  .conference-section-page__main .section-intro-row h1 {
+    max-width: 10ch !important;
+    font-size: clamp(2.8rem, 12vw, 4.8rem) !important;
+  }
+
+  .quest-cards,
+  .skill-grid,
+  .readiness-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .faction-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.65rem !important;
+  }
+
+  .faction-card,
+  .faction-card__trigger {
+    min-height: 12rem !important;
+  }
+
+  .leaderboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .readiness-layout,
+  .trial-command-deck {
+    grid-template-columns: 1fr !important;
+  }
+
+  .route-deck {
+    padding: 3.5rem 0 !important;
+  }
+
+  .trial-command-deck {
+    width: min(calc(100% - 2rem), 42rem) !important;
+    padding: 3.7rem 0 2rem !important;
+  }
+
+  .trial-command-deck__heading h1 {
+    font-size: clamp(3.4rem, 14vw, 5.5rem) !important;
+  }
+
+  .game-chase-frame {
+    width: min(calc(100% - 2rem), 42rem) !important;
+  }
+
+  .game-frame {
+    aspect-ratio: 1 / 0.68 !important;
+  }
+
+  .registration-site .register-layout {
+    width: min(calc(100% - 2rem), 42rem) !important;
+    padding: 2.8rem 0 2rem !important;
+  }
+
+  .registration-site .dossier-intro h1 {
+    max-width: 10ch !important;
+    font-size: clamp(2.8rem, 12vw, 4.8rem) !important;
+  }
+
+  .registration-site .form-grid.two,
+  .registration-site .attachment-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .registration-site .registration-actions {
+    align-items: stretch !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .registration-site .registration-actions > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .registration-site .dossier-progress {
+    gap: 0.45rem !important;
+  }
+
+  .registration-site .dossier-progress em {
+    min-width: 1rem !important;
+  }
+
+  .conference-footer {
+    min-height: 3rem !important;
+    padding: 0.8rem 1rem !important;
+    font-size: 0.42rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .conference-nav .game-brand b {
+    font-size: 0.5rem !important;
+  }
+
+  .conference-nav .game-brand small,
+  .conference-nav .game-nav__status {
+    font-size: 0.36rem !important;
+  }
+
+  .conference-nav .game-nav__links {
+    gap: 0.78rem !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__register {
+    font-size: 0.42rem !important;
+  }
+
+  .world-hero__facts {
+    grid-template-columns: 1fr !important;
+  }
+
+  .faction-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .faction-card,
+  .faction-card__trigger {
+    min-height: 13rem !important;
+  }
+
+  .game-frame {
+    aspect-ratio: 1 / 0.8 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conference-nav *,
+  .game-home *,
+  .game-page *,
+  .registration-site * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Intro route: keep the canvas, controls, reveal, and compact footer within the viewport. */
+.cinematic-shell {
+  isolation: isolate;
+  background: #05080d;
+}
+
+.cinematic-stage,
+.cinematic-vignette,
+.cinematic-motion-lines,
+.cinematic-relic-signal,
+.cinematic-impact {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+.cinematic-stage {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cinematic-controls {
+  position: absolute !important;
+  z-index: 20 !important;
+  top: max(1rem, env(safe-area-inset-top)) !important;
+  right: var(--layout-gutter) !important;
+}
+
+.cinematic-skip {
+  min-height: 2.4rem !important;
+  padding: 0.65rem 0.85rem !important;
+}
+
+.cinematic-reveal {
+  position: absolute !important;
+  inset: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 5rem var(--layout-gutter) 5rem !important;
+}
+
+.presentation-lockup {
+  width: min(100%, 42rem) !important;
+  text-align: center !important;
+}
+
+.cinematic-shell > .conference-footer {
+  position: absolute !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
+
+/* Multilingual banner slogans */
+.faction-card__slogan {
+  display: block !important;
+  width: 100% !important;
+  max-width: 15rem !important;
+  margin: 0.45rem auto 0 !important;
+  color: rgba(229, 215, 181, 0.88) !important;
+  font-family: "Noto Sans Arabic", "IBM Plex Mono", sans-serif !important;
+  font-size: clamp(0.78rem, 1.1vw, 1.05rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  direction: auto !important;
+  overflow-wrap: anywhere !important;
+}
+
+.faction-card__trigger strong {
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+  text-align: center !important;
+}
+
+@media (max-width: 720px) {
+  .faction-card__slogan {
+    max-width: 13rem !important;
+    font-size: 0.72rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .faction-card__slogan {
+    max-width: 17rem !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+/* Registration indemnity signature step */
+.indemnity-card {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+  padding: clamp(1.25rem, 3vw, 2.2rem);
+  border: 1px solid rgba(211, 164, 91, 0.42);
+  background: linear-gradient(145deg, rgba(9, 28, 43, 0.9), rgba(16, 43, 57, 0.72));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1.5rem 3rem rgba(0, 0, 0, 0.16);
+}
+
+.indemnity-card h3 {
+  margin: 0;
+  color: var(--game-brass, #d9b16d);
+  font-family: var(--game-display, Georgia, serif);
+  font-size: clamp(1.35rem, 3vw, 2.2rem);
+  letter-spacing: 0.04em;
+}
+
+.indemnity-card > p:not(.eyebrow) {
+  max-width: 42rem;
+  margin: 0;
+  color: rgba(242, 236, 222, 0.86);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.75;
+}
+
+.signature-field {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+}
+
+.indemnity-consent {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 0.2rem;
+  color: rgba(242, 236, 222, 0.92);
+  line-height: 1.5;
+}
+
+.indemnity-consent input {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.15rem;
+  accent-color: var(--game-brass, #d9b16d);
+}
+
+.indemnity-card .registration-actions {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 600px) {
+  .indemnity-card {
+    padding: 1rem;
+  }
+}
+
+/* Full-screen layout pass: let desktop pages use the available viewport instead of a narrow centered island. */
+:root {
+  --layout-gutter: clamp(1.25rem, 4vw, 6rem);
+  --layout-max: 120rem;
+}
+
+.conference-site,
+.game-home,
+.game-page,
+.cinematic-shell,
+.registration-site {
+  min-height: 100dvh !important;
+  overflow-x: clip !important;
+}
+
+.conference-section-page__main,
+.route-deck,
+.trial-command-deck,
+.game-chase-frame,
+.registration-site .register-layout,
+.game-home--single-screen > .world-hero {
+  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+}
+
+.conference-section-page__main {
+  min-height: calc(100dvh - 4.5rem) !important;
+  padding-top: clamp(5rem, 10vh, 8.5rem) !important;
+  padding-bottom: clamp(4.5rem, 9vh, 8rem) !important;
+}
+
+.conference-section-page__main .section-intro-row {
+  align-items: end !important;
+}
+
+.faction-grid,
+.quest-cards,
+.skill-grid,
+.leaderboard-grid,
+.readiness-grid {
+  max-width: none !important;
+}
+
+.faction-card,
+.faction-card__trigger {
+  min-height: clamp(16rem, 25vh, 22rem) !important;
+}
+
+.route-deck {
+  min-height: calc(100dvh - 4.5rem) !important;
+  padding-top: clamp(5rem, 10vh, 8rem) !important;
+  padding-bottom: clamp(4rem, 9vh, 7rem) !important;
+}
+
+.trial-command-deck {
+  padding-top: clamp(5rem, 10vh, 8rem) !important;
+  padding-bottom: clamp(2.5rem, 5vh, 4.5rem) !important;
+}
+
+.game-chase-frame {
+  max-width: var(--layout-max) !important;
+}
+
+.game-frame {
+  min-height: clamp(24rem, 52vh, 42rem) !important;
+}
+
+.game-home--single-screen > .world-hero {
+  min-height: calc(100dvh - 4.5rem) !important;
+  max-width: var(--layout-max) !important;
+}
+
+/* Registration is a regular document page: no sticky sidebar, popup scroll, clipped card, or inner scroll area. */
+html:has(.registration-site),
+body:has(.registration-site) {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.registration-site {
+  display: block !important;
+  height: auto !important;
+  min-height: 100dvh !important;
+  padding: 0 0 3rem !important;
+  overflow: visible !important;
+}
+
+.registration-site .register-layout {
+  display: block !important;
+  max-width: var(--layout-max) !important;
+  margin: 0 auto !important;
+  padding: clamp(3rem, 8vh, 7rem) 0 clamp(4rem, 8vh, 7rem) !important;
+}
+
+.registration-site .dossier-intro {
+  position: relative !important;
+  top: auto !important;
+  max-width: none !important;
+  margin: 0 0 clamp(2rem, 5vw, 4rem) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+}
+
+.registration-site .dossier-intro::before,
+.registration-site .dossier-intro::after {
+  display: none !important;
+}
+
+.registration-site .dossier-intro h1 {
+  max-width: 12ch !important;
+  font-size: clamp(3.4rem, 7vw, 7rem) !important;
+}
+
+.registration-site .dossier-intro > p:not(.eyebrow) {
+  max-width: 48rem !important;
+  font-size: clamp(1rem, 1.4vw, 1.2rem) !important;
+}
+
+.registration-site .dossier-intro dl {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  max-width: none !important;
+  margin-top: clamp(1.5rem, 3vw, 2.8rem) !important;
+  border-top: 1px solid rgba(158, 216, 244, 0.28) !important;
+  border-bottom: 1px solid rgba(158, 216, 244, 0.18) !important;
+}
+
+.registration-site .dossier-intro dl > div {
+  display: grid !important;
+  gap: 0.5rem !important;
+  justify-content: start !important;
+  padding: 1rem 1.2rem !important;
+  border-right: 1px solid rgba(158, 216, 244, 0.16) !important;
+  border-bottom: 0 !important;
+}
+
+.registration-site .dossier-intro dl > div:last-child {
+  border-right: 0 !important;
+}
+
+.registration-site .dossier-intro dd {
+  text-align: left !important;
+  font-size: clamp(0.65rem, 0.9vw, 0.82rem) !important;
+}
+
+.registration-site .dossier-panel {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  padding: clamp(1.5rem, 4vw, 4.5rem) !important;
+  border: 1px solid rgba(158, 216, 244, 0.3) !important;
+  background: rgba(5, 20, 33, 0.72) !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  overflow: visible !important;
+}
+
+.registration-site .dossier-panel::before,
+.registration-site .dossier-panel::after {
+  display: none !important;
+}
+
+.registration-site .dossier-panel form,
+.registration-site .registration-step {
+  overflow: visible !important;
+}
+
+.registration-site .registration-step {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.registration-site .dossier-heading h2 {
+  max-width: none !important;
+  font-size: clamp(2.2rem, 5vw, 5rem) !important;
+}
+
+.registration-site .dossier-progress {
+  width: 100% !important;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem) !important;
+}
+
+@media (max-width: 720px) {
+  .conference-section-page__main,
+  .route-deck,
+  .trial-command-deck,
+  .game-chase-frame,
+  .registration-site .register-layout,
+  .game-home--single-screen > .world-hero {
+    width: min(calc(100% - 2rem), 56rem) !important;
+  }
+
+  .conference-section-page__main,
+  .route-deck {
+    min-height: 0 !important;
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .game-home--single-screen > .world-hero {
+    min-height: 0 !important;
+  }
+
+  .registration-site .register-layout {
+    padding-top: 3rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .registration-site .dossier-intro dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .registration-site .dossier-intro dl > div:nth-child(2) {
+    border-right: 0 !important;
+  }
+
+  .registration-site .dossier-intro dl > div:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(158, 216, 244, 0.16) !important;
+  }
+
+  .registration-site .dossier-panel {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .registration-site .dossier-intro dl {
+    grid-template-columns: 1fr !important;
+  }
+
+  .registration-site .dossier-intro dl > div {
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(158, 216, 244, 0.16) !important;
+  }
+
+  .registration-site .dossier-intro dl > div:last-child {
+    border-bottom: 0 !important;
+  }
+}
+
+/* Checkbox controls: keep consent inputs compact instead of inheriting full-width text-field geometry. */
+.registration-site .single-room-option,
+.registration-site .indemnity-consent {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  cursor: pointer;
+}
+
+.registration-site .single-room-option input[type="checkbox"],
+.registration-site .indemnity-consent input[type="checkbox"] {
+  flex: 0 0 1.25rem !important;
+  width: 1.25rem !important;
+  min-width: 1.25rem !important;
+  max-width: 1.25rem !important;
+  height: 1.25rem !important;
+  min-height: 1.25rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(231, 183, 100, 0.85) !important;
+  border-radius: 0.15rem !important;
+  background: rgba(2, 11, 21, 0.9) !important;
+  appearance: auto !important;
+  accent-color: var(--layout-gold) !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.registration-site .single-room-option span,
+.registration-site .indemnity-consent span {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.registration-site .indemnity-consent {
+  align-items: flex-start !important;
+}
+
+/* Navigation stability pass */
+.conference-nav {
+  grid-template-columns: minmax(14rem, 1fr) auto minmax(24rem, 1.35fr) !important;
+  min-height: 4.8rem !important;
+  gap: clamp(1rem, 2.5vw, 3rem) !important;
+}
+
+.conference-nav .game-brand {
+  min-width: 0 !important;
+}
+
+.conference-nav .game-nav__status {
+  justify-self: center !important;
+  white-space: nowrap !important;
+}
+
+.conference-nav .game-nav__links {
+  justify-self: end !important;
+  width: 100% !important;
+  flex-wrap: wrap !important;
+  row-gap: 0.65rem !important;
+}
+
+.virtual-signature {
+  display: block !important;
+  width: 100% !important;
+  height: clamp(10rem, 22vw, 15rem) !important;
+  min-height: 10rem !important;
+  padding: 0 !important;
+  border: 1px solid rgba(231, 183, 100, 0.65) !important;
+  border-bottom: 2px solid rgba(231, 183, 100, 0.9) !important;
+  background: linear-gradient(180deg, rgba(2, 11, 21, 0.92), rgba(7, 25, 39, 0.85)) !important;
+  touch-action: none !important;
+  cursor: crosshair !important;
+}
+
+.signature-field__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.signature-field__header label {
+  display: block !important;
+  margin: 0 !important;
+}
+
+.signature-clear {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(158, 216, 244, 0.4);
+  background: rgba(7, 22, 36, 0.8);
+  color: var(--layout-cream);
+  font: 600 0.55rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.signature-clear:hover:not(:disabled),
+.signature-clear:focus-visible:not(:disabled) {
+  border-color: var(--layout-gold);
+  color: var(--layout-gold);
+  outline: none;
+}
+
+.signature-clear:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 1100px) {
+  .conference-nav {
+    grid-template-columns: minmax(13rem, 1fr) auto !important;
+  }
+
+  .conference-nav .game-nav__status {
+    display: none !important;
+  }
+
+  .conference-nav .game-nav__links {
+    grid-column: 1 / -1 !important;
+    justify-self: stretch !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 0.15rem !important;
+    scrollbar-width: none !important;
+  }
+
+  .conference-nav .game-nav__links::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .virtual-signature {
+    height: 11rem !important;
+    min-height: 11rem !important;
+  }
+
+  .signature-field__header {
+    align-items: flex-start;
+  }
+}
+
+/* Shared city background for the home and content routes only. */
+.game-home:not(.chase-route) {
+  isolation: isolate !important;
+  background: #17130f !important;
+}
+
+.game-home:not(.chase-route)::before,
+.game-home:not(.chase-route)::after {
+  position: fixed;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.game-home:not(.chase-route)::before {
+  z-index: -2;
+  background-image: url("/assets/lead-lead-city-background.jfif");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: brightness(0.58) saturate(0.72) contrast(0.96);
+  transform: scale(1.025);
+}
+
+.game-home:not(.chase-route)::after {
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(2, 8, 14, 0.9) 0%, rgba(4, 12, 18, 0.48) 23%, rgba(4, 10, 16, 0.7) 68%, rgba(2, 6, 11, 0.94) 100%),
+    linear-gradient(90deg, rgba(2, 7, 13, 0.78) 0%, rgba(3, 8, 13, 0.28) 52%, rgba(2, 7, 13, 0.76) 100%);
+}
+
+.game-home:not(.chase-route) > .cinematic-background,
+.game-home:not(.chase-route) .world-hero__backdrop {
+  display: none !important;
+}
+
+.game-home:not(.chase-route) .world-hero,
+.game-home:not(.chase-route) .conference-section-page__main,
+.game-home:not(.chase-route) .route-deck {
+  background: transparent !important;
+}
+
+.game-home:not(.chase-route) .conference-nav {
+  background: rgba(2, 8, 14, 0.78) !important;
+  border-bottom-color: rgba(231, 183, 100, 0.32) !important;
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.24) !important;
+  backdrop-filter: blur(12px) saturate(0.85) !important;
+}
+
+.game-home:not(.chase-route) .world-hero__copy,
+.game-home:not(.chase-route) .section-intro-row,
+.game-home:not(.chase-route) .route-deck > * {
+  text-shadow: 0 0.18rem 0.85rem rgba(0, 0, 0, 0.76);
+}
+
+.game-home:not(.chase-route) .world-hero__copy h1,
+.game-home:not(.chase-route) .section-intro-row h1,
+.game-home:not(.chase-route) .route-deck h1,
+.game-home:not(.chase-route) .route-deck h2 {
+  color: #fff7e5 !important;
+  text-shadow: 0 0.3rem 1.2rem rgba(0, 0, 0, 0.84) !important;
+}
+
+.game-home:not(.chase-route) .world-hero__lead,
+.game-home:not(.chase-route) .section-intro-row__copy,
+.game-home:not(.chase-route) .route-deck > p {
+  color: #f2eadb !important;
+}
+
+.game-home:not(.chase-route) .world-hero__facts,
+.game-home:not(.chase-route) .world-chapter-dock,
+.game-home:not(.chase-route) .mission-console {
+  background-color: rgba(3, 12, 20, 0.72) !important;
+  border-color: rgba(231, 183, 100, 0.38) !important;
+  box-shadow: 0 1rem 2.8rem rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(9px) !important;
+}
+
+.game-home:not(.chase-route) .quest-card,
+.game-home:not(.chase-route) .skill-node,
+.game-home:not(.chase-route) .faction-card,
+.game-home:not(.chase-route) .leaderboard-card,
+.game-home:not(.chase-route) .readiness-card {
+  background: linear-gradient(145deg, rgba(4, 21, 32, 0.9), rgba(2, 9, 16, 0.88)) !important;
+  border-color: rgba(183, 211, 218, 0.34) !important;
+  box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.34) !important;
+}
+
+.game-home:not(.chase-route) .quest-card p,
+.game-home:not(.chase-route) .skill-node p,
+.game-home:not(.chase-route) .faction-card p,
+.game-home:not(.chase-route) .leaderboard-card p,
+.game-home:not(.chase-route) .readiness-card p {
+  color: rgba(241, 235, 222, 0.84) !important;
+}
+
+.game-home:not(.chase-route) .conference-footer {
+  background: rgba(2, 7, 12, 0.82) !important;
+  border-top-color: rgba(231, 183, 100, 0.32) !important;
+}
+
+@media (max-width: 720px) {
+  .game-home:not(.chase-route)::before {
+    background-position: 58% center;
+    filter: brightness(0.52) saturate(0.7) contrast(0.94);
+  }
+
+  .game-home:not(.chase-route)::after {
+    background:
+      linear-gradient(180deg, rgba(2, 8, 14, 0.93) 0%, rgba(4, 12, 18, 0.6) 35%, rgba(2, 7, 12, 0.92) 100%),
+      linear-gradient(90deg, rgba(2, 7, 13, 0.72), rgba(2, 7, 13, 0.48));
+  }
+}
+
+/* Final route-specific background and mobile navigation correction. */
+.game-home--single-screen:not(.chase-route) {
+  background: #050911 !important;
+}
+
+.game-home--single-screen:not(.chase-route)::before,
+.game-home--single-screen:not(.chase-route)::after {
+  display: none !important;
+}
+
+.game-home--single-screen:not(.chase-route) > .cinematic-background,
+.game-home--single-screen:not(.chase-route) .world-hero__backdrop {
+  display: block !important;
+}
+
+.game-home--single-screen:not(.chase-route) .world-hero,
+.game-home--single-screen:not(.chase-route) .world-hero__facts {
+  background: transparent !important;
+}
+
+.game-home--single-screen:not(.chase-route) .conference-nav {
+  background: rgba(3, 10, 19, 0.92) !important;
+  border-bottom-color: rgba(158, 216, 244, 0.18) !important;
+}
+
+.game-home--single-screen:not(.chase-route) .world-hero__facts {
+  border-color: rgba(158, 216, 244, 0.22) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* The new artwork belongs to content pages, not the home hero. */
+.conference-section-page:not(.chase-route)::before {
+  background-image: url("/assets/lead-lead-city-background-v2.png") !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  filter: brightness(0.66) saturate(0.58) contrast(0.92) !important;
+}
+
+.conference-section-page:not(.chase-route)::after {
+  background:
+    linear-gradient(180deg, rgba(5, 11, 18, 0.86) 0%, rgba(5, 12, 18, 0.38) 28%, rgba(4, 10, 15, 0.7) 72%, rgba(2, 6, 11, 0.94) 100%),
+    linear-gradient(90deg, rgba(3, 8, 14, 0.74), rgba(3, 8, 14, 0.2) 54%, rgba(3, 8, 14, 0.72));
+}
+
+.conference-section-page:not(.chase-route) .conference-section-page__main,
+.conference-section-page:not(.chase-route) .route-deck {
+  background: transparent !important;
+}
+
+@media (max-width: 720px) {
+  .conference-nav {
+    min-height: 6.5rem !important;
+    height: auto !important;
+    align-content: center !important;
+    row-gap: 0.7rem !important;
+    overflow: visible !important;
+  }
+
+  .conference-nav .game-nav__links {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: calc(100vw - 2rem) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 0.85rem !important;
+    padding: 0.25rem 0.1rem 0.45rem !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(231, 183, 100, 0.65) transparent !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__links a:not([href="#chapters"]),
+  .conference-nav .game-nav__links button,
+  .conference-nav .game-nav__register {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: 0.58rem !important;
+    line-height: 1 !important;
+  }
+
+  .conference-nav .game-nav__links .game-nav__register {
+    padding: 0.65rem 0.8rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .conference-nav .game-brand b {
+    font-size: 0.58rem !important;
+  }
+
+  .conference-nav .game-brand small {
+    font-size: 0.39rem !important;
+  }
+
+  .conference-nav .game-nav__links {
+    width: calc(100vw - 1.2rem) !important;
+    gap: 0.72rem !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__links a:not([href="#chapters"]),
+  .conference-nav .game-nav__links button,
+  .conference-nav .game-nav__register {
+    font-size: 0.56rem !important;
+  }
+}
+
+/* Mirage podium and final phone usability pass. */
+.conference-section-page--mirage .leaderboard-grid {
+  align-items: stretch !important;
+  min-height: 0 !important;
+  padding: 0.75rem 0 1.5rem !important;
+}
+
+.conference-section-page--mirage .leaderboard-card {
+  position: relative !important;
+  inset: auto !important;
+  display: flex !important;
+  min-height: clamp(20rem, 34vw, 28rem) !important;
+  height: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  overflow: hidden !important;
+  border-radius: 0.15rem !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 {
+  background: linear-gradient(145deg, rgba(91, 62, 22, 0.98), rgba(31, 20, 8, 0.96)) !important;
+  border: 1px solid rgba(255, 215, 126, 0.9) !important;
+  box-shadow: 0 1.4rem 3rem rgba(0, 0, 0, 0.44), 0 0 0 0.22rem rgba(231, 183, 100, 0.14) !important;
+  transform: translateY(-0.8rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 22%, rgba(255, 230, 159, 0.22), transparent 42%), linear-gradient(135deg, transparent 0 45%, rgba(255, 230, 159, 0.12) 45.2% 45.5%, transparent 45.8%);
+}
+
+.conference-section-page--mirage .leaderboard-card--1 > p,
+.conference-section-page--mirage .leaderboard-card--1 > strong,
+.conference-section-page--mirage .leaderboard-card--1 h2 {
+  color: #ffe5a3 !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 .leaderboard-card__logo {
+  border-color: #ffe5a3 !important;
+  box-shadow: inset 0 0 0 0.38rem rgba(255, 229, 163, 0.12), 0 0.7rem 1.6rem rgba(0, 0, 0, 0.32) !important;
+}
+
+.conference-section-page--mirage .leaderboard-status,
+.conference-section-page--mirage .leaderboard-empty {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 16rem !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+/* Keep every phone navigation item visible without a horizontal scroll gesture. */
+@media (max-width: 720px) {
+  .conference-nav {
+    min-height: 7.6rem !important;
+    padding: 0.75rem 0.65rem !important;
+  }
+
+  .conference-nav .game-nav__links {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    justify-content: stretch !important;
+    gap: 0.25rem !important;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0.2rem 0 0 !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__links a:not([href="#chapters"]),
+  .conference-nav .game-nav__links button,
+  .conference-nav .game-nav__register {
+    display: flex !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.55rem 0.12rem !important;
+    font-size: clamp(0.42rem, 1.65vw, 0.58rem) !important;
+    letter-spacing: 0.035em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
+
+  .conference-nav .game-nav__register b {
+    display: none !important;
+  }
+
+  .conference-nav .game-nav__links::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .conference-nav .game-nav__links {
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 0.15rem !important;
+  }
+
+  .conference-nav .game-nav__links a,
+  .conference-nav .game-nav__links a:not([href="#chapters"]),
+  .conference-nav .game-nav__links button,
+  .conference-nav .game-nav__register {
+    padding-inline: 0.04rem !important;
+    font-size: 0.41rem !important;
+  }
+}
+
+/* Registration must remain a normal document that can scroll in both directions. */
+html:has(.registration-site),
+body:has(.registration-site),
+.registration-site,
+.registration-site .register-layout,
+.registration-site .dossier-panel,
+.registration-site .dossier-panel form {
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.registration-site .dossier-panel {
+  position: relative !important;
+  top: auto !important;
+  overscroll-behavior: auto !important;
+}
+
+@media (max-width: 620px) {
+  .conference-section-page--mirage .leaderboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding-top: 0.25rem !important;
+  }
+
+  .conference-section-page--mirage .leaderboard-card,
+  .conference-section-page--mirage .leaderboard-card--1 {
+    min-height: 20rem !important;
+    transform: none !important;
+  }
+}
+
+/* Registration one-scrollbar contract: the browser document is the only vertical scroller. */
+html:has(.registration-site),
+body:has(.registration-site),
+body:has(.registration-site) #root {
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: auto !important;
+}
+
+.registration-site,
+.registration-site .register-layout,
+.registration-site .dossier-intro,
+.registration-site .dossier-panel,
+.registration-site .dossier-panel form,
+.registration-site .registration-step,
+.registration-site .registration-receipt {
+  position: static !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overscroll-behavior: auto !important;
+}
+
+.registration-site .dossier-panel {
+  contain: none !important;
+  transform: none !important;
+}
+
+.registration-site .dossier-panel form {
+  display: block !important;
+}
+
+/* Mirage ranking redesign */
+.conference-section-page--mirage .leaderboard-grid {
+  position: relative !important;
+  isolation: isolate !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: end !important;
+  gap: clamp(0.85rem, 2vw, 1.6rem) !important;
+  padding: clamp(1.2rem, 3vw, 2.2rem) 0 2rem !important;
+}
+
+.conference-section-page--mirage .leaderboard-grid::before {
+  position: absolute;
+  right: 6%;
+  bottom: 1rem;
+  left: 6%;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(231, 183, 100, 0.58), rgba(158, 216, 244, 0.26), transparent);
+  z-index: -1;
+}
+
+.conference-section-page--mirage .leaderboard-card {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 0 !important;
+  min-height: clamp(19rem, 31vw, 25rem) !important;
+  padding: clamp(1rem, 2vw, 1.7rem) !important;
+  border: 1px solid rgba(158, 216, 244, 0.28) !important;
+  background: linear-gradient(160deg, rgba(8, 28, 44, 0.96), rgba(3, 12, 21, 0.96)) !important;
+  box-shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.04) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--2,
+.conference-section-page--mirage .leaderboard-card--3 {
+  transform: translateY(0.85rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card:hover {
+  border-color: rgba(231, 183, 100, 0.66) !important;
+  box-shadow: 0 1.5rem 2.8rem rgba(0, 0, 0, 0.36), inset 0 1px rgba(255, 255, 255, 0.06) !important;
+  transform: translateY(-0.2rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--2:hover,
+.conference-section-page--mirage .leaderboard-card--3:hover {
+  transform: translateY(0.6rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__cap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 1.1rem;
+}
+
+.conference-section-page--mirage .leaderboard-card__cap p {
+  margin: 0 !important;
+  color: var(--game-gold) !important;
+  font: 600 0.55rem/1 var(--game-mono) !important;
+  letter-spacing: 0.15em !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__cap span,
+.conference-section-page--mirage .leaderboard-card__live {
+  color: rgba(183, 222, 241, 0.7) !important;
+  font: 500 0.45rem/1 var(--game-mono) !important;
+  letter-spacing: 0.1em !important;
+  white-space: nowrap;
+}
+
+.conference-section-page--mirage .leaderboard-card__logo {
+  width: clamp(6.2rem, 10vw, 8rem) !important;
+  height: clamp(6.2rem, 10vw, 8rem) !important;
+  margin: clamp(1.1rem, 2.3vw, 1.8rem) 0 1rem !important;
+}
+
+.conference-section-page--mirage .leaderboard-card h2 {
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: var(--game-text) !important;
+  font-size: clamp(1.12rem, 1.7vw, 1.55rem) !important;
+  text-align: center !important;
+  text-wrap: balance;
+}
+
+.conference-section-page--mirage .leaderboard-card > strong {
+  margin-top: 0.8rem !important;
+  color: var(--game-gold-bright) !important;
+  font-size: clamp(2.2rem, 4.2vw, 3.8rem) !important;
+  text-align: center !important;
+}
+
+.conference-section-page--mirage .leaderboard-card > strong small {
+  color: rgba(183, 222, 241, 0.72) !important;
+  font-size: 0.45rem !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__live {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  color: rgba(151, 214, 237, 0.74) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 {
+  min-height: clamp(21rem, 36vw, 29rem) !important;
+  border-color: rgba(255, 214, 123, 0.92) !important;
+  background: radial-gradient(circle at 50% 18%, rgba(255, 212, 122, 0.2), transparent 38%), linear-gradient(160deg, rgba(90, 61, 21, 0.98), rgba(30, 18, 7, 0.98)) !important;
+  box-shadow: 0 1.6rem 3.2rem rgba(0, 0, 0, 0.46), 0 0 0 0.25rem rgba(255, 211, 121, 0.12), inset 0 1px rgba(255, 239, 187, 0.2) !important;
+  transform: translateY(-0.8rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1:hover {
+  transform: translateY(-1.1rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 .leaderboard-card__cap p,
+.conference-section-page--mirage .leaderboard-card--1 .leaderboard-card__cap span,
+.conference-section-page--mirage .leaderboard-card--1 .leaderboard-card__live,
+.conference-section-page--mirage .leaderboard-card--1 h2,
+.conference-section-page--mirage .leaderboard-card--1 > strong {
+  color: #ffe5a3 !important;
+}
+
+@media (max-width: 620px) {
+  .conference-section-page--mirage .leaderboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding: 0.5rem 0 1.5rem !important;
+  }
+
+  .conference-section-page--mirage .leaderboard-grid::before {
+    display: none;
+  }
+
+  .conference-section-page--mirage .leaderboard-card,
+  .conference-section-page--mirage .leaderboard-card--1,
+  .conference-section-page--mirage .leaderboard-card--2,
+  .conference-section-page--mirage .leaderboard-card--3 {
+    min-height: 19rem !important;
+    transform: none !important;
+  }
+
+  .conference-section-page--mirage .leaderboard-card:hover,
+  .conference-section-page--mirage .leaderboard-card--1:hover,
+  .conference-section-page--mirage .leaderboard-card--2:hover,
+  .conference-section-page--mirage .leaderboard-card--3:hover {
+    transform: translateY(-0.15rem) !important;
+  }
+}

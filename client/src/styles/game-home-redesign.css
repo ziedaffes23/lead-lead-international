@@ -1,0 +1,317 @@
+/* Lead & Lead world-hub redesign: make the landing screen feel like a playable mission select. */
+.game-home--single-screen .world-hero {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    90deg,
+    rgba(3, 9, 17, 0.16),
+    transparent 58%,
+    rgba(3, 9, 17, 0.28)
+  );
+}
+
+.game-home--single-screen .world-hero::before {
+  position: absolute;
+  inset: 8% 0 6%;
+  content: "";
+  pointer-events: none;
+  opacity: 0.42;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0 8%,
+      rgba(158, 216, 244, 0.14) 8.1% 8.2%,
+      transparent 8.3% 72%,
+      rgba(231, 183, 100, 0.17) 72.1% 72.2%,
+      transparent 72.3%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0 22%,
+      rgba(158, 216, 244, 0.1) 22.1% 22.2%,
+      transparent 22.3% 74%,
+      rgba(158, 216, 244, 0.08) 74.1% 74.2%,
+      transparent 74.3%
+    );
+  mask-image: linear-gradient(90deg, #000, transparent 92%);
+}
+
+.game-home--single-screen .world-hero__copy {
+  position: relative;
+  padding: clamp(1rem, 2vw, 1.65rem) 0 clamp(1rem, 2vw, 1.4rem);
+}
+
+.game-home--single-screen .world-hero__copy::before {
+  position: absolute;
+  top: 0;
+  left: -1.1rem;
+  width: 0.35rem;
+  height: 100%;
+  content: "";
+  background: linear-gradient(
+    180deg,
+    var(--game-gold),
+    rgba(231, 183, 100, 0.08) 78%,
+    transparent
+  );
+  box-shadow: 0 0 1.4rem rgba(231, 183, 100, 0.25);
+}
+
+.game-home--single-screen .world-hero__copy h1 {
+  max-width: 6.4ch !important;
+  text-wrap: balance;
+}
+
+.game-home--single-screen .world-hero__directive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.25rem 0 1.45rem;
+  color: var(--game-gold-bright);
+  font: 600 0.63rem/1 var(--game-mono);
+  letter-spacing: 0.24em;
+}
+
+.game-home--single-screen .world-hero__directive i {
+  display: block;
+  width: 4rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--game-gold), transparent);
+}
+
+.game-home--single-screen .world-hero__facts {
+  position: relative;
+  padding: 0.9rem 0;
+  border-top-color: rgba(158, 216, 244, 0.26) !important;
+  border-bottom-color: rgba(158, 216, 244, 0.18) !important;
+}
+
+.game-home--single-screen .world-hero__facts::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 22%;
+  height: 1px;
+  content: "";
+  background: var(--game-gold);
+}
+
+.game-home--single-screen .world-hero__facts span {
+  position: relative;
+  padding-left: 0.65rem;
+}
+
+.game-home--single-screen .world-hero__facts span::before {
+  position: absolute;
+  top: 0.1rem;
+  bottom: 0.1rem;
+  left: 0;
+  width: 1px;
+  content: "";
+  background: linear-gradient(180deg, var(--game-cyan), transparent);
+}
+
+.game-home--single-screen .world-hero__actions {
+  margin-top: 1.2rem;
+}
+
+.game-home--single-screen .world-hero__actions > button {
+  min-height: 3.45rem !important;
+}
+
+.game-home--single-screen .world-hero__actions .game-secondary {
+  border-style: dashed;
+}
+
+.game-home--single-screen .mission-console {
+  width: min(100%, 28rem) !important;
+  padding: 1.35rem !important;
+  border-color: rgba(158, 216, 244, 0.44) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(7, 24, 40, 0.9),
+    rgba(2, 10, 19, 0.94)
+  ) !important;
+  box-shadow:
+    0 2rem 4rem rgba(0, 0, 0, 0.4),
+    inset 0 0 2rem rgba(77, 155, 195, 0.08),
+    0 0 0 1px rgba(231, 183, 100, 0.08) !important;
+}
+
+.game-home--single-screen .mission-console__top {
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(158, 216, 244, 0.16);
+}
+
+.game-home--single-screen .mission-console__radar {
+  width: clamp(9.5rem, 14vw, 12rem);
+  margin: 1.35rem auto 1.5rem;
+  background:
+    radial-gradient(circle, rgba(105, 180, 219, 0.26), transparent 64%),
+    repeating-radial-gradient(
+      circle,
+      transparent 0 23%,
+      rgba(158, 216, 244, 0.18) 24% 24.5%
+    );
+}
+
+.game-home--single-screen .mission-console__radar::after {
+  background: linear-gradient(transparent, var(--game-cyan), transparent);
+  opacity: 0.65;
+}
+
+.game-home--single-screen .mission-console__radar::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--game-cyan),
+    transparent
+  );
+  opacity: 0.65;
+}
+
+.game-home--single-screen .mission-console__progress {
+  margin-top: 1.05rem;
+}
+
+.mission-console__missions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.mission-console__missions button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.65rem 0.5rem;
+  border: 1px solid rgba(158, 216, 244, 0.2);
+  background: rgba(2, 11, 20, 0.5);
+  color: var(--game-cyan);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 160ms ease-out,
+    background 160ms ease-out;
+}
+
+.mission-console__missions button:hover,
+.mission-console__missions button:focus-visible {
+  border-color: rgba(231, 183, 100, 0.76);
+  background: rgba(94, 61, 22, 0.34);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.mission-console__missions button:active {
+  transform: scale(0.97);
+}
+
+.mission-console__missions span {
+  color: var(--game-gold);
+  font: 600 0.48rem/1 var(--game-mono);
+}
+
+.mission-console__missions strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--game-text);
+  font: 500 0.48rem/1 var(--game-mono);
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+}
+
+.mission-console__missions b {
+  color: var(--game-gold-bright);
+  font: 0.7rem/1 var(--game-mono);
+}
+
+@media (max-width: 900px) {
+  .game-home--single-screen .world-hero__copy h1 {
+    max-width: 7ch !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .game-home--single-screen .world-hero {
+    background: linear-gradient(
+      180deg,
+      rgba(3, 9, 17, 0.12),
+      rgba(3, 9, 17, 0.3)
+    );
+  }
+
+  .game-home--single-screen .world-hero__copy::before {
+    left: -0.35rem;
+  }
+
+  .game-home--single-screen .world-hero__directive {
+    margin: 1rem 0 1.2rem;
+    font-size: 0.56rem;
+  }
+
+  .game-home--single-screen .world-hero__facts {
+    gap: 0.7rem 0.8rem !important;
+  }
+
+  .mission-console__missions {
+    gap: 0.3rem;
+  }
+
+  .mission-console__missions button {
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem;
+    padding: 0.6rem 0.4rem;
+  }
+
+  .mission-console__missions strong {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .mission-console__missions b {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-console__missions button {
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  html:has(.game-home--single-screen),
+  body:has(.game-home--single-screen),
+  body:has(.game-home--single-screen) #root {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  .game-home--single-screen {
+    min-height: 100svh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .game-home--single-screen > .world-hero {
+    min-height: calc(100svh - 7.3rem) !important;
+    overflow: visible !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .game-home--single-screen .world-hero h1 {
+    font-size: clamp(3.4rem, 16vw, 5.4rem) !important;
+  }
+
+  .game-home--single-screen .mission-console {
+    margin-top: 1.4rem !important;
+  }
+}

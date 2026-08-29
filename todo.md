@@ -1,0 +1,82 @@
+- [x] Inspect the current runner silhouette and relic attachment offsets at the grab moment.
+- [x] Refine the original procedural runner with clearer humanoid anatomy and readable hand placement.
+- [x] Move the relic attachment anchor out from the torso and align it with the visible right hand through the grab and throw.
+- [x] Verify the revised grab in the browser and save an updated checkpoint.
+- [x] Superseded by the approved original procedural courier route; no supplied GLB/GLTF archive was retained for publication.
+- [x] Superseded by the approved original procedural courier route; no supplied model textures were published.
+- [x] Superseded by the original articulated courier’s live sprint, grab, throw, and recovery choreography.
+- [x] Superseded by the validated original courier cinematic, preserving the required non-franchise character policy.
+- [x] Define original, non-franchise realistic character anchors and the visual treatment to improve.
+- [x] Generate a compliant realistic character texture/reference asset and publish it to managed storage.
+- [x] Apply the new treatment to the existing original humanoid runner without changing the supplied official logo.
+- [x] Validate the upgraded original character in the grab and running views, then save a checkpoint.
+- [x] Map opening, sprint, vault, reach, grab, throw, and recovery beats to visibly distinct body poses.
+- [x] Add active procedural transform motion to the original courier’s visual layer and the live attachment rig.
+- [x] Improve camera timing and motion cues so the sequence reads as a continuous active chase rather than a static plate.
+- [x] Validate representative action beats in the browser and save the updated checkpoint.
+- [x] Remove the generated 2D pose-plate renderer from the active courier.
+- [x] Restore the original textured 3D courier mesh as the visible character.
+- [x] Add articulated torso, head, arm, leg, cloak, and hand animation for sprint, vault, grab, throw, and recovery.
+- [x] Validate that the action reads as actual 3D motion rather than moving images, then save a checkpoint.
+- [x] Define the post-ENTER home and registration routes using the provided original visual references only as style inspiration.
+- [x] Build the Lead & Lead 2K26 home experience with the 3 September 2026 conference information.
+- [x] Build the registration dossier with Foulen Fouléni and the AIESEC email requirements.
+- [x] Implement contribution calculation, field validation, and the centralized Google Sheets submission endpoint configuration.
+- [x] Validate home-to-registration navigation, desktop/mobile forms, and the registration result states.
+- [x] Inspect the supplied Lead & Lead 2K26 project archive and identify its playable game entry point and assets.
+- [x] Fix the cinematic exit so ENTER, keyboard, and skip actions navigate to the conference home reliably.
+- [x] Integrate the supplied playable game as an accessible website route and connect it from the main site.
+- [x] Add responsive, reduced-motion-aware animation to the home, game, and registration views.
+- [x] Validate navigation and gameplay across representative desktop and mobile states.
+- [x] Identify and remove the navigation behavior that traps users on the conference home.
+- [x] Make home, trials, and registration controls use reliable browser navigation paths.
+- [x] Add richer but performant page-level animation across home, game, and registration.
+- [x] Verify all routes and animated states on desktop and mobile.
+- [x] Hide the prefilled Foulen Fouléni name fields from the visible registration form while keeping their submission values.
+- [x] Add a scrollable exploration section with direct links to the trials and registration pages.
+- [x] Apply a white treatment to the Thyna mark in the cinematic intro.
+- [x] Validate the refined registration, scroll behavior, and intro branding on desktop and mobile.
+- [x] Identify the global layout rule preventing page scroll outside the cinematic intro.
+- [x] Restore normal vertical scrolling for home, trials, and registration without changing intro behavior.
+- [x] Validate scrollable content and fixed background layers on desktop and mobile.
+- [x] Review the current title-reveal markup and determine the LC Thyna presents hierarchy.
+- [x] Add a ceremonial LC Thyna presents Lead & Lead title composition with clear branding and motion.
+- [x] Validate the revised title moment on desktop and mobile.
+- [x] Add a prominent home-page invitation that tells delegates the Rooftop Trials game is playable.
+- [x] Link the invitation directly to the game route and validate its responsive presentation.
+- [x] Define a layered rooftop-chase composition, restrained palette, and motion storyboard for the new direction.
+- [x] Replace the static archive-style home composition with cinematic depth, runner pressure, Relic Gold energy, and a clearer action hierarchy.
+- [x] Extend route transitions and kinetic cues through the trials and registration experiences.
+- [x] Validate the high-motion design on desktop and mobile with a reduced-motion fallback.
+- [x] Define the new site-wide moving background layers, atmosphere, and visual rhythm.
+- [x] Build a reusable cinematic background component and apply it to the home experience.
+- [x] Rework section styles, typography motion, and interactive visual states for a stronger design system.
+- [x] Extend the upgraded environment across the trials and registration pages.
+- [x] Validate animated backgrounds, performance, and reduced-motion behavior on desktop and mobile.
+- [x] Define a character-free home hero focal treatment that preserves cinematic forward momentum.
+- [x] Define a character-free home hero focal treatment that preserves cinematic forward momentum.
+- [x] Remove the current moving courier from the home hero and refine the replacement motion layers.
+- [x] Validate the revised home hero on desktop and mobile, then publish the update.
+- [x] Inspect the opening cinematic’s camera-switch timing and identify the lagging handoff.
+- [x] Replace the switch with a continuous camera path through the affected beat.
+- [x] Restore visible first-name and last-name fields in registration with Foulen/Fouléni examples.
+- [x] Validate the smooth intro and registration form on desktop and mobile, then publish.
+- [x] Replace the visible Foulen Fouléni credit with Created by IM Department.
+- [x] Map essential delegate details to registration step one and contribution/additional details to step two.
+- [x] Implement step navigation, per-step validation, and final submission behavior.
+- [x] Validate the two-step registration flow on desktop and mobile, then publish.
+- [x] Define a review stage that summarizes both registration steps before final submission.
+- [x] Add a submitted-details success receipt with delegate, contribution, and event information.
+- [x] Validate review edits, success and error outcomes, and mobile receipt readability.
+- [x] Define the photo/CV upload behavior, deferred contribution trigger, and home focal replacement direction.
+- [x] Add photo and CV controls to registration, review, submission payload, and receipt summary.
+- [x] Hide contribution until nationality and position are deliberately selected.
+- [x] Replace the tall Assembly Beacon shown in the hero with a cleaner cinematic focal treatment.
+- [x] Validate optional attachment controls, deferred contribution timing, review details, and desktop/mobile presentation.
+- [x] Validate the receipt implementation and document that a real live-delivery check requires the owner-configured VITE_SHEETS_WEB_APP_URL; no submission success was fabricated without it.
+- [x] Define a moonlit lighthouse focal composition that fits the moving rooftop world.
+- [x] Replace the Assembly Compass hero markup and styling with an animated lighthouse.
+- [x] Validate the lighthouse hero on desktop and mobile, then publish the revision.
+- [x] Define near-black navy, electric cobalt, and antique copper-gold tokens from the supplied post.
+- [x] Apply the new palette to the cinematic intro, home, trials, and registration routes.
+- [x] Validate contrast, legibility, and responsive visual consistency before publishing.

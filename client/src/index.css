@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+@theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --color-border: var(--border); --color-ring: var(--ring); }
+:root { --background: oklch(0.08 0.013 251); --foreground: oklch(0.93 0.012 83); --border: oklch(0.7 0.08 82 / 45%); --ring: oklch(0.78 0.11 82); --ease-cinematic: cubic-bezier(0.23, 1, 0.32, 1); }
+* { box-sizing: border-box; }
+html { width: 100%; min-height: 100%; margin: 0; background: #05080d; scroll-behavior: smooth; }
+body { width: 100%; min-height: 100%; margin: 0; overflow-x: hidden; overflow-y: auto; background: #05080d; color: var(--foreground); font-family: "IBM Plex Mono", monospace; }
+#root { width: 100%; min-height: 100%; }
+button, input, textarea, select { font: inherit; }
+:focus-visible { outline: 2px solid #f1d58c; outline-offset: 4px; }
+button:not(:disabled), [role="button"]:not([aria-disabled="true"]) { cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

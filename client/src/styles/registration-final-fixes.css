@@ -1,0 +1,37 @@
+html:has(.registration-site),body:has(.registration-site){height:auto!important;min-height:100%;overflow-x:hidden!important;overflow-y:auto!important}.registration-site{height:auto!important;min-height:100dvh;overflow:visible!important}.registration-site .register-layout{height:auto!important;min-height:0;align-items:start}.registration-site .dossier-panel{height:auto!important;max-height:none!important;overflow:visible!important}.registration-site .dossier-panel form,.registration-site .registration-step,.registration-site .registration-step--information,.registration-site .registration-step--participation,.registration-site .registration-review{height:auto!important;max-height:none!important;overflow:visible!important}.registration-site .registration-step{padding-bottom:1rem}@media(max-width:760px){.registration-site .register-layout{display:block}.registration-site .dossier-intro{margin-bottom:1rem}.registration-site .dossier-panel{padding-bottom:1.5rem}}
+
+/* Final visual pass: keep the dossier intro present while the preparation/review panel scrolls. */
+.registration-site .register-layout{grid-template-columns:minmax(18rem,.58fr) minmax(34rem,1.42fr);max-width:92rem;gap:clamp(2rem,5vw,5rem)}
+.registration-site .dossier-intro{position:sticky;top:1.5rem;align-self:start}
+.registration-site .dossier-panel{background:linear-gradient(145deg,#0c2a40 0%,#071b2b 58%,#061421 100%)!important;border:1px solid rgba(231,183,100,.6)!important;box-shadow:0 2rem 5rem rgba(0,0,0,.52),inset 0 1px rgba(255,255,255,.06)!important;clip-path:none!important}
+.registration-site .dossier-panel:before{opacity:.55}
+.registration-site .registration-receipt{display:grid;justify-items:start;gap:1.15rem;min-height:26rem;padding:clamp(2rem,5vw,4.5rem)!important;border:1px solid rgba(231,183,100,.88)!important;background:radial-gradient(circle at 85% 12%,rgba(231,183,100,.18),transparent 16rem),linear-gradient(145deg,#123b54 0%,#0a2538 52%,#061522 100%)!important;color:#f5f0df!important;box-shadow:0 1.6rem 4rem rgba(0,0,0,.42),inset 0 0 0 1px rgba(158,216,244,.12)!important}
+.registration-site .registration-receipt .receipt-seal{width:4.3rem;border-color:#e7b764;background:radial-gradient(circle at 38% 30%,#fff4c9 0 10%,#e7b764 11% 38%,#123b54 39% 100%);color:#071522;box-shadow:0 0 2.5rem rgba(231,183,100,.42)}
+.registration-site .registration-receipt .receipt-kicker{color:#f2c978!important}
+.registration-site .registration-receipt h3{color:#fff1c8!important;text-shadow:0 .25rem 1rem rgba(0,0,0,.32)}
+.registration-site .registration-receipt .receipt-copy{color:#d9e9ed!important;font-size:.95rem}
+.registration-site .registration-receipt .receipt-reference{min-width:min(100%,24rem);border-color:rgba(158,216,244,.35)!important;background:rgba(3,16,28,.65)!important}
+.registration-site .registration-receipt .receipt-reference span{color:#9fc6d5!important}
+.registration-site .registration-receipt .receipt-reference strong{color:#ffe0a0!important}
+@media(max-width:900px){.registration-site .register-layout{grid-template-columns:1fr}.registration-site .dossier-intro{position:relative;top:auto}.registration-site .dossier-panel{min-width:0}}
+
+/* Registration footer: full-bleed, readable, and aligned to the viewport rather than the padded dossier column. */
+.registration-site{padding-bottom:1.5rem!important}
+.registration-site>.conference-footer{width:100vw;max-width:none;margin-top:1.5rem;margin-left:calc(50% - 50vw);margin-right:0;padding:1rem clamp(1rem,5vw,5rem);border-top:1px solid rgba(231,183,100,.42);background:linear-gradient(90deg,#06111d 0%,#0c2b40 50%,#06111d 100%);color:#cfe1e7;box-shadow:0 -1rem 2.5rem rgba(0,0,0,.22)}
+.registration-site>.conference-footer span{white-space:normal;text-align:center}
+.registration-site>.conference-footer span:last-child{color:#f0c878}
+@media(max-width:620px){.registration-site>.conference-footer{width:100vw;margin-top:1rem;padding:.8rem 1rem;font-size:.38rem;letter-spacing:.08em}.registration-site>.conference-footer i{height:.5rem}}
+
+/* Receipt contrast lock: the confirmation card must stay dark in every theme cascade. */
+.registration-site .dossier-panel .registration-receipt{background-color:#04121e!important;background-image:radial-gradient(circle at 88% 10%,rgba(231,183,100,.12),transparent 14rem),linear-gradient(145deg,#0a2639 0%,#061a2a 52%,#020b14 100%)!important;color:#edf3ef!important;border-color:#c89543!important;box-shadow:0 1.8rem 4rem rgba(0,0,0,.58),inset 0 0 0 1px rgba(158,216,244,.1)!important}
+.registration-site .dossier-panel .registration-receipt h3{color:#f4d58f!important;text-shadow:0 .2rem .8rem rgba(0,0,0,.55)!important}
+.registration-site .dossier-panel .registration-receipt .receipt-copy{color:#c4d6dc!important}
+.registration-site .dossier-panel .registration-receipt .receipt-reference{background:#020b14!important;background-image:linear-gradient(110deg,rgba(7,28,43,.95),rgba(2,10,17,.98))!important;border-color:rgba(158,216,244,.32)!important}
+.registration-site .dossier-panel .registration-receipt .receipt-reference span{color:#8fb5c4!important}
+.registration-site .dossier-panel .registration-receipt .receipt-reference strong{color:#f1cb79!important}
+
+/* Compact rhythm: avoid oversized blank bands on the long registration route. */
+.registration-site{padding-top:1rem!important;padding-bottom:.75rem!important}
+.registration-site .register-header{margin-bottom:clamp(1rem,2.5vw,2rem)!important}
+.registration-site .register-layout{gap:clamp(1rem,2.5vw,2.5rem)!important}
+.registration-site>.conference-footer{margin-top:.75rem!important}

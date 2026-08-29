@@ -1,0 +1,406 @@
+/* Mirage board redesign: a readable competitive podium instead of a flat card wall. */
+.conference-section-page--mirage .conference-section-page__main {
+  padding-top: clamp(4.2rem, 8vh, 7rem);
+}
+
+.conference-section-page--mirage .section-intro-row {
+  position: relative;
+  margin-bottom: clamp(2rem, 4vh, 3.5rem) !important;
+}
+
+.conference-section-page--mirage .section-intro-row::after {
+  position: absolute;
+  right: 0;
+  bottom: 0.5rem;
+  width: clamp(7rem, 18vw, 16rem);
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(231, 183, 100, 0.78));
+}
+
+.leaderboard-board {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(1rem, 2.2vw, 1.55rem);
+  border: 1px solid rgba(158, 216, 244, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(6, 23, 37, 0.92),
+    rgba(2, 9, 17, 0.96)
+  );
+  box-shadow:
+    0 2rem 4.5rem rgba(0, 0, 0, 0.35),
+    inset 0 0 3rem rgba(77, 155, 195, 0.06);
+}
+
+.leaderboard-board::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0.34;
+  background:
+    linear-gradient(rgba(158, 216, 244, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(158, 216, 244, 0.08) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  mask-image: linear-gradient(135deg, #000, transparent 78%);
+}
+
+.leaderboard-board__header,
+.leaderboard-board__notice,
+.leaderboard-board .leaderboard-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.leaderboard-board__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(158, 216, 244, 0.17);
+}
+
+.leaderboard-board__header > div:first-child {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.leaderboard-board__header span,
+.leaderboard-board__header strong,
+.leaderboard-board__legend {
+  font: 500 0.5rem/1 var(--game-mono);
+  letter-spacing: 0.14em;
+}
+
+.leaderboard-board__header span {
+  color: var(--game-gold);
+}
+
+.leaderboard-board__header strong {
+  color: rgba(241, 238, 229, 0.7);
+  font-weight: 500;
+}
+
+.leaderboard-board__legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(158, 216, 244, 0.72);
+  white-space: nowrap;
+}
+
+.leaderboard-board__legend i,
+.leaderboard-card__live i {
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #75e1a0;
+  box-shadow: 0 0 0.7rem rgba(117, 225, 160, 0.78);
+}
+
+.leaderboard-board__notice {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(231, 183, 100, 0.26);
+  background: rgba(105, 65, 19, 0.18);
+  color: rgba(247, 221, 174, 0.74);
+  font: 500 0.55rem/1.55 var(--game-mono);
+  letter-spacing: 0.04em;
+}
+
+.leaderboard-board__notice b {
+  display: grid;
+  flex: 0 0 auto;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid rgba(231, 183, 100, 0.6);
+  color: var(--game-gold-bright);
+  font: 600 0.7rem/1 var(--game-mono);
+}
+
+.conference-section-page--mirage .leaderboard-grid {
+  position: relative;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.08fr) minmax(0, 0.9fr) !important;
+  align-items: end !important;
+  gap: clamp(0.7rem, 1.4vw, 1.2rem) !important;
+  padding: clamp(1.2rem, 2.4vw, 2rem) 0 0 !important;
+}
+
+.conference-section-page--mirage .leaderboard-grid::before {
+  right: 4% !important;
+  bottom: 0.65rem !important;
+  left: 4% !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(158, 216, 244, 0.45) 18%,
+    rgba(231, 183, 100, 0.84) 50%,
+    rgba(158, 216, 244, 0.45) 82%,
+    transparent
+  ) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card,
+.conference-section-page--mirage .leaderboard-card--1,
+.conference-section-page--mirage .leaderboard-card--2,
+.conference-section-page--mirage .leaderboard-card--3 {
+  display: grid !important;
+  grid-template-rows: auto auto auto auto 1fr !important;
+  align-items: center !important;
+  justify-items: center !important;
+  min-height: clamp(20rem, 31vw, 26rem) !important;
+  padding: clamp(1rem, 1.8vw, 1.45rem) !important;
+  border-radius: 0.25rem !important;
+  border-color: rgba(158, 216, 244, 0.28) !important;
+  background: linear-gradient(
+    160deg,
+    rgba(8, 30, 47, 0.95),
+    rgba(2, 11, 21, 0.98)
+  ) !important;
+  box-shadow:
+    0 1.4rem 2.8rem rgba(0, 0, 0, 0.34),
+    inset 0 1px rgba(255, 255, 255, 0.06) !important;
+  transform: translateY(0.9rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 {
+  min-height: clamp(22rem, 34vw, 29rem) !important;
+  border-color: rgba(255, 214, 123, 0.9) !important;
+  background:
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(255, 212, 122, 0.25),
+      transparent 37%
+    ),
+    linear-gradient(160deg, rgba(83, 55, 17, 0.98), rgba(26, 16, 7, 0.98)) !important;
+  box-shadow:
+    0 1.8rem 3.6rem rgba(0, 0, 0, 0.5),
+    0 0 0 0.25rem rgba(255, 211, 121, 0.1),
+    inset 0 1px rgba(255, 239, 187, 0.22) !important;
+  transform: translateY(-0.5rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--2 {
+  border-color: rgba(212, 224, 231, 0.45) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--3 {
+  border-color: rgba(191, 139, 85, 0.52) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card:hover,
+.conference-section-page--mirage .leaderboard-card--1:hover,
+.conference-section-page--mirage .leaderboard-card--2:hover,
+.conference-section-page--mirage .leaderboard-card--3:hover {
+  border-color: rgba(231, 183, 100, 0.9) !important;
+  box-shadow:
+    0 1.7rem 3.1rem rgba(0, 0, 0, 0.42),
+    0 0 1.6rem rgba(77, 155, 195, 0.1) !important;
+  transform: translateY(-0.15rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1:hover {
+  transform: translateY(-0.8rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__cap {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(158, 216, 244, 0.12);
+}
+
+.conference-section-page--mirage .leaderboard-card__logo {
+  width: clamp(6rem, 9vw, 8rem) !important;
+  height: clamp(6rem, 9vw, 8rem) !important;
+  margin: clamp(1.2rem, 2vw, 1.7rem) 0 1.1rem !important;
+  border-color: currentColor !important;
+  color: rgba(158, 216, 244, 0.68);
+  box-shadow:
+    inset 0 0 0 0.42rem rgba(158, 216, 244, 0.06),
+    0 0.8rem 1.5rem rgba(0, 0, 0, 0.28) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card--1 .leaderboard-card__logo {
+  color: var(--game-gold-bright);
+  box-shadow:
+    inset 0 0 0 0.42rem rgba(255, 229, 163, 0.13),
+    0 0.8rem 1.7rem rgba(0, 0, 0, 0.34) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__identity {
+  display: grid !important;
+  width: 100%;
+  gap: 0.38rem;
+  justify-items: center;
+}
+
+.conference-section-page--mirage .leaderboard-card__identity h2 {
+  font-size: clamp(1rem, 1.5vw, 1.35rem) !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__identity span {
+  color: rgba(158, 216, 244, 0.64);
+  font: 500 0.46rem/1 var(--game-mono);
+  letter-spacing: 0.15em;
+}
+
+.conference-section-page--mirage
+  .leaderboard-card--1
+  .leaderboard-card__identity
+  span {
+  color: rgba(255, 229, 163, 0.72);
+}
+
+.conference-section-page--mirage .leaderboard-card > strong {
+  margin-top: 1rem !important;
+  font-size: clamp(2.45rem, 4vw, 4rem) !important;
+  line-height: 0.85 !important;
+}
+
+.conference-section-page--mirage .leaderboard-card__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 1rem;
+  font-size: 0.44rem !important;
+}
+
+.leaderboard-board--rehearsal {
+  border-color: rgba(231, 183, 100, 0.4);
+}
+
+.leaderboard-board--rehearsal .leaderboard-board__legend i {
+  background: var(--game-gold);
+  box-shadow: 0 0 0.7rem rgba(231, 183, 100, 0.72);
+}
+
+.leaderboard-status--loading {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  min-height: 20rem !important;
+  border-color: rgba(158, 216, 244, 0.3) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(7, 24, 40, 0.9),
+    rgba(2, 10, 19, 0.94)
+  ) !important;
+}
+
+.leaderboard-status--loading strong {
+  color: var(--game-text);
+  font: 600 1rem/1 var(--game-display);
+  letter-spacing: 0.08em;
+}
+
+.leaderboard-status--loading small {
+  color: rgba(158, 216, 244, 0.65);
+  font: 500 0.5rem/1 var(--game-mono);
+  letter-spacing: 0.14em;
+}
+
+.leaderboard-status__pulse {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(231, 183, 100, 0.8);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.55rem rgba(231, 183, 100, 0.06),
+    0 0 2rem rgba(231, 183, 100, 0.2);
+  animation: mirage-pulse 1.6s ease-in-out infinite;
+}
+
+.leaderboard-empty {
+  align-content: center;
+  justify-items: center;
+  gap: 0.85rem;
+  min-height: 20rem !important;
+  border-color: rgba(158, 216, 244, 0.3) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(7, 24, 40, 0.9),
+    rgba(2, 10, 19, 0.94)
+  ) !important;
+}
+
+.leaderboard-empty p {
+  max-width: 38rem;
+}
+
+.leaderboard-empty .game-secondary {
+  margin-top: 0.35rem;
+}
+
+@keyframes mirage-pulse {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.58;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .conference-section-page--mirage .section-intro-row::after {
+    display: none;
+  }
+
+  .leaderboard-board {
+    padding: 0.8rem;
+  }
+
+  .leaderboard-board__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .leaderboard-board__legend {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .conference-section-page--mirage .leaderboard-grid,
+  .conference-section-page--mirage .leaderboard-card,
+  .conference-section-page--mirage .leaderboard-card--1,
+  .conference-section-page--mirage .leaderboard-card--2,
+  .conference-section-page--mirage .leaderboard-card--3 {
+    transform: none !important;
+  }
+
+  .conference-section-page--mirage .leaderboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .conference-section-page--mirage .leaderboard-card,
+  .conference-section-page--mirage .leaderboard-card--1,
+  .conference-section-page--mirage .leaderboard-card--2,
+  .conference-section-page--mirage .leaderboard-card--3 {
+    min-height: 18rem !important;
+  }
+
+  .leaderboard-board__notice {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaderboard-status__pulse {
+    animation: none;
+  }
+}
