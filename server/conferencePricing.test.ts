@@ -1,36 +1,31 @@
 import { describe, expect, it } from "vitest";
 import {
-  ACCOMMODATION_PER_NIGHT_TND,
-  EB_DURATION_DAYS,
-  MMB_DURATION_DAYS,
-  TUNISIAN_EB_TND,
-  TUNISIAN_MMB_TND,
+  CONFERENCE_DURATION_DAYS,
+  PARTICIPANT_BASE_PRICE_EUR,
+  SINGLE_ROOM_SURCHARGE_EUR,
   getContribution,
 } from "@/data/conferencePricing";
 
 describe("conference pricing", () => {
-  it("keeps the Tunisian track rates and durations", () => {
-    expect(TUNISIAN_MMB_TND).toBe(160);
-    expect(TUNISIAN_EB_TND).toBe(240);
-    expect(MMB_DURATION_DAYS).toBe(3);
-    expect(EB_DURATION_DAYS).toBe(4);
-    expect(ACCOMMODATION_PER_NIGHT_TND).toBe(80);
+  it("uses the confirmed three-day EUR package", () => {
+    expect(PARTICIPANT_BASE_PRICE_EUR).toBe(90);
+    expect(SINGLE_ROOM_SURCHARGE_EUR).toBe(20);
+    expect(CONFERENCE_DURATION_DAYS).toBe(3);
   });
 
-  it("calculates Tunisian MMB and EB packages", () => {
-    expect(getContribution("Tunisian", "MMB")).toMatchObject({ price: 160, currency: "TND" });
-    expect(getContribution("Tunisian", "EB")).toMatchObject({ price: 240, currency: "TND" });
+  it("calculates the shared-room price for both participant types", () => {
+    expect(getContribution("International AIESECer")).toMatchObject({ price: 90, currency: "EUR" });
+    expect(getContribution("EP")).toMatchObject({ price: 90, currency: "EUR" });
   });
 
-  it("adds track-specific single-room surcharges", () => {
-    expect(getContribution("Tunisian", "MMB", true)).toMatchObject({ price: 260, currency: "TND" });
-    expect(getContribution("Tunisian", "EB", true)).toMatchObject({ price: 390, currency: "TND" });
-    expect(getContribution("Tunisian", "MMB", true)?.note).toContain("+100 TND");
-    expect(getContribution("Tunisian", "EB", true)?.note).toContain("+150 TND");
+  it("adds the same single-room surcharge to both participant types", () => {
+    expect(getContribution("International AIESECer", true)).toMatchObject({ price: 110, currency: "EUR" });
+    expect(getContribution("EP", true)).toMatchObject({ price: 110, currency: "EUR" });
+    expect(getContribution("International AIESECer", true)?.note).toContain("+20 EUR");
+    expect(getContribution("EP", true)?.note).toContain("+20 EUR");
   });
 
-  it("does not calculate a contribution for an incomplete or non-Tunisian selection", () => {
-    expect(getContribution("", "MMB")).toBeNull();
-    expect(getContribution("Tunisian", "")).toBeNull();
+  it("does not calculate a contribution for an incomplete selection", () => {
+    expect(getContribution("")).toBeNull();
   });
 });

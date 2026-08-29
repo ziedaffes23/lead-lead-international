@@ -10,37 +10,83 @@ const publicUrl = z
     "Document URLs must use HTTPS."
   );
 
-export const registrationSubmissionInput = z.object({
-  firstName: z.string().trim().min(1),
-  lastName: z.string().trim().min(1),
-  cin: z.string().trim().regex(/^\d+$/, "CIN number must contain digits only."),
-  lc: z.string().trim().min(1),
-  phoneCountry: z.string().trim().min(1),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\d{8}$/, "Phone number must contain exactly 8 digits."),
-  email: z.string().trim().email(),
-  nationality: z.literal("Tunisian"),
-  track: z.enum(["MMB", "EB"]),
-  position: z.enum(["Manager", "Team Leader", "LCVP", "LCP"]),
-  singleRoom: z.boolean(),
-  department: z.string().trim().min(1),
-  allergies: z.string().trim().min(1),
-  note: z.string().trim().min(1),
-  price: z.number().int().nonnegative(),
-  currency: z.literal("TND"),
-  photoUrl: publicUrl,
-  photoName: z.string().trim().min(1),
-  cvUrl: publicUrl,
-  cvName: z.string().trim().min(1),
-  identityUrl: publicUrl,
-  identityName: z.string().trim().min(1),
-  indemnitySignature: z.string().trim().min(1),
-  indemnityAccepted: z
-    .boolean()
-    .refine(value => value, "Indemnity consent is required."),
-});
+export const registrationSubmissionInput = z
+  .object({
+    firstName: z.string().trim().min(1),
+    lastName: z.string().trim().min(1),
+    passportNumber: z.string().trim().min(1),
+    phoneCountry: z.string().trim().min(1),
+    phone: z.string().trim().min(1),
+    email: z.string().trim().email(),
+    track: z.enum(["International AIESECer", "EP"]),
+    position: z.enum(["None", "Manager", "Team Leader", "LCVP", "LCP"]),
+    singleRoom: z.boolean(),
+    department: z.string().trim().min(1),
+    countryOfOrigin: z.string().trim().min(1),
+    allergies: z.string().trim().min(1),
+    note: z.string().trim().min(1),
+    price: z.number().int().nonnegative(),
+    currency: z.literal("EUR"),
+    photoUrl: publicUrl,
+    photoName: z.string().trim().min(1),
+    cvUrl: publicUrl,
+    cvName: z.string().trim().min(1),
+    identityUrl: publicUrl,
+    identityName: z.string().trim().min(1),
+    indemnitySignature: z.string().trim().min(1),
+    indemnityAccepted: z
+      .boolean()
+      .refine(value => value, "Indemnity consent is required."),
+  })
+  .superRefine((input, ctx) => {
+    const expectedPrice = 90 + (input.singleRoom ? 20 : 0);
+    if (input.price !== expectedPrice) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["price"],
+        message: `Price must be ${expectedPrice} EUR for the selected room type.`,
+      });
+    }
+
+    if (input.track === "EP") {
+      if (input.position !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["position"],
+          message: "EP registrations must not include an AIESEC position.",
+        });
+      }
+      if (input.department !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["department"],
+          message: "EP registrations must not include an AIESEC department.",
+        });
+      }
+    } else {
+      if (input.position === "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["position"],
+          message: "International AIESECer registrations require a position.",
+        });
+      }
+      if (input.department === "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["department"],
+          message: "International AIESECer registrations require a department.",
+        });
+      }
+      if (input.countryOfOrigin !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["countryOfOrigin"],
+          message: "International AIESECer registrations do not require a country of origin.",
+        });
+      }
+    }
+  });
 
 export type RegistrationSubmissionInput = z.infer<
   typeof registrationSubmissionInput
@@ -81,9 +127,6 @@ export async function submitRegistrationToSheets(
       signal: AbortSignal.timeout(30_000),
     });
 
-    // Apps Script returns the ContentService JSON through a one-time 302 redirect.
-    // Fetching the redirect target explicitly avoids clients turning the POST into
-    // an invalid follow-up request and receiving an HTML "Page Not Found" response.
     const redirectStatuses = new Set([301, 302, 303, 307, 308]);
     const finalResponse = redirectStatuses.has(response.status)
       ? await (async () => {

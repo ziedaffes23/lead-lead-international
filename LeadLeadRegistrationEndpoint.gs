@@ -1,30 +1,34 @@
 /**
  * Lead & Lead 2K26 registration endpoint.
  *
- * Deploy this file as a Web App from the spreadsheet that receives registrations.
+ * Bind this script to the supplied Google Sheet and deploy it as a Web App.
  * The website sends text/plain JSON to the deployed /exec URL.
- * Existing sheets with an “AIESEC email” column remain compatible, but the
- * endpoint accepts and stores any valid email address.
  */
 
+const SPREADSHEET_ID = "1xTZ4JuQxvNhRQRASC0kCwk2x2pvoxO2bVxnsK8f1SZ0";
 const REGISTRATIONS_SHEET_NAME = "Sheet1";
 const DRIVE_FOLDER_ID = "1W9D3eZ6p2X6Y4qaOO-JzDr1MJtwceCUR";
+const BASE_PRICE_EUR = 90;
+const SINGLE_ROOM_SURCHARGE_EUR = 20;
 
 const REQUIRED_HEADERS = [
-  "Timestamp", "First name", "Last name", "CIN number", "Phone country", "Phone",
-  "Email", "Local committee", "Nationality", "Other nationality", "Track", "Position",
-  "Single room", "Department", "Price", "Currency", "Allergies", "Note",
-  "Profile Photo URL", "Profile Photo Name", "CV URL", "CV Name",
-  "Identity Document URL", "Identity Document Name", "Indemnity Signature", "Indemnity Accepted",
+  "Timestamp", "First name", "Last name", "Passport number", "Phone country", "Phone",
+  "Email", "Track", "Position", "Department", "Country of origin", "Single room",
+  "Price", "Currency", "Allergies", "Note", "Profile Photo URL", "Profile Photo Name",
+  "CV URL", "CV Name", "Identity Document URL", "Identity Document Name",
+  "Indemnity Signature", "Indemnity Accepted",
 ];
 
 const HEADER_ALIASES = {
   Email: ["Email", "AIESEC email"],
+  "Passport number": ["Passport number", "Passport Number", "CIN number"],
 };
 
-const ALLOWED_TRACKS = ["MMB", "EB"];
-const ALLOWED_POSITIONS = ["Manager", "Team Leader", "LCVP", "LCP"];
+const ALLOWED_TRACKS = ["International AIESECer", "EP"];
+const ALLOWED_POSITIONS = ["None", "Manager", "Team Leader", "LCVP", "LCP"];
 
+// Kept only for compatibility with the legacy leaderboard endpoint. New registrations
+// intentionally do not collect or write a Local Committee value.
 const LEADERBOARD_LCS = [
   "LC Thyna", "LC University", "SU Bullaregia", "LC Tacapes", "LC Ruspina", "LC Carthage",
   "LC Sfax", "LC Bardo", "LC Bizerte", "LC Hadrumet", "LC Medina", "LC Nabel",
@@ -50,8 +54,7 @@ function doPost(event) {
     const payload = parsePayload(event);
     validatePayload(payload);
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(REGISTRATIONS_SHEET_NAME);
-    if (!sheet) throw new Error(`Worksheet "${REGISTRATIONS_SHEET_NAME}" was not found.`);
+    const sheet = getRegistrationSheet();
 
     const headers = ensureHeaders(sheet);
     const driveDocuments = saveAttachmentsToDrive(payload);
@@ -60,18 +63,17 @@ function doPost(event) {
       "Timestamp": new Date(),
       "First name": cleanText(payload.firstName),
       "Last name": cleanText(payload.lastName),
-      "CIN number": cleanText(payload.cin),
+      "Passport number": cleanText(payload.passportNumber),
+      "CIN number": cleanText(payload.passportNumber),
       "Phone country": cleanText(payload.phoneCountry),
       "Phone": cleanText(payload.phone),
       "Email": email,
       "AIESEC email": email,
-      "Local committee": cleanText(payload.lc),
-      "Nationality": cleanText(payload.nationality),
-      "Other nationality": "",
       "Track": cleanText(payload.track),
       "Position": cleanText(payload.position),
-      "Single room": payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true" ? "Yes" : "No",
       "Department": cleanText(payload.department),
+      "Country of origin": cleanText(payload.countryOfOrigin),
+      "Single room": payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true" ? "Yes" : "No",
       "Price": numberOrBlank(payload.price),
       "Currency": cleanText(payload.currency),
       "Allergies": cleanText(payload.allergies),
@@ -94,32 +96,66 @@ function doPost(event) {
   }
 }
 
+function setupSheet() {
+  const sheet = getRegistrationSheet();
+  const headers = ensureHeaders(sheet);
+  sheet.setFrozenRows(1);
+  return { ok: true, sheet: sheet.getName(), headers: headers };
+}
+
+function getRegistrationSheet() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(REGISTRATIONS_SHEET_NAME);
+  if (!sheet) throw new Error(`Worksheet "${REGISTRATIONS_SHEET_NAME}" was not found.`);
+  return sheet;
+}
+
 function parsePayload(event) {
   if (!event || !event.postData || !event.postData.contents) throw new Error("Missing registration payload.");
   try { return JSON.parse(event.postData.contents); } catch (_) { throw new Error("Registration payload must be valid JSON."); }
 }
 
 function validatePayload(payload) {
-  const required = ["firstName", "lastName", "cin", "phoneCountry", "phone", "email", "lc", "nationality", "track", "position", "department", "price", "currency", "allergies", "note", "photoUrl", "cvUrl", "identityUrl", "indemnitySignature", "indemnityAccepted"];
+  const required = [
+    "firstName", "lastName", "passportNumber", "phoneCountry", "phone", "email", "track",
+    "position", "department", "countryOfOrigin", "singleRoom", "price", "currency",
+    "allergies", "note", "photoUrl", "cvUrl", "identityUrl", "indemnitySignature", "indemnityAccepted",
+  ];
   required.forEach((key) => {
     if (payload[key] === undefined || payload[key] === null || String(payload[key]).trim() === "") throw new Error(`Missing required field: ${key}.`);
   });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(String(payload.email).trim())) throw new Error("Email must be a valid email address.");
-  if (payload.nationality !== "Tunisian") throw new Error("Only Tunisian registrations are currently accepted.");
-  if (payload.indemnityAccepted !== true && String(payload.indemnityAccepted).toLowerCase() !== "true") throw new Error("Indemnity consent is required.");
-  if (!ALLOWED_TRACKS.includes(cleanText(payload.track))) throw new Error("Select a valid conference track.");
+  if (!ALLOWED_TRACKS.includes(cleanText(payload.track))) throw new Error("Select a valid participant type.");
   if (!ALLOWED_POSITIONS.includes(cleanText(payload.position))) throw new Error("Select a valid position.");
+  if (cleanText(payload.currency) !== "EUR") throw new Error("Currency must be EUR.");
+
+  const expectedPrice = (payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true")
+    ? BASE_PRICE_EUR + SINGLE_ROOM_SURCHARGE_EUR
+    : BASE_PRICE_EUR;
+  if (Number(payload.price) !== expectedPrice) throw new Error(`Price must be ${expectedPrice} EUR for the selected room type.`);
+
+  if (cleanText(payload.track) === "EP") {
+    if (cleanText(payload.position) !== "None") throw new Error("EP registrations must not include an AIESEC position.");
+    if (cleanText(payload.department) !== "None") throw new Error("EP registrations must not include an AIESEC department.");
+    if (!cleanText(payload.countryOfOrigin) || cleanText(payload.countryOfOrigin) === "None") throw new Error("Country of origin is required for EP registrations.");
+  } else {
+    if (cleanText(payload.position) === "None") throw new Error("International AIESECer registrations require a position.");
+    if (cleanText(payload.department) === "None") throw new Error("International AIESECer registrations require a department.");
+    if (cleanText(payload.countryOfOrigin) !== "None") throw new Error("International AIESECer registrations do not require a country of origin.");
+  }
+  if (payload.indemnityAccepted !== true && String(payload.indemnityAccepted).toLowerCase() !== "true") throw new Error("Indemnity consent is required.");
 }
 
 function ensureHeaders(sheet) {
   let headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getDisplayValues()[0].map(cleanText);
+  if (headers.length === 1 && !headers[0]) headers = [];
+
   if (!headers.some((header) => HEADER_ALIASES.Email.includes(header))) {
     headers.push("Email");
     sheet.getRange(1, headers.length).setValue("Email");
   }
   REQUIRED_HEADERS.forEach((header) => {
-    const exists = header === "Email" ? headers.some((current) => HEADER_ALIASES.Email.includes(current)) : headers.includes(header);
-    if (!exists) {
+    const aliases = HEADER_ALIASES[header] || [header];
+    if (!headers.some((current) => aliases.includes(current))) {
       headers.push(header);
       sheet.getRange(1, headers.length).setValue(header);
     }
@@ -130,7 +166,7 @@ function ensureHeaders(sheet) {
 function saveAttachmentsToDrive(payload) {
   const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
   const documents = {};
-  const baseName = `${cleanText(payload.firstName)}-${cleanText(payload.lastName)}-${cleanText(payload.cin)}`.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || `registration-${Date.now()}`;
+  const baseName = `${cleanText(payload.firstName)}-${cleanText(payload.lastName)}-${cleanText(payload.passportNumber)}`.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || `registration-${Date.now()}`;
   const candidates = [
     { key: "photo", url: payload.photoUrl, name: payload.photoName || "profile-photo" },
     { key: "cv", url: payload.cvUrl, name: payload.cvName || "cv" },
@@ -153,8 +189,7 @@ function saveAttachmentsToDrive(payload) {
 }
 
 function getLeaderboardTotals() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(REGISTRATIONS_SHEET_NAME);
-  if (!sheet) throw new Error(`Worksheet "${REGISTRATIONS_SHEET_NAME}" was not found.`);
+  const sheet = getRegistrationSheet();
   const rows = sheet.getDataRange().getDisplayValues();
   const headers = rows.shift() || [];
   const emailIndex = findHeaderIndex(headers, HEADER_ALIASES.Email);

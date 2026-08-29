@@ -1,39 +1,29 @@
-export type ConferenceNationality = "" | "Tunisian";
-export type ConferenceTrack = "" | "MMB" | "EB";
+export type ConferenceTrack = "" | "International AIESECer" | "EP";
 
-export const TUNISIAN_MMB_TND = 160;
-export const TUNISIAN_EB_TND = 240;
-export const ACCOMMODATION_PER_NIGHT_TND = 80;
-export const MMB_SINGLE_ROOM_SURCHARGE_TND = 100;
-export const EB_SINGLE_ROOM_SURCHARGE_TND = 150;
-export const MMB_DURATION_DAYS = 3;
-export const EB_DURATION_DAYS = 4;
+export const PARTICIPANT_BASE_PRICE_EUR = 90;
+export const SINGLE_ROOM_SURCHARGE_EUR = 20;
+export const CONFERENCE_DURATION_DAYS = 3;
 
 export type Contribution = {
   price: number;
-  currency: "TND";
+  currency: "EUR";
   note: string;
 };
 
 export function getContribution(
-  nationality: ConferenceNationality,
   track: ConferenceTrack,
   singleRoom = false,
 ): Contribution | null {
-  if (nationality !== "Tunisian" || !track) return null;
+  if (!track) return null;
 
-  const isMmb = track === "MMB";
-  const basePrice = isMmb ? TUNISIAN_MMB_TND : TUNISIAN_EB_TND;
-  const durationDays = isMmb ? MMB_DURATION_DAYS : EB_DURATION_DAYS;
-  const singleRoomSurcharge = isMmb ? MMB_SINGLE_ROOM_SURCHARGE_TND : EB_SINGLE_ROOM_SURCHARGE_TND;
-  const price = basePrice + (singleRoom ? singleRoomSurcharge : 0);
+  const price = PARTICIPANT_BASE_PRICE_EUR + (singleRoom ? SINGLE_ROOM_SURCHARGE_EUR : 0);
   const roomNote = singleRoom
-    ? ` Single room selected: +${singleRoomSurcharge} TND.`
-    : ` Shared room selected. Single room surcharge: +${singleRoomSurcharge} TND.`;
+    ? ` Single room selected: +${SINGLE_ROOM_SURCHARGE_EUR} EUR.`
+    : ` Shared room selected. Single room surcharge: +${SINGLE_ROOM_SURCHARGE_EUR} EUR.`;
 
   return {
     price,
-    currency: "TND",
-    note: `Tunisian ${track} package: ${basePrice} TND for ${durationDays} days.${roomNote}`,
+    currency: "EUR",
+    note: `${track} package: ${PARTICIPANT_BASE_PRICE_EUR} EUR for ${CONFERENCE_DURATION_DAYS} days.${roomNote}`,
   };
 }

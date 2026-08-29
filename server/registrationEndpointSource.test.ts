@@ -7,15 +7,22 @@ describe("registration Apps Script contract", () => {
   it("accepts generic email addresses and maps the complete registration payload", () => {
     expect(endpoint).toContain('"Email"');
     expect(endpoint).toContain('payload.email || payload.aiesecEmail');
+    expect(endpoint).toContain('"Passport number"');
     expect(endpoint).toContain('"Phone country"');
     expect(endpoint).toContain('"Single room"');
+    expect(endpoint).toContain('"Country of origin"');
     expect(endpoint).toContain('"Track"');
     expect(endpoint).toContain('ALLOWED_TRACKS');
     expect(endpoint).toContain('ALLOWED_POSITIONS');
-    expect(endpoint).toContain("Only Tunisian registrations are currently accepted.");
+    expect(endpoint).toContain('BASE_PRICE_EUR = 90');
+    expect(endpoint).toContain('SINGLE_ROOM_SURCHARGE_EUR = 20');
+    expect(endpoint).toContain('International AIESECer');
+    expect(endpoint).toContain('valid email address');
+    expect(endpoint).not.toContain("Only Tunisian registrations are currently accepted.");
+    expect(endpoint).not.toContain("must contain digits only");
+    expect(endpoint).not.toContain("exactly 8 digits");
     expect(endpoint).toContain('"Identity Document URL"');
     expect(endpoint).toContain('"Identity Document Name"');
-    expect(endpoint).toContain("valid email address");
     expect(endpoint).not.toContain("must end with @aiesec.net");
   });
 

@@ -22,7 +22,7 @@ services:
       - key: VITE_APP_TITLE
         value: Lead&Lead2K26
       - key: VITE_SHEETS_WEB_APP_URL
-        value: https://script.google.com/macros/s/AKfycbwnRQqEqaSZ0SmzZlxdRO3Es1yQjHj3pGQwtiU948RpgNpGlOWJr2l_IFp8T9rsEkhMKg/exec
+        value: https://script.google.com/macros/s/AKfycbwZW1FPbQhLJM8iUtPpR06mniCG_Bg96Gbv2M6K86OZ7SBNRoednxNh2zFyAUgn6v4-/exec
       - key: DATABASE_URL
         sync: false
       - key: DRIZZLE_DATABASE_URL

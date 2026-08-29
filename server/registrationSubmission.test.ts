@@ -11,20 +11,19 @@ const originalFetch = globalThis.fetch;
 const input: RegistrationSubmissionInput = {
   firstName: "Foulen",
   lastName: "Fouleni",
-  cin: "12345678",
-  lc: "LC Thyna",
+  passportNumber: "A12-34B",
   phoneCountry: "+216",
-  phone: "55111222",
+  phone: "+216 55 111 222 ext. 9",
   email: "foulen@example.com",
-  nationality: "Tunisian",
-  track: "MMB",
+  track: "International AIESECer",
   position: "Manager",
   singleRoom: false,
   department: "MKT — Marketing",
+  countryOfOrigin: "None",
   allergies: "None",
   note: "None",
-  price: 160,
-  currency: "TND",
+  price: 90,
+  currency: "EUR",
   photoUrl: "https://storage.example.com/photo.jpg",
   photoName: "photo.jpg",
   cvUrl: "https://storage.example.com/cv.pdf",
@@ -43,20 +42,39 @@ afterEach(() => {
 });
 
 describe("registration sheet submission bridge", () => {
-  it("requires a numeric CIN and exactly eight phone digits", () => {
-    expect(
-      registrationSubmissionInput.safeParse({ ...input, cin: "1234ABCD" })
-        .success
-    ).toBe(false);
-    expect(
-      registrationSubmissionInput.safeParse({ ...input, phone: "5511122" })
-        .success
-    ).toBe(false);
-    expect(
-      registrationSubmissionInput.safeParse({ ...input, phone: "551112233" })
-        .success
-    ).toBe(false);
+  it("accepts alphanumeric passports and unrestricted phone text", () => {
     expect(registrationSubmissionInput.safeParse(input).success).toBe(true);
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        track: "EP",
+        position: "None",
+        department: "None",
+        countryOfOrigin: "Brazil",
+        singleRoom: true,
+        price: 110,
+        passportNumber: "P-AB 123/XY",
+        phone: "00 55 (11) 99999-0000",
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects a mismatched price or conditional field contract", () => {
+    expect(
+      registrationSubmissionInput.safeParse({ ...input, price: 110 }).success,
+    ).toBe(false);
+    expect(
+      registrationSubmissionInput.safeParse({ ...input, countryOfOrigin: "Tunisia" }).success,
+    ).toBe(false);
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        track: "EP",
+        position: "None",
+        department: "None",
+        countryOfOrigin: "",
+      }).success,
+    ).toBe(false);
   });
 
   it("posts the validated payload server-side and returns the confirmation", async () => {
@@ -69,8 +87,11 @@ describe("registration sheet submission bridge", () => {
         "Content-Type": "text/plain;charset=utf-8",
       });
       expect(JSON.parse(String(init?.body))).toMatchObject({
-        track: "MMB",
+        track: "International AIESECer",
         position: "Manager",
+        passportNumber: "A12-34B",
+        price: 90,
+        currency: "EUR",
       });
       return new Response(JSON.stringify({ ok: true, row: 12 }), {
         status: 200,
@@ -101,7 +122,7 @@ describe("registration sheet submission bridge", () => {
         });
       }
       expect(String(url)).toContain(
-        "https://script.googleusercontent.com/macros/echo"
+        "https://script.googleusercontent.com/macros/echo",
       );
       expect(init?.method).toBeUndefined();
       return new Response(JSON.stringify({ ok: true, row: 13 }), {
@@ -121,7 +142,7 @@ describe("registration sheet submission bridge", () => {
     globalThis.fetch = async () =>
       new Response(
         JSON.stringify({ ok: false, error: "Missing required field: track." }),
-        { status: 200 }
+        { status: 200 },
       );
 
     await expect(submitRegistrationToSheets(input)).rejects.toMatchObject({
