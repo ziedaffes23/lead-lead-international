@@ -3,7 +3,7 @@
  * the supplied Lead & Lead logo is referenced unmodified and never recreated in code.
  */
 export const CINEMATIC_ASSETS = {
-  logo: "/manus-storage/lead-lead-official-logo_f7b00492.png",
+  logo: "/assets/thyna-logo-white.png",
   rooftopReference: "/manus-storage/lead-lead-moonlit-rooftop_f19ec9d4.jpg",
   thynaRooftopBackground: "/assets/thyna-rooftop-background.png",
   stoneTexture: "/manus-storage/lead-lead-stone-material_8e8d229b.jpg",

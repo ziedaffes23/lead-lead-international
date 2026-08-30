@@ -21,7 +21,7 @@ export const registrationReadiness = [
 ] as const;
 
 export const conferenceFactions = [
-  { id: "thyna", name: "LC Thyna", logo: "/manus-storage/Thyna_1bf5fbed.png", logoTreatment: "transparent", established: "Since 1997", detail: "LC Thyna", slogan: "للقمة و نقودوها" },
+  { id: "thyna", name: "LC Thyna", logo: "/assets/thyna-logo-white.png", logoTreatment: "transparent", established: "Since 1997", detail: "LC Thyna", slogan: "للقمة و نقودوها" },
   { id: "university", name: "LC University", logo: "/manus-storage/University_28b5bd24.png", logoTreatment: "paper", established: "Since 1987", detail: "LC University", slogan: "لوكال يشعل بالنار" },
   { id: "bullaregia", name: "SU Bullaregia", logo: "/manus-storage/Bullaregia_4f76f328.png", logoTreatment: "paper", established: "Since 2025", detail: "SU Bullaregia", slogan: "The north will remember" },
   { id: "tacapes", name: "LC Tacapes", logo: "/manus-storage/Tacapes_4d0e60ea.png", logoTreatment: "paper", established: "Since 2014", detail: "LC Tacapes", slogan: "تكاباس الحب" },
