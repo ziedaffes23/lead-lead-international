@@ -202,9 +202,9 @@ export default function Register() {
   const continueToReview = () => { if (validate(["indemnitySignature", "indemnityAccepted"])) goTo(4); };
   const selectAttachment = (key: AttachmentKey, candidate?: File) => {
     if (!candidate) return;
-    const isValid = key === "photo" ? photoTypes.includes(candidate.type) && candidate.size <= 3 * 1024 * 1024 : key === "identity" ? identityTypes.includes(candidate.type) && candidate.size <= 5 * 1024 * 1024 : candidate.type === "application/pdf" && candidate.size <= 15 * 1024 * 1024;
+    const isValid = key === "photo" ? photoTypes.includes(candidate.type) && candidate.size <= 3 * 1024 * 1024 : key === "identity" ? identityTypes.includes(candidate.type) && candidate.size <= 5 * 1024 * 1024 : candidate.type === "application/pdf" && candidate.size <= 5 * 1024 * 1024;
     if (!isValid) {
-      setAttachmentErrors((current) => ({ ...current, [key]: key === "photo" ? "Use a JPG, PNG, or WebP image up to 3 MB." : key === "identity" ? "Use a JPG, PNG, or PDF document up to 5 MB." : "Use a PDF CV up to 15 MB." }));
+      setAttachmentErrors((current) => ({ ...current, [key]: key === "photo" ? "Use a JPG, PNG, or WebP image up to 3 MB." : key === "identity" ? "Use a JPG, PNG, or PDF document up to 5 MB." : "Use a PDF CV up to 5 MB." }));
       return;
     }
     setAttachmentErrors((current) => ({ ...current, [key]: undefined }));
