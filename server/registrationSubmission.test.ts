@@ -12,6 +12,7 @@ const input: RegistrationSubmissionInput = {
   firstName: "Foulen",
   lastName: "Fouleni",
   passportNumber: "A12-34B",
+  gender: "Male",
   phoneCountry: "+216",
   phone: "+216 55 111 222 ext. 9",
   email: "foulen@example.com",
@@ -22,9 +23,10 @@ const input: RegistrationSubmissionInput = {
   lcName: "LC Thyna",
   entityName: "AIESEC in Tunisia",
   countryOfOrigin: "None",
+  hostingLc: "None",
   allergies: "None",
   note: "None",
-  price: 90,
+  price: 65,
   currency: "EUR",
   photoUrl: "https://storage.example.com/photo.jpg",
   photoName: "photo.jpg",
@@ -55,20 +57,24 @@ describe("registration sheet submission bridge", () => {
         lcName: "None",
         entityName: "None",
         countryOfOrigin: "Brazil",
+        hostingLc: "LC Thyna",
         singleRoom: true,
-        price: 150,
+        price: 115,
         passportNumber: "P-AB 123/XY",
         phone: "00 55 (11) 99999-0000",
-      }).success,
+      }).success
     ).toBe(true);
   });
 
   it("rejects a mismatched price or conditional field contract", () => {
     expect(
-      registrationSubmissionInput.safeParse({ ...input, price: 110 }).success,
+      registrationSubmissionInput.safeParse({ ...input, price: 110 }).success
     ).toBe(false);
     expect(
-      registrationSubmissionInput.safeParse({ ...input, countryOfOrigin: "Tunisia" }).success,
+      registrationSubmissionInput.safeParse({
+        ...input,
+        countryOfOrigin: "Tunisia",
+      }).success
     ).toBe(false);
     expect(
       registrationSubmissionInput.safeParse({
@@ -79,7 +85,8 @@ describe("registration sheet submission bridge", () => {
         lcName: "None",
         entityName: "None",
         countryOfOrigin: "",
-      }).success,
+        hostingLc: "LC Thyna",
+      }).success
     ).toBe(false);
   });
 
@@ -98,7 +105,7 @@ describe("registration sheet submission bridge", () => {
         passportNumber: "A12-34B",
         lcName: "LC Thyna",
         entityName: "AIESEC in Tunisia",
-        price: 90,
+        price: 65,
         currency: "EUR",
       });
       return new Response(JSON.stringify({ ok: true, row: 12 }), {
@@ -130,7 +137,7 @@ describe("registration sheet submission bridge", () => {
         });
       }
       expect(String(url)).toContain(
-        "https://script.googleusercontent.com/macros/echo",
+        "https://script.googleusercontent.com/macros/echo"
       );
       expect(init?.method).toBeUndefined();
       return new Response(JSON.stringify({ ok: true, row: 13 }), {
@@ -150,7 +157,7 @@ describe("registration sheet submission bridge", () => {
     globalThis.fetch = async () =>
       new Response(
         JSON.stringify({ ok: false, error: "Missing required field: track." }),
-        { status: 200 },
+        { status: 200 }
       );
 
     await expect(submitRegistrationToSheets(input)).rejects.toMatchObject({

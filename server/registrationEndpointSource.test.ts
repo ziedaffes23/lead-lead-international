@@ -11,6 +11,10 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).toContain('"Phone country"');
     expect(endpoint).toContain('"Single room"');
     expect(endpoint).toContain('"Country of origin"');
+    expect(endpoint).toContain('"Gender"');
+    expect(endpoint).toContain('"Hosting LC"');
+    expect(endpoint).toContain('payload.gender');
+    expect(endpoint).toContain('payload.hostingLc');
     expect(endpoint).toContain('"LC Name"');
     expect(endpoint).toContain('"Entity Name"');
     expect(endpoint).toContain('payload.lcName');
@@ -18,8 +22,11 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).toContain('"Track"');
     expect(endpoint).toContain('ALLOWED_TRACKS');
     expect(endpoint).toContain('ALLOWED_POSITIONS');
-    expect(endpoint).toContain('BASE_PRICE_EUR = 90');
-    expect(endpoint).toContain('SINGLE_ROOM_SURCHARGE_EUR = 60');
+    expect(endpoint).toContain('LEADERSHIP_BASE_PRICE_EUR = 90');
+    expect(endpoint).toContain('STANDARD_BASE_PRICE_EUR = 65');
+    expect(endpoint).toContain('SINGLE_ROOM_SURCHARGE_EUR = 50');
+    expect(endpoint).toContain('"MCVP"');
+    expect(endpoint).toContain('"MCP"');
     expect(endpoint).toContain('International AIESECer');
     expect(endpoint).toContain('valid email address');
     expect(endpoint).not.toContain("Only Tunisian registrations are currently accepted.");

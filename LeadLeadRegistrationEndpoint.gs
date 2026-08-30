@@ -7,12 +7,13 @@
 
 const SPREADSHEET_ID = "1xTZ4JuQxvNhRQRASC0kCwk2x2pvoxO2bVxnsK8f1SZ0";
 const REGISTRATIONS_SHEET_NAME = "Sheet1";
-const BASE_PRICE_EUR = 90;
-const SINGLE_ROOM_SURCHARGE_EUR = 60;
+const LEADERSHIP_BASE_PRICE_EUR = 90;
+const STANDARD_BASE_PRICE_EUR = 65;
+const SINGLE_ROOM_SURCHARGE_EUR = 50;
 
 const REQUIRED_HEADERS = [
   "Timestamp", "First name", "Last name", "Passport number", "Phone country", "Phone",
-  "Email", "Track", "Position", "Department", "LC Name", "Entity Name", "Country of origin", "Single room",
+  "Email", "Gender", "Track", "Position", "Department", "LC Name", "Entity Name", "Country of origin", "Hosting LC", "Single room",
   "Price", "Currency", "Allergies", "Note", "Profile Photo URL", "Profile Photo Name",
   "CV URL", "CV Name", "Identity Document URL", "Identity Document Name",
   "Indemnity Signature", "Indemnity Accepted",
@@ -24,7 +25,7 @@ const HEADER_ALIASES = {
 };
 
 const ALLOWED_TRACKS = ["International AIESECer", "EP"];
-const ALLOWED_POSITIONS = ["None", "Manager", "Team Leader", "LCVP", "LCP"];
+const ALLOWED_POSITIONS = ["None", "Member", "Manager", "Team Leader", "LCVP", "LCP", "MCVP", "MCP"];
 
 // Kept only for compatibility with the legacy leaderboard endpoint. New registrations
 // intentionally do not collect or write a Local Committee value.
@@ -71,12 +72,14 @@ function doPost(event) {
       "Phone": cleanText(payload.phone),
       "Email": email,
       "AIESEC email": email,
+      "Gender": cleanText(payload.gender),
       "Track": cleanText(payload.track),
       "Position": cleanText(payload.position),
       "Department": cleanText(payload.department),
       "LC Name": cleanText(payload.lcName),
       "Entity Name": cleanText(payload.entityName),
       "Country of origin": cleanText(payload.countryOfOrigin),
+      "Hosting LC": cleanText(payload.hostingLc),
       "Single room": payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true" ? "Yes" : "No",
       "Price": numberOrBlank(payload.price),
       "Currency": cleanText(payload.currency),
@@ -120,21 +123,22 @@ function parsePayload(event) {
 
 function validatePayload(payload) {
   const required = [
-    "firstName", "lastName", "passportNumber", "phoneCountry", "phone", "email", "track",
-    "position", "department", "lcName", "entityName", "countryOfOrigin", "singleRoom", "price", "currency",
+      "firstName", "lastName", "passportNumber", "gender", "phoneCountry", "phone", "email", "track",
+      "position", "department", "lcName", "entityName", "countryOfOrigin", "hostingLc", "singleRoom", "price", "currency",
     "allergies", "note", "photoUrl", "cvUrl", "identityUrl", "indemnitySignature", "indemnityAccepted",
   ];
   required.forEach((key) => {
     if (payload[key] === undefined || payload[key] === null || String(payload[key]).trim() === "") throw new Error(`Missing required field: ${key}.`);
   });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(String(payload.email).trim())) throw new Error("Email must be a valid email address.");
+  if (!["Male", "Female"].includes(cleanText(payload.gender))) throw new Error("Select a valid gender.");
   if (!ALLOWED_TRACKS.includes(cleanText(payload.track))) throw new Error("Select a valid participant type.");
   if (!ALLOWED_POSITIONS.includes(cleanText(payload.position))) throw new Error("Select a valid position.");
   if (cleanText(payload.currency) !== "EUR") throw new Error("Currency must be EUR.");
 
-  const expectedPrice = (payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true")
-    ? BASE_PRICE_EUR + SINGLE_ROOM_SURCHARGE_EUR
-    : BASE_PRICE_EUR;
+  const leadershipPosition = ["LCVP", "LCP", "MCVP", "MCP"].includes(cleanText(payload.position));
+  const basePrice = leadershipPosition ? LEADERSHIP_BASE_PRICE_EUR : STANDARD_BASE_PRICE_EUR;
+  const expectedPrice = basePrice + ((payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true") ? SINGLE_ROOM_SURCHARGE_EUR : 0);
   if (Number(payload.price) !== expectedPrice) throw new Error(`Price must be ${expectedPrice} EUR for the selected room type.`);
 
   if (cleanText(payload.track) === "EP") {
@@ -143,12 +147,14 @@ function validatePayload(payload) {
     if (cleanText(payload.lcName) !== "None") throw new Error("EP registrations must not include an LC name.");
     if (cleanText(payload.entityName) !== "None") throw new Error("EP registrations must not include an entity name.");
     if (!cleanText(payload.countryOfOrigin) || cleanText(payload.countryOfOrigin) === "None") throw new Error("Country of origin is required for EP registrations.");
+    if (!cleanText(payload.hostingLc) || cleanText(payload.hostingLc) === "None") throw new Error("Hosting LC is required for EP registrations.");
   } else {
     if (cleanText(payload.position) === "None") throw new Error("International AIESECer registrations require a position.");
     if (cleanText(payload.department) === "None") throw new Error("International AIESECer registrations require a department.");
     if (cleanText(payload.lcName) === "None") throw new Error("International AIESECer registrations require an LC name.");
     if (cleanText(payload.entityName) === "None") throw new Error("International AIESECer registrations require an entity name.");
     if (cleanText(payload.countryOfOrigin) !== "None") throw new Error("International AIESECer registrations do not require a country of origin.");
+    if (cleanText(payload.hostingLc) !== "None") throw new Error("International AIESECer registrations do not require a hosting LC.");
   }
   if (payload.indemnityAccepted !== true && String(payload.indemnityAccepted).toLowerCase() !== "true") throw new Error("Indemnity consent is required.");
 }

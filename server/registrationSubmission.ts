@@ -1,5 +1,5 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { confirmSheetsDelivery } from "@shared/sheetsDelivery";
 
 const publicUrl = z
@@ -15,16 +15,27 @@ export const registrationSubmissionInput = z
     firstName: z.string().trim().min(1),
     lastName: z.string().trim().min(1),
     passportNumber: z.string().trim().min(1),
+    gender: z.enum(["Male", "Female"]),
     phoneCountry: z.string().trim().min(1),
     phone: z.string().trim().min(1),
     email: z.string().trim().email(),
     track: z.enum(["International AIESECer", "EP"]),
-    position: z.enum(["None", "Manager", "Team Leader", "LCVP", "LCP"]),
+    position: z.enum([
+      "None",
+      "Member",
+      "Manager",
+      "Team Leader",
+      "LCVP",
+      "LCP",
+      "MCVP",
+      "MCP",
+    ]),
     singleRoom: z.boolean(),
     department: z.string().trim().min(1),
     lcName: z.string().trim().min(1),
     entityName: z.string().trim().min(1),
     countryOfOrigin: z.string().trim().min(1),
+    hostingLc: z.string().trim().min(1),
     allergies: z.string().trim().min(1),
     note: z.string().trim().min(1),
     price: z.number().int().nonnegative(),
@@ -41,7 +52,11 @@ export const registrationSubmissionInput = z
       .refine(value => value, "Indemnity consent is required."),
   })
   .superRefine((input, ctx) => {
-    const expectedPrice = 90 + (input.singleRoom ? 60 : 0);
+    const leadershipPosition = ["LCVP", "LCP", "MCVP", "MCP"].includes(
+      input.position
+    );
+    const expectedPrice =
+      (leadershipPosition ? 90 : 65) + (input.singleRoom ? 50 : 0);
     if (input.price !== expectedPrice) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -79,6 +94,13 @@ export const registrationSubmissionInput = z
           message: "EP registrations must not include an entity name.",
         });
       }
+      if (input.hostingLc === "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["hostingLc"],
+          message: "Hosting LC is required for EP registrations.",
+        });
+      }
     } else {
       if (input.position === "None") {
         ctx.addIssue({
@@ -105,14 +127,24 @@ export const registrationSubmissionInput = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["entityName"],
-          message: "International AIESECer registrations require an entity name.",
+          message:
+            "International AIESECer registrations require an entity name.",
         });
       }
       if (input.countryOfOrigin !== "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["countryOfOrigin"],
-          message: "International AIESECer registrations do not require a country of origin.",
+          message:
+            "International AIESECer registrations do not require a country of origin.",
+        });
+      }
+      if (input.hostingLc !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["hostingLc"],
+          message:
+            "International AIESECer registrations do not require a hosting LC.",
         });
       }
     }

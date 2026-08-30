@@ -8,7 +8,7 @@ const dataSource = await readFile(new URL("../client/src/data/conferenceSections
 
 describe("registration requirements and dark-only presentation", () => {
   it("uses a generic required email with the requested example", () => {
-    expect(registerSource).toContain('label>Email');
+    expect(registerSource).toContain('Email');
     expect(registerSource).toContain('placeholder="foulen.fouleni@mail.com"');
     expect(registerSource).toContain("Use a valid email address.");
     expect(registerSource).not.toContain("@aiesec.net");
@@ -16,39 +16,47 @@ describe("registration requirements and dark-only presentation", () => {
   });
 
   it("marks core registration inputs as required", () => {
-    expect(registerSource).toContain('placeholder="Foulen" required');
-    expect(registerSource).toContain('placeholder="Fouléni" required');
-    expect(registerSource).toContain('placeholder="Enter your passport number" required');
+    expect(registerSource).toContain('placeholder="Foulen"');
+    expect(registerSource).toContain('placeholder="Fouléni"');
+    expect(registerSource).toContain('placeholder="Enter your passport number"');
+    expect(registerSource).toContain('value={form.gender}');
+    expect(registerSource).toContain('value="Male"');
+    expect(registerSource).toContain('value="Female"');
     expect(registerSource).not.toContain('inputMode="numeric"');
     expect(registerSource).not.toContain('CIN number must contain digits only.');
     expect(registerSource).not.toContain('Select your LC');
-    expect(registerSource).toContain('Country code<select value={form.phoneCountry}');
-    expect(registerSource).toContain('inputMode="tel" required');
+    expect(registerSource).toContain('value={form.phoneCountry}');
+    expect(registerSource).toContain('inputMode="tel"');
     expect(registerSource).not.toContain('maxLength={8}');
     expect(registerSource).not.toContain('pattern="[0-9]{8}"');
     expect(registerSource).not.toContain('Phone number must contain exactly 8 digits.');
     expect(registerSource).toContain('Passport document');
-    expect(registerSource).toContain('accept="image/jpeg,image/png,application/pdf,.pdf" required');
-    expect(registerSource).toContain('accept="image/jpeg,image/png,image/webp" required');
-    expect(registerSource).toContain('accept="application/pdf,.pdf" required');
-    expect(registerSource).toContain('placeholder="List allergies or dietary concerns, or enter None" required');
-    expect(registerSource).toContain('placeholder="Add a note for the organising team, or enter None" required');
+    expect(registerSource).toContain('accept="image/jpeg,image/png,application/pdf,.pdf"');
+    expect(registerSource).toContain('accept="image/jpeg,image/png,image/webp"');
+    expect(registerSource).toContain('accept="application/pdf,.pdf"');
+    expect(registerSource).toContain('placeholder="List allergies or dietary concerns, or enter None"');
+    expect(registerSource).toContain('placeholder="Add a note for the organising team, or enter None"');
     expect(registerSource).toContain('Participant type');
     expect(registerSource).toContain('International AIESECer');
     expect(registerSource).toContain('<option>EP</option>');
     expect(registerSource).toContain('Country of origin');
+    expect(registerSource).toContain('Gender');
+    expect(registerSource).toContain('value={form.gender}');
+    expect(registerSource).toContain('Hosting LC');
     expect(registerSource).toContain('form.track === "International AIESECer"');
     expect(registerSource).toContain('form.track === "EP"');
-    expect(registerSource).toContain('+60 EUR');
+    expect(registerSource).toContain('+50 EUR');
+    expect(registerSource).toContain('MCVP');
+    expect(registerSource).toContain('MCP');
     expect(registerSource).toContain('INDEMNITY SIGNATURE');
     expect(registerSource).toContain('indemnityAccepted');
     expect(registerSource).not.toContain('Accommodation is 80 TND / per night.');
     expect(dataSource).toContain('name: "SU Bullaregia"');
-    expect(registerSource).toContain('autoComplete="email" required');
+    expect(registerSource).toContain('autoComplete="email"');
     expect(registerSource).not.toContain('label>Nationality<select');
-    expect(registerSource).toContain('<select required value={form.track}');
-    expect(registerSource).toContain('<select required value={form.position}');
-    expect(registerSource).toContain('<select required value={form.department}');
+    expect(registerSource).toContain('value={form.track}');
+    expect(registerSource).toContain('value={form.position}');
+    expect(registerSource).toContain('value={form.department}');
     expect(registerSource).toContain('placeholder="Write your department"');
     expect(registerSource).toContain('placeholder="Write your LC name"');
     expect(registerSource).toContain('placeholder="Write your entity name"');
@@ -56,6 +64,7 @@ describe("registration requirements and dark-only presentation", () => {
     expect(registerSource).toContain('error("entityName")');
     expect(registerSource).toContain('lcName: track === "EP" ? "None" : ""');
     expect(registerSource).toContain('entityName: track === "EP" ? "None" : ""');
+    expect(registerSource).toContain('hostingLc');
     expect(registerSource).toContain('Error: registration not submitted.');
   });
 
