@@ -1,7 +1,7 @@
 export type ConferenceTrack = "" | "International AIESECer" | "EP";
 
 export const PARTICIPANT_BASE_PRICE_EUR = 90;
-export const SINGLE_ROOM_SURCHARGE_EUR = 20;
+export const SINGLE_ROOM_SURCHARGE_EUR = 60;
 export const CONFERENCE_DURATION_DAYS = 3;
 
 export type Contribution = {

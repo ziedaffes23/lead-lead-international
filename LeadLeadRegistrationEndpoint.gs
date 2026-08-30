@@ -7,9 +7,8 @@
 
 const SPREADSHEET_ID = "1xTZ4JuQxvNhRQRASC0kCwk2x2pvoxO2bVxnsK8f1SZ0";
 const REGISTRATIONS_SHEET_NAME = "Sheet1";
-const DRIVE_FOLDER_ID = "1W9D3eZ6p2X6Y4qaOO-JzDr1MJtwceCUR";
 const BASE_PRICE_EUR = 90;
-const SINGLE_ROOM_SURCHARGE_EUR = 20;
+const SINGLE_ROOM_SURCHARGE_EUR = 60;
 
 const REQUIRED_HEADERS = [
   "Timestamp", "First name", "Last name", "Passport number", "Phone country", "Phone",
@@ -57,7 +56,10 @@ function doPost(event) {
     const sheet = getRegistrationSheet();
 
     const headers = ensureHeaders(sheet);
-    const driveDocuments = saveAttachmentsToDrive(payload);
+    // Documents are already uploaded to the Render storage proxy. Keep those HTTPS URLs
+    // in the sheet instead of calling DriveApp, which requires separate Apps Script
+    // authorization and caused the deployed endpoint to reject submissions.
+    const driveDocuments = {};
     const email = cleanText(payload.email || payload.aiesecEmail).toLowerCase();
     const rowByHeader = {
       "Timestamp": new Date(),
@@ -161,31 +163,6 @@ function ensureHeaders(sheet) {
     }
   });
   return headers;
-}
-
-function saveAttachmentsToDrive(payload) {
-  const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
-  const documents = {};
-  const baseName = `${cleanText(payload.firstName)}-${cleanText(payload.lastName)}-${cleanText(payload.passportNumber)}`.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || `registration-${Date.now()}`;
-  const candidates = [
-    { key: "photo", url: payload.photoUrl, name: payload.photoName || "profile-photo" },
-    { key: "cv", url: payload.cvUrl, name: payload.cvName || "cv" },
-    { key: "identity", url: payload.identityUrl, name: payload.identityName || "identity-document" },
-  ];
-
-  candidates.forEach((candidate) => {
-    const url = cleanUrl(candidate.url);
-    const response = UrlFetchApp.fetch(url, { followRedirects: true, muteHttpExceptions: true });
-    if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
-      throw new Error(`Unable to download ${candidate.key} for Drive storage.`);
-    }
-    const originalName = cleanText(candidate.name).replace(/[^a-zA-Z0-9._-]+/g, "-") || candidate.key;
-    const file = folder.createFile(response.getBlob().setName(`${baseName}-${candidate.key}-${originalName}`));
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    documents[candidate.key] = { name: file.getName(), url: file.getUrl() };
-  });
-
-  return documents;
 }
 
 function getLeaderboardTotals() {

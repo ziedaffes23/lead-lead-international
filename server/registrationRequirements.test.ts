@@ -39,7 +39,7 @@ describe("registration requirements and dark-only presentation", () => {
     expect(registerSource).toContain('Country of origin');
     expect(registerSource).toContain('form.track === "International AIESECer"');
     expect(registerSource).toContain('form.track === "EP"');
-    expect(registerSource).toContain('+20 EUR');
+    expect(registerSource).toContain('+60 EUR');
     expect(registerSource).toContain('INDEMNITY SIGNATURE');
     expect(registerSource).toContain('indemnityAccepted');
     expect(registerSource).not.toContain('Accommodation is 80 TND / per night.');

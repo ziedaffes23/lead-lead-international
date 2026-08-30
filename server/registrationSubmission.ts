@@ -39,7 +39,7 @@ export const registrationSubmissionInput = z
       .refine(value => value, "Indemnity consent is required."),
   })
   .superRefine((input, ctx) => {
-    const expectedPrice = 90 + (input.singleRoom ? 20 : 0);
+    const expectedPrice = 90 + (input.singleRoom ? 60 : 0);
     if (input.price !== expectedPrice) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

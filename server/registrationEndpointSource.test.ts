@@ -15,7 +15,7 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).toContain('ALLOWED_TRACKS');
     expect(endpoint).toContain('ALLOWED_POSITIONS');
     expect(endpoint).toContain('BASE_PRICE_EUR = 90');
-    expect(endpoint).toContain('SINGLE_ROOM_SURCHARGE_EUR = 20');
+    expect(endpoint).toContain('SINGLE_ROOM_SURCHARGE_EUR = 60');
     expect(endpoint).toContain('International AIESECer');
     expect(endpoint).toContain('valid email address');
     expect(endpoint).not.toContain("Only Tunisian registrations are currently accepted.");
@@ -26,12 +26,11 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).not.toContain("must end with @aiesec.net");
   });
 
-  it("stores every uploaded document in the configured Drive folder and returns share links", () => {
-    expect(endpoint).toContain('const DRIVE_FOLDER_ID = "1W9D3eZ6p2X6Y4qaOO-JzDr1MJtwceCUR";');
-    expect(endpoint).toContain("DriveApp.getFolderById(DRIVE_FOLDER_ID)");
-    expect(endpoint).toContain("DriveApp.Access.ANYONE_WITH_LINK");
-    expect(endpoint).toContain("DriveApp.Permission.VIEW");
-    expect(endpoint).toContain("documents: driveDocuments");
+  it("keeps uploaded HTTPS document URLs in the sheet without DriveApp authorization", () => {
+    expect(endpoint).toContain("Attachment links must use HTTPS.");
+    expect(endpoint).toContain("const driveDocuments = {};");
+    expect(endpoint).not.toContain("DriveApp.getFolderById");
+    expect(endpoint).not.toContain("DRIVE_FOLDER_ID");
   });
 
   it("preserves legacy sheet compatibility while normalizing SU Bullaregia", () => {
