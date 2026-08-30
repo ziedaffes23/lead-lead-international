@@ -50,6 +50,12 @@ describe("registration requirements and dark-only presentation", () => {
     expect(registerSource).toContain('<select required value={form.position}');
     expect(registerSource).toContain('<select required value={form.department}');
     expect(registerSource).toContain('placeholder="Write your department"');
+    expect(registerSource).toContain('placeholder="Write your LC name"');
+    expect(registerSource).toContain('placeholder="Write your entity name"');
+    expect(registerSource).toContain('error("lcName")');
+    expect(registerSource).toContain('error("entityName")');
+    expect(registerSource).toContain('lcName: track === "EP" ? "None" : ""');
+    expect(registerSource).toContain('entityName: track === "EP" ? "None" : ""');
     expect(registerSource).toContain('Error: registration not submitted.');
   });
 

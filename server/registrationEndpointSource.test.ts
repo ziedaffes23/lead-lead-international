@@ -11,6 +11,10 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).toContain('"Phone country"');
     expect(endpoint).toContain('"Single room"');
     expect(endpoint).toContain('"Country of origin"');
+    expect(endpoint).toContain('"LC Name"');
+    expect(endpoint).toContain('"Entity Name"');
+    expect(endpoint).toContain('payload.lcName');
+    expect(endpoint).toContain('payload.entityName');
     expect(endpoint).toContain('"Track"');
     expect(endpoint).toContain('ALLOWED_TRACKS');
     expect(endpoint).toContain('ALLOWED_POSITIONS');

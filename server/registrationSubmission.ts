@@ -22,6 +22,8 @@ export const registrationSubmissionInput = z
     position: z.enum(["None", "Manager", "Team Leader", "LCVP", "LCP"]),
     singleRoom: z.boolean(),
     department: z.string().trim().min(1),
+    lcName: z.string().trim().min(1),
+    entityName: z.string().trim().min(1),
     countryOfOrigin: z.string().trim().min(1),
     allergies: z.string().trim().min(1),
     note: z.string().trim().min(1),
@@ -63,6 +65,20 @@ export const registrationSubmissionInput = z
           message: "EP registrations must not include an AIESEC department.",
         });
       }
+      if (input.lcName !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lcName"],
+          message: "EP registrations must not include an LC name.",
+        });
+      }
+      if (input.entityName !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["entityName"],
+          message: "EP registrations must not include an entity name.",
+        });
+      }
     } else {
       if (input.position === "None") {
         ctx.addIssue({
@@ -76,6 +92,20 @@ export const registrationSubmissionInput = z
           code: z.ZodIssueCode.custom,
           path: ["department"],
           message: "International AIESECer registrations require a department.",
+        });
+      }
+      if (input.lcName === "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lcName"],
+          message: "International AIESECer registrations require an LC name.",
+        });
+      }
+      if (input.entityName === "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["entityName"],
+          message: "International AIESECer registrations require an entity name.",
         });
       }
       if (input.countryOfOrigin !== "None") {

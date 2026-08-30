@@ -13,6 +13,8 @@ This Apps Script endpoint receives registrations from the website and appends ea
 | Track | `track` | `International AIESECer` or `EP`. |
 | Position | `position` | Required for International AIESECers; `None` for EPs. |
 | Department | `department` | Required for International AIESECers; `None` for EPs. |
+| LC Name | `lcName` | Required for International AIESECers; `None` for EPs. |
+| Entity Name | `entityName` | Required for International AIESECers; `None` for EPs. |
 | Country of origin | `countryOfOrigin` | Required for EPs; `None` for International AIESECers. |
 | Single room | `singleRoom` | `Yes` or `No`. |
 | Price | `price` | `90 EUR` shared room or `150 EUR` single room. |
@@ -21,7 +23,7 @@ This Apps Script endpoint receives registrations from the website and appends ea
 | CV URL | `cvUrl` | HTTPS document URL. |
 | Identity Document URL | `identityUrl` | HTTPS passport-document URL. |
 
-Both tracks are **€90 for three days**. Selecting a single room adds **€60**, making the total **€150**. International AIESECers see position and department fields. EPs see only country of origin in the participant-details section.
+Both tracks are **€90 for three days**. Selecting a single room adds **€60**, making the total **€150**. International AIESECers see position, department, LC Name, and Entity Name fields. EPs see only country of origin in the participant-details section.
 
 ## Setup on the supplied spreadsheet
 
@@ -41,7 +43,7 @@ Set the deployed `/exec` URL as the protected `VITE_SHEETS_WEB_APP_URL` environm
 
 The script creates these headers in `Sheet1`, in the following order:
 
-`Timestamp`, `First name`, `Last name`, `Passport number`, `Phone country`, `Phone`, `Email`, `Track`, `Position`, `Department`, `Country of origin`, `Single room`, `Price`, `Currency`, `Allergies`, `Note`, `Profile Photo URL`, `Profile Photo Name`, `CV URL`, `CV Name`, `Identity Document URL`, `Identity Document Name`, `Indemnity Signature`, `Indemnity Accepted`.
+`Timestamp`, `First name`, `Last name`, `Passport number`, `Phone country`, `Phone`, `Email`, `Track`, `Position`, `Department`, `LC Name`, `Entity Name`, `Country of origin`, `Single room`, `Price`, `Currency`, `Allergies`, `Note`, `Profile Photo URL`, `Profile Photo Name`, `CV URL`, `CV Name`, `Identity Document URL`, `Identity Document Name`, `Indemnity Signature`, `Indemnity Accepted`.
 
 The endpoint also recognizes a legacy `CIN number` header as an alias for `Passport number`, and an `AIESEC email` header as an alias for `Email`, so it can be used with an older sheet if necessary.
 

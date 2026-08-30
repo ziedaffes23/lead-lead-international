@@ -112,7 +112,7 @@ export default function ConferenceHome() {
             </span>
             <span>
               <small>CREED COSTS</small>
-              <b>MMB 160 · EB 240 TND</b>
+              <b>€90 · 3 DAYS</b>
             </span>
           </div>
           <div className="world-hero__actions">

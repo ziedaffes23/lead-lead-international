@@ -12,7 +12,7 @@ const SINGLE_ROOM_SURCHARGE_EUR = 60;
 
 const REQUIRED_HEADERS = [
   "Timestamp", "First name", "Last name", "Passport number", "Phone country", "Phone",
-  "Email", "Track", "Position", "Department", "Country of origin", "Single room",
+  "Email", "Track", "Position", "Department", "LC Name", "Entity Name", "Country of origin", "Single room",
   "Price", "Currency", "Allergies", "Note", "Profile Photo URL", "Profile Photo Name",
   "CV URL", "CV Name", "Identity Document URL", "Identity Document Name",
   "Indemnity Signature", "Indemnity Accepted",
@@ -74,6 +74,8 @@ function doPost(event) {
       "Track": cleanText(payload.track),
       "Position": cleanText(payload.position),
       "Department": cleanText(payload.department),
+      "LC Name": cleanText(payload.lcName),
+      "Entity Name": cleanText(payload.entityName),
       "Country of origin": cleanText(payload.countryOfOrigin),
       "Single room": payload.singleRoom === true || String(payload.singleRoom).toLowerCase() === "true" ? "Yes" : "No",
       "Price": numberOrBlank(payload.price),
@@ -119,7 +121,7 @@ function parsePayload(event) {
 function validatePayload(payload) {
   const required = [
     "firstName", "lastName", "passportNumber", "phoneCountry", "phone", "email", "track",
-    "position", "department", "countryOfOrigin", "singleRoom", "price", "currency",
+    "position", "department", "lcName", "entityName", "countryOfOrigin", "singleRoom", "price", "currency",
     "allergies", "note", "photoUrl", "cvUrl", "identityUrl", "indemnitySignature", "indemnityAccepted",
   ];
   required.forEach((key) => {
@@ -138,10 +140,14 @@ function validatePayload(payload) {
   if (cleanText(payload.track) === "EP") {
     if (cleanText(payload.position) !== "None") throw new Error("EP registrations must not include an AIESEC position.");
     if (cleanText(payload.department) !== "None") throw new Error("EP registrations must not include an AIESEC department.");
+    if (cleanText(payload.lcName) !== "None") throw new Error("EP registrations must not include an LC name.");
+    if (cleanText(payload.entityName) !== "None") throw new Error("EP registrations must not include an entity name.");
     if (!cleanText(payload.countryOfOrigin) || cleanText(payload.countryOfOrigin) === "None") throw new Error("Country of origin is required for EP registrations.");
   } else {
     if (cleanText(payload.position) === "None") throw new Error("International AIESECer registrations require a position.");
     if (cleanText(payload.department) === "None") throw new Error("International AIESECer registrations require a department.");
+    if (cleanText(payload.lcName) === "None") throw new Error("International AIESECer registrations require an LC name.");
+    if (cleanText(payload.entityName) === "None") throw new Error("International AIESECer registrations require an entity name.");
     if (cleanText(payload.countryOfOrigin) !== "None") throw new Error("International AIESECer registrations do not require a country of origin.");
   }
   if (payload.indemnityAccepted !== true && String(payload.indemnityAccepted).toLowerCase() !== "true") throw new Error("Indemnity consent is required.");

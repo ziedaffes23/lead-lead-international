@@ -21,6 +21,12 @@ describe("ConferenceHome lighthouse hero", () => {
     expect(lighthouseStyles).toContain("animation:none");
   });
 
+  it("shows the requested Creed contribution", () => {
+    expect(pageSource).toContain("CREED COSTS");
+    expect(pageSource).toContain("€90 · 3 DAYS");
+    expect(pageSource).not.toContain("MMB 160 · EB 240 TND");
+  });
+
   it("uses an original creed-inspired sentinel instead of the distracting lighthouse beacon", () => {
     expect(pageSource).toContain('className="world-hero__sentinel"');
     expect(pageSource).toContain('className="sentinel-glyph"');
