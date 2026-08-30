@@ -27,7 +27,7 @@ describe("mobile responsive contract", () => {
     expect(css).toContain(".game-page {");
     expect(css).toContain("padding-left: 0 !important");
     expect(css).toContain(".registration-site .form-grid.two");
-    expect(css).toContain(".conference-section-page--mirage .leaderboard-grid");
+    expect(css).not.toContain(".conference-section-page--mirage");
   });
 
   it("keeps the mobile game focused on the playable trial", () => {

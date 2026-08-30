@@ -62,7 +62,7 @@ export function serveStatic(app: Express) {
 
   // Explicit SPA routes keep direct links and browser refreshes working in production.
   // Express 5 wildcard matching can otherwise miss paths such as /register.
-  app.get(["/", "/home", "/mission", "/principles", "/delegate-prep", "/hall-of-banners", "/mirage", "/live-vanguard", "/game", "/register"], (_req, res) => {
+  app.get(["/", "/home", "/mission", "/principles", "/delegate-prep", "/game", "/register"], (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 

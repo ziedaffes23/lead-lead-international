@@ -1,10 +1,8 @@
-export type ConferencePageId = "home" | "brief" | "principles" | "banners" | "mirage" | "game" | "register";
+export type ConferencePageId = "home" | "brief" | "principles" | "game" | "register";
 
 const navigation = [
   ["brief", "/mission", "MISSION"],
   ["principles", "/principles", "CREED"],
-  ["banners", "/hall-of-banners", "BANNERS"],
-  ["mirage", "/mirage", "MIRAGE"],
   ["game", "/game", "TRIAL"],
 ] as const;
 

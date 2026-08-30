@@ -4,7 +4,7 @@ import { localCommitteeFromSearch } from "@shared/registration";
 import { buildLeaderboardPodium } from "@shared/leaderboardPodium";
 
 describe("registration leaderboard helpers", () => {
-  it("normalizes legacy LC spelling to its published banner name", () => {
+  it("normalizes legacy LC spelling to its published committee name", () => {
     expect(normalizeLocalCommittee("LC Bellaregia")).toBe("SU Bullaregia");
     expect(normalizeLocalCommittee("LC Nabeul")).toBe("LC Nabel");
   });
@@ -13,7 +13,7 @@ describe("registration leaderboard helpers", () => {
     expect(hashRegistrationEmail(" Delegate@AIESEC.net ")).toBe(hashRegistrationEmail("delegate@aiesec.net"));
   });
 
-  it("accepts only published LC selections passed from Hall of Banners", () => {
+  it("accepts only published LC selections", () => {
     expect(localCommitteeFromSearch("?lc=LC%20Bizerte")).toBe("LC Bizerte");
     expect(localCommitteeFromSearch("?lc=not-a-published-lc")).toBe("LC Thyna");
   });

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { localCommitteeFromSearch } from "./registration";
 
 describe("localCommitteeFromSearch", () => {
-  it("uses the Hall of Banners LC when it is a published registration option", () => {
+  it("uses the published LC when it is a published registration option", () => {
     expect(localCommitteeFromSearch("?lc=LC%20Bizerte")).toBe("LC Bizerte");
   });
 
