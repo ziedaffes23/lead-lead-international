@@ -52,7 +52,7 @@ describe("registration sheet submission bridge", () => {
         department: "None",
         countryOfOrigin: "Brazil",
         singleRoom: true,
-        price: 110,
+        price: 150,
         passportNumber: "P-AB 123/XY",
         phone: "00 55 (11) 99999-0000",
       }).success,

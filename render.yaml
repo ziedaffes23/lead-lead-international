@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: lead-lead-cinematic-intro
+    name: lead-lead-international
     runtime: docker
     plan: free
     healthCheckPath: /
@@ -22,7 +22,7 @@ services:
       - key: VITE_APP_TITLE
         value: Lead&Lead2K26
       - key: VITE_SHEETS_WEB_APP_URL
-        value: https://script.google.com/macros/s/AKfycbwZW1FPbQhLJM8iUtPpR06mniCG_Bg96Gbv2M6K86OZ7SBNRoednxNh2zFyAUgn6v4-/exec
+        value: https://script.google.com/macros/s/AKfycbxsTTVellusJUpK6n9MlXTg2iuHW6MkSZ20menlZR_i9EI7fkaoJ1rMTzOXHmeulnib/exec
       - key: DATABASE_URL
         sync: false
       - key: DRIZZLE_DATABASE_URL
