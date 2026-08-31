@@ -235,10 +235,12 @@ export async function submitRegistrationToSheets(
   }
 
   try {
+    const requestBody = JSON.stringify(input);
+    const requestHeaders = { "Content-Type": "text/plain;charset=utf-8" };
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(input),
+      headers: requestHeaders,
+      body: requestBody,
       redirect: "manual",
       signal: AbortSignal.timeout(30_000),
     });
@@ -251,8 +253,14 @@ export async function submitRegistrationToSheets(
             throw new Error(
               "The registration service did not provide a response location."
             );
+          // Apps Script commonly redirects script.google.com to a
+          // googleusercontent.com content-service URL. Re-submit the same
+          // POST body to that final URL; following the 302 as a GET would
+          // invoke doGet and silently skip sheet.appendRow().
           return fetch(location, {
-            headers: { Accept: "application/json" },
+            method: "POST",
+            headers: requestHeaders,
+            body: requestBody,
             redirect: "manual",
             signal: AbortSignal.timeout(30_000),
           });

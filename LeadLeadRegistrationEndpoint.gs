@@ -12,6 +12,7 @@ const STANDARD_BASE_PRICE_EUR = 65;
 const SINGLE_ROOM_PER_NIGHT_EUR = 20;
 const STANDARD_DURATION_NIGHTS = 3;
 const LEADERSHIP_DURATION_NIGHTS = 4;
+const SHEET_WRITE_LOCK_TIMEOUT_MS = 30_000;
 
 const REQUIRED_HEADERS = [
   "Timestamp",
@@ -165,16 +166,23 @@ function doPost(event) {
           : "No",
     };
 
-    sheet.appendRow(
-      headers.map(header =>
-        Object.prototype.hasOwnProperty.call(rowByHeader, header)
-          ? rowByHeader[header]
-          : ""
-      )
+    const rowValues = headers.map(header =>
+      Object.prototype.hasOwnProperty.call(rowByHeader, header)
+        ? rowByHeader[header]
+        : ""
     );
+    const writeLock = LockService.getScriptLock();
+    writeLock.waitLock(SHEET_WRITE_LOCK_TIMEOUT_MS);
+    let rowNumber;
+    try {
+      sheet.appendRow(rowValues);
+      rowNumber = sheet.getLastRow();
+    } finally {
+      writeLock.releaseLock();
+    }
     return jsonResponse({
       ok: true,
-      row: sheet.getLastRow(),
+      row: rowNumber,
       documents: driveDocuments,
     });
   } catch (error) {
