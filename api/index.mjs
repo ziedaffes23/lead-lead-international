@@ -514,12 +514,12 @@ import { z as z3 } from "zod";
 import { TRPCError as TRPCError4 } from "@trpc/server";
 
 // shared/sheetsDelivery.ts
-function confirmSheetsDelivery(httpOk, body, responseUrl) {
+function confirmSheetsDelivery(httpOk, body, responseUrl, initialStatus) {
   let parsed;
   try {
     parsed = JSON.parse(body);
   } catch {
-    if (httpOk && responseUrl?.startsWith("https://script.googleusercontent.com/") && body.trim() && !body.toLowerCase().includes("sorry, unable to open the file")) {
+    if (httpOk && responseUrl?.startsWith("https://script.googleusercontent.com/") && (body.trim() || initialStatus !== void 0 && initialStatus >= 300 && initialStatus < 400) && !body.toLowerCase().includes("sorry, unable to open the file")) {
       return { ok: true };
     }
     throw new Error("The registration service returned an unreadable response. Please try again shortly.");
@@ -767,7 +767,8 @@ async function submitRegistrationToSheets(input) {
     const confirmation = confirmSheetsDelivery(
       finalResponse.ok,
       await finalResponse.text(),
-      finalResponse.url
+      finalResponse.url,
+      response.status
     );
     return confirmation;
   } catch (error) {

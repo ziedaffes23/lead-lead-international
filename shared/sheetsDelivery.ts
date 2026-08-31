@@ -4,7 +4,8 @@ export type SheetsDeliveryConfirmation = { ok: true; row?: number; documents?: P
 export function confirmSheetsDelivery(
   httpOk: boolean,
   body: string,
-  responseUrl?: string
+  responseUrl?: string,
+  initialStatus?: number
 ): SheetsDeliveryConfirmation {
   let parsed: unknown;
   try {
@@ -13,7 +14,7 @@ export function confirmSheetsDelivery(
     if (
       httpOk &&
       responseUrl?.startsWith("https://script.googleusercontent.com/") &&
-      body.trim() &&
+      (body.trim() || (initialStatus !== undefined && initialStatus >= 300 && initialStatus < 400)) &&
       !body.toLowerCase().includes("sorry, unable to open the file")
     ) {
       return { ok: true };
