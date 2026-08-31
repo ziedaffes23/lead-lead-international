@@ -1,9 +1,5 @@
 import { nodeHTTPRequestHandler } from "@trpc/server/adapters/node-http";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { appRouter } from "../server/routers";
-import { createContext } from "../server/_core/context";
-import { ENV } from "../server/_core/env";
-import { storageGetSignedUrl } from "../server/storage";
 
 type VercelRequest = IncomingMessage & {
   body?: unknown;
@@ -21,7 +17,12 @@ function sendJson(res: VercelResponse, status: number, body: unknown) {
   res.end(JSON.stringify(body));
 }
 
-async function handleStorage(req: VercelRequest, res: VercelResponse) {
+async function handleStorage(
+  req: VercelRequest,
+  res: VercelResponse,
+  ENV: { forgeApiUrl: string; forgeApiKey: string },
+  storageGetSignedUrl: (key: string) => Promise<string>,
+) {
   const requestUrl = new URL(req.url ?? "/", "https://vercel.local");
   const key = decodeURIComponent(
     requestUrl.pathname.replace(/^\/manus-storage\//, ""),
@@ -53,17 +54,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (requestUrl.pathname.startsWith("/manus-storage/")) {
-    await handleStorage(req, res);
-    return;
-  }
+  try {
+    const { ENV } = await import("../server/_core/env");
+    if (requestUrl.pathname.startsWith("/manus-storage/")) {
+      const { storageGetSignedUrl } = await import("../server/storage");
+      await handleStorage(req, res, ENV, storageGetSignedUrl);
+      return;
+    }
 
-  const path = requestUrl.pathname.replace(/^\/api\/trpc\/?/, "");
-  await nodeHTTPRequestHandler({
-    req,
-    res,
-    path,
-    router: appRouter,
-    createContext: options => createContext(options as never),
-  });
+    const [{ appRouter }, { createContext }] = await Promise.all([
+      import("../server/routers"),
+      import("../server/_core/context"),
+    ]);
+    const path = requestUrl.pathname.replace(/^\/api\/trpc\/?/, "");
+    await nodeHTTPRequestHandler({
+      req,
+      res,
+      path,
+      router: appRouter,
+      createContext: options => createContext(options as never),
+    });
+  } catch (error) {
+    console.error("[API] invocation failed:", error);
+    if (!res.headersSent) {
+      sendJson(res, 500, {
+        error: "API initialization failed",
+        detail: error instanceof Error ? error.message : String(error),
+      });
+    } else {
+      res.end();
+    }
+  }
 }
