@@ -245,7 +245,10 @@ export async function submitRegistrationToSheets(
 
   try {
     const requestBody = JSON.stringify(input);
-    const requestHeaders = { "Content-Type": "text/plain;charset=utf-8" };
+    const requestHeaders = {
+      "Content-Type": "text/plain;charset=utf-8",
+      Accept: "application/json",
+    };
     const response = await fetch(url, {
       method: "POST",
       headers: requestHeaders,

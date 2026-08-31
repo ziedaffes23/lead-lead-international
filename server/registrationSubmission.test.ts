@@ -140,6 +140,7 @@ describe("registration sheet submission bridge", () => {
       expect(init?.method).toBe("POST");
       expect(init?.headers).toEqual({
         "Content-Type": "text/plain;charset=utf-8",
+        Accept: "application/json",
       });
       expect(JSON.parse(String(init?.body))).toMatchObject({
         track: "International AIESECer",
