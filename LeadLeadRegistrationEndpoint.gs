@@ -10,6 +10,8 @@ const REGISTRATIONS_SHEET_NAME = "Sheet1";
 const LEADERSHIP_BASE_PRICE_EUR = 90;
 const STANDARD_BASE_PRICE_EUR = 65;
 const SINGLE_ROOM_PER_NIGHT_EUR = 20;
+const SHORT_SINGLE_ROOM_NIGHTS = 2;
+const STANDARD_SINGLE_ROOM_NIGHTS = 3;
 const STANDARD_DURATION_NIGHTS = 3;
 const LEADERSHIP_DURATION_NIGHTS = 4;
 const SHEET_WRITE_LOCK_TIMEOUT_MS = 30000;
@@ -55,7 +57,6 @@ const HEADER_ALIASES = {
 const ALLOWED_TRACKS = ["International AIESECer", "EP"];
 const ALLOWED_POSITIONS = [
   "None",
-  "MMB",
   "Manager",
   "Team Leader",
   "LCVP",
@@ -285,11 +286,18 @@ function validatePayload(payload) {
   const basePrice = leadershipPosition
     ? LEADERSHIP_BASE_PRICE_EUR
     : STANDARD_BASE_PRICE_EUR;
+  const shortRoomStay =
+    cleanText(payload.track) === "EP" ||
+    (cleanText(payload.track) === "International AIESECer" &&
+      ["Manager", "Team Leader"].includes(cleanText(payload.position)));
+  const roomNights = shortRoomStay
+    ? SHORT_SINGLE_ROOM_NIGHTS
+    : STANDARD_SINGLE_ROOM_NIGHTS;
   const expectedPrice =
     basePrice +
     (payload.singleRoom === true ||
     String(payload.singleRoom).toLowerCase() === "true"
-      ? SINGLE_ROOM_PER_NIGHT_EUR * stayNights
+      ? SINGLE_ROOM_PER_NIGHT_EUR * roomNights
       : 0);
   if (Number(payload.price) !== expectedPrice)
     throw new Error(

@@ -30,7 +30,9 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).toContain("SINGLE_ROOM_PER_NIGHT_EUR = 20");
     expect(endpoint).toContain("STANDARD_DURATION_NIGHTS = 3");
     expect(endpoint).toContain("LEADERSHIP_DURATION_NIGHTS = 4");
-    expect(endpoint).toContain('"MMB"');
+    expect(endpoint).toContain("SHORT_SINGLE_ROOM_NIGHTS = 2");
+    expect(endpoint).toContain("STANDARD_SINGLE_ROOM_NIGHTS = 3");
+    expect(endpoint).not.toContain('  "MMB",');
     expect(endpoint).toContain('"MCVP"');
     expect(endpoint).toContain(
       "MCVP and MCP registrations must not include an LC name."

@@ -296,7 +296,6 @@ type Track = "" | "International AIESECer" | "EP";
 type Position =
   | ""
   | "None"
-  | "MMB"
   | "Manager"
   | "Team Leader"
   | "LCVP"
@@ -1203,7 +1202,6 @@ export default function Register() {
                         >
                           <option value="">Select position</option>
                           {[
-                            "MMB",
                             "Manager",
                             "Team Leader",
                             "LCVP",

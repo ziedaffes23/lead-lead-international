@@ -28,7 +28,6 @@ export const registrationSubmissionInput = z
     track: z.enum(["International AIESECer", "EP"]),
     position: z.enum([
       "None",
-      "MMB",
       "Manager",
       "Team Leader",
       "LCVP",
@@ -68,9 +67,14 @@ export const registrationSubmissionInput = z
       "MCVP",
       "MCP",
     ].includes(input.position);
-    const stayNights = leadershipPosition ? 4 : 3;
+    const shortRoomStay =
+      input.track === "EP" ||
+      (input.track === "International AIESECer" &&
+        ["Manager", "Team Leader"].includes(input.position));
+    const roomNights = shortRoomStay ? 2 : 3;
     const expectedPrice =
-      (leadershipPosition ? 90 : 65) + (input.singleRoom ? 20 * stayNights : 0);
+      (leadershipPosition ? 90 : 65) +
+      (input.singleRoom ? 20 * roomNights : 0);
     if (input.price !== expectedPrice) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

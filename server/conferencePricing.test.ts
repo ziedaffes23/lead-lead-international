@@ -24,9 +24,6 @@ describe("conference pricing", () => {
 
   it("calculates standard and leadership shared-room prices", () => {
     expect(
-      getContribution("International AIESECer", false, "MMB")
-    ).toMatchObject({ price: 65, currency: "EUR" });
-    expect(
       getContribution("International AIESECer", false, "Manager")
     ).toMatchObject({ price: 65, currency: "EUR" });
     expect(
@@ -49,28 +46,30 @@ describe("conference pricing", () => {
 
   it("adds 20 EUR per night for a single room", () => {
     expect(
-      getContribution("International AIESECer", true, "MMB")
-    ).toMatchObject({ price: 125, currency: "EUR" });
+      getContribution("International AIESECer", true, "Manager")
+    ).toMatchObject({ price: 105, currency: "EUR" });
     expect(
       getContribution("International AIESECer", true, "MCP")
-    ).toMatchObject({ price: 170, currency: "EUR" });
+    ).toMatchObject({ price: 150, currency: "EUR" });
     expect(getContribution("EP", true)).toMatchObject({
-      price: 125,
+      price: 105,
       currency: "EUR",
     });
-    expect(getSingleRoomSurcharge("MMB", "International AIESECer")).toBe(60);
-    expect(getSingleRoomSurcharge("MCP", "International AIESECer")).toBe(80);
-    expect(getStayDurationDays("International AIESECer", "MMB")).toBe(3);
+    expect(getSingleRoomSurcharge("Manager", "International AIESECer")).toBe(40);
+    expect(getSingleRoomSurcharge("Team Leader", "International AIESECer")).toBe(40);
+    expect(getSingleRoomSurcharge("MCP", "International AIESECer")).toBe(60);
+    expect(getSingleRoomSurcharge("", "EP")).toBe(40);
+    expect(getStayDurationDays("International AIESECer", "Manager")).toBe(3);
     expect(getStayDurationDays("International AIESECer", "MCP")).toBe(4);
     expect(
       getContribution("International AIESECer", true, "MCP")?.note
-    ).toContain("+20 EUR/night for 4 nights");
+    ).toContain("+20 EUR/night for 3 nights");
   });
 
   it("hides LC name only for MC positions", () => {
     expect(shouldShowLcName("MCVP")).toBe(false);
     expect(shouldShowLcName("MCP")).toBe(false);
-    expect(shouldShowLcName("MMB")).toBe(true);
+    expect(shouldShowLcName("Manager")).toBe(true);
     expect(shouldShowLcName("LCVP")).toBe(true);
   });
 

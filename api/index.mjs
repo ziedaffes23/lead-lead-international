@@ -553,7 +553,6 @@ var registrationSubmissionInput = z3.object({
   track: z3.enum(["International AIESECer", "EP"]),
   position: z3.enum([
     "None",
-    "MMB",
     "Manager",
     "Team Leader",
     "LCVP",
@@ -590,8 +589,9 @@ var registrationSubmissionInput = z3.object({
     "MCVP",
     "MCP"
   ].includes(input.position);
-  const stayNights = leadershipPosition ? 4 : 3;
-  const expectedPrice = (leadershipPosition ? 90 : 65) + (input.singleRoom ? 20 * stayNights : 0);
+  const shortRoomStay = input.track === "EP" || input.track === "International AIESECer" && ["Manager", "Team Leader"].includes(input.position);
+  const roomNights = shortRoomStay ? 2 : 3;
+  const expectedPrice = (leadershipPosition ? 90 : 65) + (input.singleRoom ? 20 * roomNights : 0);
   if (input.price !== expectedPrice) {
     ctx.addIssue({
       code: z3.ZodIssueCode.custom,
