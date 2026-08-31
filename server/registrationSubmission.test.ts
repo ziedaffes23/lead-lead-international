@@ -61,7 +61,7 @@ describe("registration sheet submission bridge", () => {
         countryOfOrigin: "Brazil",
         hostingLc: "LC Thyna",
         singleRoom: true,
-        price: 125,
+        price: 105,
         passportNumber: "P-AB 123/XY",
         phone: "00 55 (11) 99999-0000",
       }).success
@@ -82,6 +82,7 @@ describe("registration sheet submission bridge", () => {
       registrationSubmissionInput.safeParse({
         ...input,
         position: "MCP",
+        department: "None",
         lcName: "None",
         mcPosition: "None",
         price: 90,
@@ -103,6 +104,15 @@ describe("registration sheet submission bridge", () => {
         lcName: "None",
         mcPosition: "MC President",
         price: 90,
+      }).success
+    ).toBe(false);
+  });
+
+  it("rejects MMB because it is no longer an available position", () => {
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        position: "MMB" as any,
       }).success
     ).toBe(false);
   });

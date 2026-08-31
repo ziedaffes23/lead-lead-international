@@ -650,7 +650,14 @@ var registrationSubmissionInput = z3.object({
         message: "International AIESECer registrations require a position."
       });
     }
-    if (input.department === "None") {
+    if (input.position === "MCP" && input.department !== "None") {
+      ctx.addIssue({
+        code: z3.ZodIssueCode.custom,
+        path: ["department"],
+        message: "MCP registrations must not include a department."
+      });
+    }
+    if (input.position !== "MCP" && input.department === "None") {
       ctx.addIssue({
         code: z3.ZodIssueCode.custom,
         path: ["department"],

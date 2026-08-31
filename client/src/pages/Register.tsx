@@ -376,12 +376,15 @@ const informationFields: Array<keyof FormState> = [
   "email",
 ];
 
-function participationFieldsForTrack(track: Track): Array<keyof FormState> {
+function participationFieldsForTrack(
+  track: Track,
+  position: Position = ""
+): Array<keyof FormState> {
   return track === "International AIESECer"
     ? [
         "track",
         "position",
-        "department",
+        ...(position === "MCP" ? [] : ["department" as const]),
         "lcName",
         "entityName",
         "mcPosition",
@@ -506,6 +509,7 @@ export default function Register() {
     if (
       fields.includes("department") &&
       form.track === "International AIESECer" &&
+      form.position !== "MCP" &&
       (!form.department ||
         (form.department === "Other" && !otherDepartment.trim()))
     )
@@ -576,7 +580,7 @@ export default function Register() {
   };
   const continueToSignature = () => {
     if (
-      validate(participationFieldsForTrack(form.track)) &&
+      validate(participationFieldsForTrack(form.track, form.position)) &&
       validateAttachments()
     )
       goTo(3);
@@ -677,7 +681,8 @@ export default function Register() {
       return;
     }
     const participationValidationFields = participationFieldsForTrack(
-      form.track
+      form.track,
+      form.position
     );
     if (!validate(participationValidationFields)) {
       setStage(2);
@@ -699,7 +704,7 @@ export default function Register() {
     const position: Exclude<Position, ""> =
       track === "EP" ? "None" : (form.position as Exclude<Position, "">);
     const selectedDepartment =
-      track === "EP"
+      track === "EP" || position === "MCP"
         ? "None"
         : form.department === "Other"
           ? otherDepartment.trim()
@@ -1186,6 +1191,12 @@ export default function Register() {
                             setForm(current => ({
                               ...current,
                               position,
+                              department:
+                                position === "MCP"
+                                  ? "None"
+                                  : current.department === "None"
+                                    ? ""
+                                    : current.department,
                               mcPosition: ["MCVP"].includes(position)
                                 ? current.mcPosition === "None"
                                   ? ""
@@ -1316,7 +1327,8 @@ export default function Register() {
                       </span>
                     </label>
                   )}
-                  {form.track === "International AIESECer" && (
+                  {form.track === "International AIESECer" &&
+                    form.position !== "MCP" && (
                     <div className="department-fields">
                       <label>
                         Department
@@ -1586,11 +1598,13 @@ export default function Register() {
                       </p>
                       {form.track === "International AIESECer" ? (
                         <>
-                          <p>
-                            {form.department === "Other"
-                              ? otherDepartment || "Department pending"
-                              : form.department || "Department pending"}
-                          </p>
+                          {form.position !== "MCP" && (
+                            <p>
+                              {form.department === "Other"
+                                ? otherDepartment || "Department pending"
+                                : form.department || "Department pending"}
+                            </p>
+                          )}
                           {shouldShowLcName(form.position) && (
                             <p>LC: {form.lcName || "LC pending"}</p>
                           )}
