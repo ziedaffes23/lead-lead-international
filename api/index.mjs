@@ -1889,8 +1889,11 @@ function confirmSheetsDelivery(httpOk, body) {
 }
 
 // server/registrationSubmission.ts
-var DEFAULT_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec";
-var LEGACY_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec";
+var DEFAULT_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyS16hLcvvCg4eqj7OpjI3qZV8WLRa_33qBtmBT6DJLCpUfeE8NNZBBNDySBCR9hKHa/exec";
+var LEGACY_SHEETS_WEB_APP_URLS = /* @__PURE__ */ new Set([
+  "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec",
+  "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec"
+]);
 var documentUrl = z3.string().trim().refine((value) => !value || value.startsWith("https://"), "Document URLs must use HTTPS.");
 var documentDataUrl = z3.string().trim().max(8e6).optional();
 var registrationSubmissionInput = z3.object({
@@ -2069,7 +2072,7 @@ var registrationSubmissionInput = z3.object({
 });
 async function submitRegistrationToSheets(input) {
   const configuredEndpoint = process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
-  const endpoint = configuredEndpoint && configuredEndpoint !== LEGACY_SHEETS_WEB_APP_URL ? configuredEndpoint : DEFAULT_SHEETS_WEB_APP_URL;
+  const endpoint = configuredEndpoint && !LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint) ? configuredEndpoint : DEFAULT_SHEETS_WEB_APP_URL;
   if (!endpoint) {
     throw new TRPCError4({
       code: "PRECONDITION_FAILED",

@@ -3,9 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { confirmSheetsDelivery } from "@shared/sheetsDelivery";
 
 const DEFAULT_SHEETS_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec";
-const LEGACY_SHEETS_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec";
+  "https://script.google.com/macros/s/AKfycbyS16hLcvvCg4eqj7OpjI3qZV8WLRa_33qBtmBT6DJLCpUfeE8NNZBBNDySBCR9hKHa/exec";
+const LEGACY_SHEETS_WEB_APP_URLS = new Set([
+  "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec",
+  "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec",
+]);
 
 const documentUrl = z
   .string()
@@ -217,7 +219,7 @@ export async function submitRegistrationToSheets(
     process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
   // Ignore the old deployment while retaining support for a future dashboard value.
   const endpoint =
-    configuredEndpoint && configuredEndpoint !== LEGACY_SHEETS_WEB_APP_URL
+    configuredEndpoint && !LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint)
       ? configuredEndpoint
       : DEFAULT_SHEETS_WEB_APP_URL;
   if (!endpoint) {
