@@ -181,15 +181,8 @@ describe("registration sheet submission bridge", () => {
       expect(String(url)).toContain(
         "https://script.googleusercontent.com/macros/echo"
       );
-      expect(init?.method).toBe("POST");
-      expect(init?.headers).toEqual({
-        "Content-Type": "text/plain;charset=utf-8",
-      });
-      expect(JSON.parse(String(init?.body))).toMatchObject({
-        track: "International AIESECer",
-        position: "Manager",
-        passportNumber: "A12-34B",
-      });
+      expect(init?.method).toBeUndefined();
+      expect(init?.headers).toEqual({ Accept: "application/json" });
       return new Response(JSON.stringify({ ok: true, row: 13 }), {
         status: 200,
       });

@@ -258,14 +258,11 @@ export async function submitRegistrationToSheets(
             throw new Error(
               "The registration service did not provide a response location."
             );
-          // Apps Script commonly redirects script.google.com to a
-          // googleusercontent.com content-service URL. Re-submit the same
-          // POST body to that final URL; following the 302 as a GET would
-          // invoke doGet and silently skip sheet.appendRow().
+          // Apps Script executes doPost() at the /exec URL, then redirects
+          // to a GET-only content-service URL that contains the response.
+          // Read that response with GET; replaying POST here returns 405.
           return fetch(location, {
-            method: "POST",
-            headers: requestHeaders,
-            body: requestBody,
+            headers: { Accept: "application/json" },
             redirect: "manual",
             signal: AbortSignal.timeout(30_000),
           });
