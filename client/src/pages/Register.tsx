@@ -468,7 +468,6 @@ export default function Register() {
     image.src = form.indemnitySignature;
     setSignatureReady(true);
   }, [stage]);
-  const uploadDocuments = trpc.registration.uploadDocuments.useMutation();
   const submitRegistration = trpc.registration.submit.useMutation();
   const fee = useMemo(
     () => contribution(form),
@@ -727,10 +726,12 @@ export default function Register() {
     setStatus("sending");
     setSubmissionMessage("");
     let nextDocuments = documents;
-    if (
-      !nextDocuments &&
-      (attachments.photo || attachments.cv || attachments.identity)
-    ) {
+    let inlineDocuments = {
+      photoDataUrl: "",
+      cvDataUrl: "",
+      identityDataUrl: "",
+    };
+    if (attachments.photo || attachments.cv || attachments.identity) {
       try {
         const [photoData, cvData, identityData] = await Promise.all([
           attachments.photo
@@ -743,38 +744,16 @@ export default function Register() {
             ? readFileAsDataUrl(attachments.identity.file)
             : Promise.resolve(undefined),
         ]);
-        nextDocuments = await uploadDocuments.mutateAsync({
-          photo:
-            attachments.photo && photoData
-              ? {
-                  name: attachments.photo.name,
-                  mimeType: attachments.photo.file.type,
-                  dataUrl: photoData,
-                }
-              : undefined,
-          cv:
-            attachments.cv && cvData
-              ? {
-                  name: attachments.cv.name,
-                  mimeType: attachments.cv.file.type,
-                  dataUrl: cvData,
-                }
-              : undefined,
-          identity:
-            attachments.identity && identityData
-              ? {
-                  name: attachments.identity.name,
-                  mimeType: attachments.identity.file.type,
-                  dataUrl: identityData,
-                }
-              : undefined,
-        });
-        setDocuments(nextDocuments);
+        inlineDocuments = {
+          photoDataUrl: photoData ?? "",
+          cvDataUrl: cvData ?? "",
+          identityDataUrl: identityData ?? "",
+        };
       } catch (error) {
         setSubmissionMessage(
           error instanceof Error
             ? error.message
-            : "The documents could not be uploaded."
+            : "The documents could not be read."
         );
         setStatus("upload");
         return;
@@ -798,11 +777,15 @@ export default function Register() {
         price: selectedFee.price,
         currency: selectedFee.currency,
         photoUrl: nextDocuments?.photo?.url ?? "",
-        photoName: nextDocuments?.photo?.name ?? "",
+        photoDataUrl: inlineDocuments.photoDataUrl,
+        photoName: nextDocuments?.photo?.name ?? attachments.photo?.name ?? "",
         cvUrl: nextDocuments?.cv?.url ?? "",
-        cvName: nextDocuments?.cv?.name ?? "",
+        cvDataUrl: inlineDocuments.cvDataUrl,
+        cvName: nextDocuments?.cv?.name ?? attachments.cv?.name ?? "",
         identityUrl: nextDocuments?.identity?.url ?? "",
-        identityName: nextDocuments?.identity?.name ?? "",
+        identityDataUrl: inlineDocuments.identityDataUrl,
+        identityName:
+          nextDocuments?.identity?.name ?? attachments.identity?.name ?? "",
       });
       const receiptDocuments = confirmation.documents ?? nextDocuments ?? {};
       setReceipt({
@@ -1656,13 +1639,11 @@ export default function Register() {
                       className="bronze-button"
                       disabled={
                         status === "sending" ||
-                        uploadDocuments.isPending ||
                         submitRegistration.isPending
                       }
                       type="submit"
                     >
                       {status === "sending" ||
-                      uploadDocuments.isPending ||
                       submitRegistration.isPending
                         ? "RECORDING…"
                         : "SUBMIT REGISTRATION"}

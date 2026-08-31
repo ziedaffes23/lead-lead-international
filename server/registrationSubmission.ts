@@ -5,13 +5,11 @@ import { confirmSheetsDelivery } from "@shared/sheetsDelivery";
 const DEFAULT_SHEETS_WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec";
 
-const publicUrl = z
+const documentUrl = z
   .string()
-  .url()
-  .refine(
-    value => value.startsWith("https://"),
-    "Document URLs must use HTTPS."
-  );
+  .trim()
+  .refine(value => !value || value.startsWith("https://"), "Document URLs must use HTTPS.");
+const documentDataUrl = z.string().trim().max(8_000_000).optional();
 
 export const registrationSubmissionInput = z
   .object({
@@ -44,11 +42,14 @@ export const registrationSubmissionInput = z
     note: z.string().trim().min(1),
     price: z.number().int().nonnegative(),
     currency: z.literal("EUR"),
-    photoUrl: publicUrl,
+    photoUrl: documentUrl,
+    photoDataUrl: documentDataUrl,
     photoName: z.string().trim().min(1),
-    cvUrl: publicUrl,
+    cvUrl: documentUrl,
+    cvDataUrl: documentDataUrl,
     cvName: z.string().trim().min(1),
-    identityUrl: publicUrl,
+    identityUrl: documentUrl,
+    identityDataUrl: documentDataUrl,
     identityName: z.string().trim().min(1),
     indemnitySignature: z.string().trim().min(1),
     indemnityAccepted: z

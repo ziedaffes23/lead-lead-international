@@ -13,6 +13,7 @@ const SINGLE_ROOM_PER_NIGHT_EUR = 20;
 const STANDARD_DURATION_NIGHTS = 3;
 const LEADERSHIP_DURATION_NIGHTS = 4;
 const SHEET_WRITE_LOCK_TIMEOUT_MS = 30000;
+const DRIVE_FOLDER_NAME = "LeadLead International Registrations";
 
 const REQUIRED_HEADERS = [
   "Timestamp",
@@ -106,10 +107,7 @@ function doPost(event) {
     const sheet = getRegistrationSheet();
 
     const headers = ensureHeaders(sheet);
-    // Documents are already uploaded to the Render storage proxy. Keep those HTTPS URLs
-    // in the sheet instead of calling DriveApp, which requires separate Apps Script
-    // authorization and caused the deployed endpoint to reject submissions.
-    const driveDocuments = {};
+    const driveDocuments = saveRegistrationDocuments(payload);
     const email = cleanText(payload.email || payload.aiesecEmail).toLowerCase();
     const rowByHeader = {
       Timestamp: new Date(),
@@ -244,9 +242,7 @@ function validatePayload(payload) {
     "currency",
     "allergies",
     "note",
-    "photoUrl",
-    "cvUrl",
-    "identityUrl",
+
     "indemnitySignature",
     "indemnityAccepted",
   ];
@@ -363,6 +359,14 @@ function validatePayload(payload) {
     String(payload.indemnityAccepted).toLowerCase() !== "true"
   )
     throw new Error("Indemnity consent is required.");
+
+  validateDocumentPayload(payload.photoUrl, payload.photoDataUrl, "photo");
+  validateDocumentPayload(payload.cvUrl, payload.cvDataUrl, "CV");
+  validateDocumentPayload(
+    payload.identityUrl,
+    payload.identityDataUrl,
+    "identity document"
+  );
 }
 
 function ensureHeaders(sheet) {
@@ -423,6 +427,56 @@ function canonicalLeaderboardLc(value) {
   const normalized = cleanText(value).replace(/\s+/g, " ").toLowerCase();
   const canonical = LEADERBOARD_LCS.find(lc => lc.toLowerCase() === normalized);
   return canonical || LEADERBOARD_LC_ALIASES[normalized] || "";
+}
+
+function getDriveFolder() {
+  const folders = DriveApp.getFoldersByName(DRIVE_FOLDER_NAME);
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder(DRIVE_FOLDER_NAME);
+}
+
+function validateDocumentPayload(url, dataUrl, label) {
+  const cleanData = cleanText(dataUrl);
+  const cleanLink = cleanUrl(url);
+  if (!cleanData && !cleanLink)
+    throw new Error(`Missing required ${label} file.`);
+  if (cleanData && !/^data:[^;]+;base64,[A-Za-z0-9+/=]+$/.test(cleanData))
+    throw new Error(`Invalid ${label} file payload.`);
+}
+
+function safeDriveFileName(name, fallback) {
+  const cleaned = cleanText(name).replace(/[^a-zA-Z0-9._-]+/g, "-");
+  return (cleaned || fallback).slice(0, 120);
+}
+
+function saveDriveFile(dataUrl, name, fallback) {
+  const cleanData = cleanText(dataUrl);
+  if (!cleanData) return null;
+  const match = cleanData.match(/^data:([^;]+);base64,(.*)$/);
+  if (!match) throw new Error(`Invalid ${fallback} file payload.`);
+  const blob = Utilities.newBlob(
+    Utilities.base64Decode(match[2]),
+    match[1],
+    safeDriveFileName(name, fallback)
+  );
+  const file = getDriveFolder().createFile(blob);
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (sharingError) {
+    console.warn(`Could not make ${fallback} file public: ${sharingError}`);
+  }
+  return { name: file.getName(), url: file.getUrl() };
+}
+
+function saveRegistrationDocuments(payload) {
+  return {
+    photo: saveDriveFile(payload.photoDataUrl, payload.photoName, "profile-photo"),
+    cv: saveDriveFile(payload.cvDataUrl, payload.cvName, "cv"),
+    identity: saveDriveFile(
+      payload.identityDataUrl,
+      payload.identityName,
+      "identity-document"
+    ),
+  };
 }
 
 function cleanText(value) {

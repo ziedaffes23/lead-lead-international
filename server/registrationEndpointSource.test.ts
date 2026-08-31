@@ -48,11 +48,12 @@ describe("registration Apps Script contract", () => {
     expect(endpoint).not.toContain("must end with @aiesec.net");
   });
 
-  it("keeps uploaded HTTPS document URLs in the sheet without DriveApp authorization", () => {
+  it("stores inline document uploads in Google Drive before writing the sheet row", () => {
+    expect(endpoint).toContain("const DRIVE_FOLDER_NAME =");
+    expect(endpoint).toContain("DriveApp.getFoldersByName");
+    expect(endpoint).toContain("saveRegistrationDocuments(payload)");
+    expect(endpoint).toContain("Utilities.base64Decode");
     expect(endpoint).toContain("Attachment links must use HTTPS.");
-    expect(endpoint).toContain("const driveDocuments = {};");
-    expect(endpoint).not.toContain("DriveApp.getFolderById");
-    expect(endpoint).not.toContain("DRIVE_FOLDER_ID");
   });
 
   it("preserves legacy sheet compatibility while normalizing SU Bullaregia", () => {
