@@ -213,27 +213,78 @@ export type RegistrationSubmissionInput = z.infer<
   typeof registrationSubmissionInput
 >;
 
+type AppsScriptFetchResult = {
+  ok: boolean;
+  body: string;
+  url: string;
+  initialStatus: number;
+};
+
+type DriveLink = { name: string; url: string };
+
+async function postToAppsScript(endpoint: URL, payload: unknown): Promise<AppsScriptFetchResult> {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+    redirect: "manual",
+    signal: AbortSignal.timeout(55_000),
+  });
+
+  const finalResponse =
+    response.status >= 300 && response.status < 400
+      ? await (async () => {
+          const location = response.headers.get("location");
+          if (!location)
+            throw new Error("The registration service did not provide a response location.");
+          return fetch(location, {
+            headers: { Accept: "application/json" },
+            redirect: "follow",
+            signal: AbortSignal.timeout(55_000),
+          });
+        })()
+      : response;
+
+  return {
+    ok: finalResponse.ok,
+    body: await finalResponse.text(),
+    url: finalResponse.url,
+    initialStatus: response.status,
+  };
+}
+
+function parseAppsScriptJson(result: AppsScriptFetchResult): Record<string, any> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(result.body);
+  } catch {
+    throw new Error("The registration service returned an unreadable response. Please try again shortly.");
+  }
+  const response = parsed && typeof parsed === "object" ? parsed as Record<string, any> : {};
+  if (!result.ok || response.ok !== true) {
+    throw new Error(
+      typeof response.error === "string" && response.error.trim()
+        ? response.error.trim()
+        : "The registration service did not confirm your record."
+    );
+  }
+  return response;
+}
+
 export async function submitRegistrationToSheets(
   input: RegistrationSubmissionInput
 ) {
   const configuredEndpoint =
     process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
-  // Production previously contained a stale Apps Script deployment that returned
-  // HTTP 404. Keep the verified live deployment authoritative in Vercel while
-  // retaining an override for local tests and non-production environments.
   const isProduction =
     process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
   const endpoint =
     isProduction || !configuredEndpoint || LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint)
       ? DEFAULT_SHEETS_WEB_APP_URL
       : configuredEndpoint;
-  if (!endpoint) {
-    throw new TRPCError({
-      code: "PRECONDITION_FAILED",
-      message:
-        "Registration setup is incomplete. Please contact the organising team before retrying.",
-    });
-  }
 
   let url: URL;
   try {
@@ -249,47 +300,65 @@ export async function submitRegistrationToSheets(
   }
 
   try {
-    const requestBody = JSON.stringify(input);
-    const requestHeaders = {
-      "Content-Type": "text/plain;charset=utf-8",
-      Accept: "application/json",
-    };
-    const response = await fetch(url, {
-      method: "POST",
-      headers: requestHeaders,
-      body: requestBody,
-      // Apps Script executes doPost() at /exec and returns a temporary
-      // content-service URL for the JSON response. Capture that redirect
-      // explicitly, then fetch the temporary URL as GET.
-      redirect: "manual",
-      signal: AbortSignal.timeout(30_000),
-    });
+    // Keep URL-only submissions compatible with the existing bridge and tests.
+    // The optimized path is used by the registration form, which supplies all
+    // three inline file payloads.
+    if (!input.photoDataUrl || !input.cvDataUrl || !input.identityDataUrl) {
+      const legacyResponse = await postToAppsScript(url, input);
+      return confirmSheetsDelivery(
+        legacyResponse.ok,
+        legacyResponse.body,
+        legacyResponse.url,
+        legacyResponse.initialStatus
+      );
+    }
 
+    const uploadSpecs = [
+      { type: "photo", data: input.photoDataUrl, name: input.photoName, key: "photo" },
+      { type: "cv", data: input.cvDataUrl, name: input.cvName, key: "cv" },
+      { type: "identity", data: input.identityDataUrl, name: input.identityName, key: "identity" },
+    ] as const;
 
-    const finalResponse =
-      response.status >= 300 && response.status < 400
-        ? await (async () => {
-            const location = response.headers.get("location");
-            if (!location)
-              throw new Error(
-                "The registration service did not provide a response location."
-              );
-            return fetch(location, {
-              headers: { Accept: "application/json" },
-              redirect: "follow",
-              signal: AbortSignal.timeout(30_000),
-            });
-          })()
-        : response;
-
-    const finalBody = await finalResponse.text();
-    const confirmation = confirmSheetsDelivery(
-      finalResponse.ok,
-      finalBody,
-      finalResponse.url,
-      response.status
+    const uploadedEntries = await Promise.all(
+      uploadSpecs.map(async spec => {
+        if (!spec.data) throw new Error(`Missing required ${spec.type} file.`);
+        const response = parseAppsScriptJson(
+          await postToAppsScript(url, {
+            action: "uploadDocument",
+            documentType: spec.type,
+            [`${spec.type}DataUrl`]: spec.data,
+            [`${spec.type}Name`]: spec.name,
+          })
+        );
+        const document = response.document as DriveLink | undefined;
+        if (!document?.url || !document.name)
+          throw new Error(`The ${spec.type} upload did not return a Drive link.`);
+        return [spec.key, document] as const;
+      })
     );
-    return confirmation;
+
+    const documents = Object.fromEntries(uploadedEntries) as Record<"photo" | "cv" | "identity", DriveLink>;
+    const sheetPayload = {
+      ...input,
+      photoUrl: documents.photo.url,
+      photoName: documents.photo.name,
+      photoDataUrl: undefined,
+      cvUrl: documents.cv.url,
+      cvName: documents.cv.name,
+      cvDataUrl: undefined,
+      identityUrl: documents.identity.url,
+      identityName: documents.identity.name,
+      identityDataUrl: undefined,
+    };
+
+    const confirmationResponse = await postToAppsScript(url, sheetPayload);
+    const confirmation = confirmSheetsDelivery(
+      confirmationResponse.ok,
+      confirmationResponse.body,
+      confirmationResponse.url,
+      confirmationResponse.initialStatus
+    );
+    return { ...confirmation, documents };
   } catch (error) {
     if (error instanceof TRPCError) throw error;
     const message =

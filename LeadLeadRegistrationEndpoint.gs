@@ -102,6 +102,9 @@ function doGet(event) {
 function doPost(event) {
   try {
     const payload = parsePayload(event);
+    if (payload.action === "uploadDocument") {
+      return jsonResponse(uploadDocumentAction(payload));
+    }
     validatePayload(payload);
 
     const sheet = getRegistrationSheet();
@@ -482,6 +485,27 @@ function saveRegistrationDocuments(payload) {
       "identity-document"
     ),
   };
+}
+
+function uploadDocumentAction(payload) {
+  const documentType = cleanText(payload.documentType);
+  const definitions = {
+    photo: { dataKey: "photoDataUrl", nameKey: "photoName", fallback: "profile-photo" },
+    cv: { dataKey: "cvDataUrl", nameKey: "cvName", fallback: "cv" },
+    identity: { dataKey: "identityDataUrl", nameKey: "identityName", fallback: "identity-document" },
+  };
+  const definition = definitions[documentType];
+  if (!definition) throw new Error("Invalid document type.");
+  const dataUrl = cleanText(payload[definition.dataKey]);
+  if (!dataUrl) throw new Error(`Missing ${documentType} file.`);
+  if (!/^data:[^;]+;base64,[A-Za-z0-9+/=]+$/.test(dataUrl))
+    throw new Error(`Invalid ${documentType} file payload.`);
+  const document = saveDriveFile(
+    dataUrl,
+    payload[definition.nameKey],
+    definition.fallback
+  );
+  return { ok: true, documentType: documentType, document: document };
 }
 
 function cleanText(value) {

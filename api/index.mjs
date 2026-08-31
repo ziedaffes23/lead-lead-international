@@ -716,16 +716,53 @@ var registrationSubmissionInput = z3.object({
     }
   }
 });
+async function postToAppsScript(endpoint, payload) {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(payload),
+    redirect: "manual",
+    signal: AbortSignal.timeout(55e3)
+  });
+  const finalResponse = response.status >= 300 && response.status < 400 ? await (async () => {
+    const location = response.headers.get("location");
+    if (!location)
+      throw new Error("The registration service did not provide a response location.");
+    return fetch(location, {
+      headers: { Accept: "application/json" },
+      redirect: "follow",
+      signal: AbortSignal.timeout(55e3)
+    });
+  })() : response;
+  return {
+    ok: finalResponse.ok,
+    body: await finalResponse.text(),
+    url: finalResponse.url,
+    initialStatus: response.status
+  };
+}
+function parseAppsScriptJson(result) {
+  let parsed;
+  try {
+    parsed = JSON.parse(result.body);
+  } catch {
+    throw new Error("The registration service returned an unreadable response. Please try again shortly.");
+  }
+  const response = parsed && typeof parsed === "object" ? parsed : {};
+  if (!result.ok || response.ok !== true) {
+    throw new Error(
+      typeof response.error === "string" && response.error.trim() ? response.error.trim() : "The registration service did not confirm your record."
+    );
+  }
+  return response;
+}
 async function submitRegistrationToSheets(input) {
   const configuredEndpoint = process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
   const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
   const endpoint = isProduction || !configuredEndpoint || LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint) ? DEFAULT_SHEETS_WEB_APP_URL : configuredEndpoint;
-  if (!endpoint) {
-    throw new TRPCError4({
-      code: "PRECONDITION_FAILED",
-      message: "Registration setup is incomplete. Please contact the organising team before retrying."
-    });
-  }
   let url;
   try {
     url = new URL(endpoint);
@@ -738,41 +775,58 @@ async function submitRegistrationToSheets(input) {
     });
   }
   try {
-    const requestBody = JSON.stringify(input);
-    const requestHeaders = {
-      "Content-Type": "text/plain;charset=utf-8",
-      Accept: "application/json"
-    };
-    const response = await fetch(url, {
-      method: "POST",
-      headers: requestHeaders,
-      body: requestBody,
-      // Apps Script executes doPost() at /exec and returns a temporary
-      // content-service URL for the JSON response. Capture that redirect
-      // explicitly, then fetch the temporary URL as GET.
-      redirect: "manual",
-      signal: AbortSignal.timeout(3e4)
-    });
-    const finalResponse = response.status >= 300 && response.status < 400 ? await (async () => {
-      const location = response.headers.get("location");
-      if (!location)
-        throw new Error(
-          "The registration service did not provide a response location."
+    if (!input.photoDataUrl || !input.cvDataUrl || !input.identityDataUrl) {
+      const legacyResponse = await postToAppsScript(url, input);
+      return confirmSheetsDelivery(
+        legacyResponse.ok,
+        legacyResponse.body,
+        legacyResponse.url,
+        legacyResponse.initialStatus
+      );
+    }
+    const uploadSpecs = [
+      { type: "photo", data: input.photoDataUrl, name: input.photoName, key: "photo" },
+      { type: "cv", data: input.cvDataUrl, name: input.cvName, key: "cv" },
+      { type: "identity", data: input.identityDataUrl, name: input.identityName, key: "identity" }
+    ];
+    const uploadedEntries = await Promise.all(
+      uploadSpecs.map(async (spec) => {
+        if (!spec.data) throw new Error(`Missing required ${spec.type} file.`);
+        const response = parseAppsScriptJson(
+          await postToAppsScript(url, {
+            action: "uploadDocument",
+            documentType: spec.type,
+            [`${spec.type}DataUrl`]: spec.data,
+            [`${spec.type}Name`]: spec.name
+          })
         );
-      return fetch(location, {
-        headers: { Accept: "application/json" },
-        redirect: "follow",
-        signal: AbortSignal.timeout(3e4)
-      });
-    })() : response;
-    const finalBody = await finalResponse.text();
-    const confirmation = confirmSheetsDelivery(
-      finalResponse.ok,
-      finalBody,
-      finalResponse.url,
-      response.status
+        const document = response.document;
+        if (!document?.url || !document.name)
+          throw new Error(`The ${spec.type} upload did not return a Drive link.`);
+        return [spec.key, document];
+      })
     );
-    return confirmation;
+    const documents = Object.fromEntries(uploadedEntries);
+    const sheetPayload = {
+      ...input,
+      photoUrl: documents.photo.url,
+      photoName: documents.photo.name,
+      photoDataUrl: void 0,
+      cvUrl: documents.cv.url,
+      cvName: documents.cv.name,
+      cvDataUrl: void 0,
+      identityUrl: documents.identity.url,
+      identityName: documents.identity.name,
+      identityDataUrl: void 0
+    };
+    const confirmationResponse = await postToAppsScript(url, sheetPayload);
+    const confirmation = confirmSheetsDelivery(
+      confirmationResponse.ok,
+      confirmationResponse.body,
+      confirmationResponse.url,
+      confirmationResponse.initialStatus
+    );
+    return { ...confirmation, documents };
   } catch (error) {
     if (error instanceof TRPCError4) throw error;
     const message = error instanceof Error ? error.message : "The registration service could not confirm your record.";
