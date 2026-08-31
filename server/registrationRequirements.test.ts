@@ -100,7 +100,7 @@ describe("registration requirements and dark-only presentation", () => {
       'entityName: track === "EP" ? "None" : ""'
     );
     expect(registerSource).toContain("hostingLc");
-    expect(registerSource).toContain("Error: registration not submitted.");
+    expect(registerSource).toContain("Error: {submissionMessage ||");
   });
 
   it("locks the public site to dark mode and removes the navigation toggle", () => {

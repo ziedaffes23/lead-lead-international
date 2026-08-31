@@ -725,6 +725,7 @@ export default function Register() {
       return;
     }
     setStatus("sending");
+    setSubmissionMessage("");
     let nextDocuments = documents;
     if (
       !nextDocuments &&
@@ -769,7 +770,12 @@ export default function Register() {
               : undefined,
         });
         setDocuments(nextDocuments);
-      } catch {
+      } catch (error) {
+        setSubmissionMessage(
+          error instanceof Error
+            ? error.message
+            : "The documents could not be uploaded."
+        );
         setStatus("upload");
         return;
       }
@@ -825,7 +831,11 @@ export default function Register() {
       });
       setStage("receipt");
     } catch (error) {
-      setSubmissionMessage("Registration not submitted.");
+      setSubmissionMessage(
+        error instanceof Error
+          ? error.message
+          : "The registration service could not confirm your record."
+      );
       setStatus("error");
     }
   };
@@ -1664,14 +1674,9 @@ export default function Register() {
                       Saving your registration. Please keep this page open.
                     </p>
                   )}
-                  {status === "upload" && (
+                  {(status === "upload" || status === "error") && (
                     <p className="form-status error" role="alert">
-                      Error: registration not submitted.
-                    </p>
-                  )}
-                  {status === "error" && (
-                    <p className="form-status error" role="alert">
-                      Error: registration not submitted.
+                      Error: {submissionMessage || "Registration not submitted."}
                     </p>
                   )}
                 </div>
