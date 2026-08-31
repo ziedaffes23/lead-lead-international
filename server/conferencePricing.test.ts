@@ -44,6 +44,9 @@ describe("conference pricing", () => {
     expect(
       getContribution("International AIESECer", false, "MCP")
     ).toMatchObject({ price: 90, currency: "EUR" });
+    expect(
+      getContribution("International AIESECer", false, "Text Holder")
+    ).toMatchObject({ price: 90, currency: "EUR" });
     expect(getContribution("EP")).toMatchObject({ price: 65, currency: "EUR" });
   });
 
@@ -70,6 +73,7 @@ describe("conference pricing", () => {
   it("hides LC name only for MC positions", () => {
     expect(shouldShowLcName("MCVP")).toBe(false);
     expect(shouldShowLcName("MCP")).toBe(false);
+    expect(shouldShowLcName("Text Holder")).toBe(false);
     expect(shouldShowLcName("MMB")).toBe(true);
     expect(shouldShowLcName("LCVP")).toBe(true);
   });

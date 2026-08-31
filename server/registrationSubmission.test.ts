@@ -22,6 +22,7 @@ const input: RegistrationSubmissionInput = {
   department: "MKT — Marketing",
   lcName: "LC Thyna",
   entityName: "AIESEC in Tunisia",
+  mcPosition: "None",
   countryOfOrigin: "None",
   hostingLc: "None",
   allergies: "None",
@@ -56,6 +57,7 @@ describe("registration sheet submission bridge", () => {
         department: "None",
         lcName: "None",
         entityName: "None",
+        mcPosition: "None",
         countryOfOrigin: "Brazil",
         hostingLc: "LC Thyna",
         singleRoom: true,
@@ -64,6 +66,45 @@ describe("registration sheet submission bridge", () => {
         phone: "00 55 (11) 99999-0000",
       }).success
     ).toBe(true);
+  });
+
+  it("validates the requested MC position rules", () => {
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        position: "MCVP",
+        lcName: "None",
+        mcPosition: "MCVP Growth",
+        price: 90,
+      }).success
+    ).toBe(true);
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        position: "MCP",
+        lcName: "None",
+        mcPosition: "None",
+        price: 90,
+      }).success
+    ).toBe(true);
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        position: "MCVP",
+        lcName: "None",
+        mcPosition: "None",
+        price: 90,
+      }).success
+    ).toBe(false);
+    expect(
+      registrationSubmissionInput.safeParse({
+        ...input,
+        position: "MCP",
+        lcName: "None",
+        mcPosition: "MC President",
+        price: 90,
+      }).success
+    ).toBe(false);
   });
 
   it("rejects a mismatched price or conditional field contract", () => {
@@ -84,6 +125,7 @@ describe("registration sheet submission bridge", () => {
         department: "None",
         lcName: "None",
         entityName: "None",
+        mcPosition: "None",
         countryOfOrigin: "",
         hostingLc: "LC Thyna",
       }).success

@@ -302,7 +302,8 @@ type Position =
   | "LCVP"
   | "LCP"
   | "MCVP"
-  | "MCP";
+  | "MCP"
+  | "Text Holder";
 type FormState = {
   firstName: string;
   lastName: string;
@@ -317,6 +318,7 @@ type FormState = {
   department: string;
   lcName: string;
   entityName: string;
+  mcPosition: string;
   countryOfOrigin: string;
   hostingLc: string;
   allergies: string;
@@ -358,6 +360,7 @@ const initial: FormState = {
   department: "",
   lcName: "",
   entityName: "",
+  mcPosition: "",
   countryOfOrigin: "",
   hostingLc: "",
   allergies: "",
@@ -383,6 +386,7 @@ function participationFieldsForTrack(track: Track): Array<keyof FormState> {
         "department",
         "lcName",
         "entityName",
+        "mcPosition",
         "allergies",
         "note",
       ]
@@ -522,6 +526,13 @@ export default function Register() {
       !form.entityName.trim()
     )
       next.entityName = "Enter your entity name.";
+    if (
+      fields.includes("mcPosition") &&
+      form.track === "International AIESECer" &&
+      ["MCVP", "Text Holder"].includes(form.position) &&
+      !form.mcPosition.trim()
+    )
+      next.mcPosition = "Enter your MC position.";
     if (
       fields.includes("countryOfOrigin") &&
       form.track === "EP" &&
@@ -701,6 +712,11 @@ export default function Register() {
         ? "None"
         : form.lcName.trim();
     const selectedEntityName = track === "EP" ? "None" : form.entityName.trim();
+    const selectedMcPosition =
+      track === "International AIESECer" &&
+      ["MCVP", "Text Holder"].includes(position)
+        ? form.mcPosition.trim()
+        : "None";
     const selectedCountryOfOrigin =
       track === "EP" ? form.countryOfOrigin.trim() : "None";
     const selectedHostingLc = track === "EP" ? form.hostingLc.trim() : "None";
@@ -769,6 +785,7 @@ export default function Register() {
         department: selectedDepartment,
         lcName: selectedLcName,
         entityName: selectedEntityName,
+        mcPosition: selectedMcPosition,
         countryOfOrigin: selectedCountryOfOrigin,
         hostingLc: selectedHostingLc,
         track,
@@ -792,6 +809,7 @@ export default function Register() {
           department: selectedDepartment,
           lcName: selectedLcName,
           entityName: selectedEntityName,
+          mcPosition: selectedMcPosition,
           position,
           countryOfOrigin: selectedCountryOfOrigin,
           hostingLc: selectedHostingLc,
@@ -1148,6 +1166,7 @@ export default function Register() {
                             ...current,
                             track,
                             position: track === "EP" ? "None" : "",
+                            mcPosition: track === "EP" ? "None" : "",
                             department: track === "EP" ? "None" : "",
                             countryOfOrigin:
                               track === "EP" ? current.countryOfOrigin : "None",
@@ -1171,9 +1190,25 @@ export default function Register() {
                         <select
                           required
                           value={form.position}
-                          onChange={event =>
-                            update("position", event.target.value as Position)
-                          }
+                          onChange={event => {
+                            const position = event.target.value as Position;
+                            setForm(current => ({
+                              ...current,
+                              position,
+                              mcPosition: ["MCVP", "Text Holder"].includes(
+                                position
+                              )
+                                ? current.mcPosition === "None"
+                                  ? ""
+                                  : current.mcPosition
+                                : "None",
+                              lcName: shouldShowLcName(position)
+                                ? current.lcName === "None"
+                                  ? ""
+                                  : current.lcName
+                                : "None",
+                            }));
+                          }}
                           aria-invalid={Boolean(errors.position)}
                         >
                           <option value="">Select position</option>
@@ -1185,6 +1220,7 @@ export default function Register() {
                             "LCP",
                             "MCVP",
                             "MCP",
+                            "Text Holder",
                           ].map(position => (
                             <option key={position}>{position}</option>
                           ))}
@@ -1192,6 +1228,23 @@ export default function Register() {
                         {error("position")}
                       </label>
                     )}
+                    {form.track === "International AIESECer" &&
+                      ["MCVP", "Text Holder"].includes(form.position) && (
+                        <label>
+                          MC position
+                          <input
+                            value={form.mcPosition}
+                            onChange={event =>
+                              update("mcPosition", event.target.value)
+                            }
+                            placeholder="Write your MC position"
+                            autoComplete="organization-title"
+                            required
+                            aria-invalid={Boolean(errors.mcPosition)}
+                          />
+                          {error("mcPosition")}
+                        </label>
+                      )}
                     {form.track === "EP" && (
                       <>
                         <label>
@@ -1224,9 +1277,9 @@ export default function Register() {
                       </>
                     )}
                   </div>
-                  {form.track === "International AIESECer" &&
-                    shouldShowLcName(form.position) && (
-                      <div className="form-grid two">
+                  {form.track === "International AIESECer" && (
+                    <div className="form-grid two">
+                      {shouldShowLcName(form.position) && (
                         <label>
                           LC name
                           <input
@@ -1241,22 +1294,23 @@ export default function Register() {
                           />
                           {error("lcName")}
                         </label>
-                        <label>
-                          Entity name
-                          <input
-                            value={form.entityName}
-                            onChange={event =>
-                              update("entityName", event.target.value)
-                            }
-                            placeholder="Write your entity name"
-                            autoComplete="organization"
-                            required
-                            aria-invalid={Boolean(errors.entityName)}
-                          />
-                          {error("entityName")}
-                        </label>
-                      </div>
-                    )}
+                      )}
+                      <label>
+                        Entity name
+                        <input
+                          value={form.entityName}
+                          onChange={event =>
+                            update("entityName", event.target.value)
+                          }
+                          placeholder="Write your entity name"
+                          autoComplete="organization"
+                          required
+                          aria-invalid={Boolean(errors.entityName)}
+                        />
+                        {error("entityName")}
+                      </label>
+                    </div>
+                  )}
                   {form.track && (
                     <label className="single-room-option">
                       <input
@@ -1552,6 +1606,12 @@ export default function Register() {
                           </p>
                           {shouldShowLcName(form.position) && (
                             <p>LC: {form.lcName || "LC pending"}</p>
+                          )}
+                          {["MCVP", "Text Holder"].includes(form.position) && (
+                            <p>
+                              MC position:{" "}
+                              {form.mcPosition || "MC position pending"}
+                            </p>
                           )}
                           <p>Entity: {form.entityName || "Entity pending"}</p>
                         </>

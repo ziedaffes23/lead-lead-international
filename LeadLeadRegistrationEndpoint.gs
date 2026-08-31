@@ -27,6 +27,7 @@ const REQUIRED_HEADERS = [
   "Department",
   "LC Name",
   "Entity Name",
+  "MC Position",
   "Country of origin",
   "Hosting LC",
   "Single room",
@@ -59,6 +60,7 @@ const ALLOWED_POSITIONS = [
   "LCP",
   "MCVP",
   "MCP",
+  "Text Holder",
 ];
 
 // Kept only for compatibility with the legacy leaderboard endpoint. New registrations
@@ -125,6 +127,7 @@ function doPost(event) {
       Department: cleanText(payload.department),
       "LC Name": cleanText(payload.lcName),
       "Entity Name": cleanText(payload.entityName),
+      "MC Position": cleanText(payload.mcPosition),
       "Country of origin": cleanText(payload.countryOfOrigin),
       "Hosting LC": cleanText(payload.hostingLc),
       "Single room":
@@ -226,6 +229,7 @@ function validatePayload(payload) {
     "department",
     "lcName",
     "entityName",
+    "mcPosition",
     "countryOfOrigin",
     "hostingLc",
     "singleRoom",
@@ -258,9 +262,13 @@ function validatePayload(payload) {
   if (cleanText(payload.currency) !== "EUR")
     throw new Error("Currency must be EUR.");
 
-  const leadershipPosition = ["LCVP", "LCP", "MCVP", "MCP"].includes(
-    cleanText(payload.position)
-  );
+  const leadershipPosition = [
+    "LCVP",
+    "LCP",
+    "MCVP",
+    "MCP",
+    "Text Holder",
+  ].includes(cleanText(payload.position));
   const stayNights = leadershipPosition
     ? LEADERSHIP_DURATION_NIGHTS
     : STANDARD_DURATION_NIGHTS;
@@ -308,7 +316,9 @@ function validatePayload(payload) {
       throw new Error(
         "International AIESECer registrations require a department."
       );
-    const mcPosition = ["MCVP", "MCP"].includes(cleanText(payload.position));
+    const mcPosition = ["MCVP", "MCP", "Text Holder"].includes(
+      cleanText(payload.position)
+    );
     if (!mcPosition && cleanText(payload.lcName) === "None")
       throw new Error(
         "International AIESECer registrations require an LC name unless the position is MCVP or MCP."
@@ -317,6 +327,18 @@ function validatePayload(payload) {
       throw new Error(
         "MCVP and MCP registrations must not include an LC name."
       );
+    if (cleanText(payload.mcPosition) !== "None" && cleanText(payload.position) === "MCP")
+      throw new Error("MCP registrations must not include an MC position.");
+    if (
+      ["MCVP", "Text Holder"].includes(cleanText(payload.position)) &&
+      cleanText(payload.mcPosition) === "None"
+    )
+      throw new Error("MCVP and Text Holder registrations require an MC position.");
+    if (
+      !["MCVP", "Text Holder", "MCP"].includes(cleanText(payload.position)) &&
+      cleanText(payload.mcPosition) !== "None"
+    )
+      throw new Error("Only MCVP and Text Holder registrations may include an MC position.");
     if (cleanText(payload.entityName) === "None")
       throw new Error(
         "International AIESECer registrations require an entity name."

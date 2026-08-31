@@ -29,11 +29,13 @@ export const registrationSubmissionInput = z
       "LCP",
       "MCVP",
       "MCP",
+      "Text Holder",
     ]),
     singleRoom: z.boolean(),
     department: z.string().trim().min(1),
     lcName: z.string().trim().min(1),
     entityName: z.string().trim().min(1),
+    mcPosition: z.string().trim().min(1),
     countryOfOrigin: z.string().trim().min(1),
     hostingLc: z.string().trim().min(1),
     allergies: z.string().trim().min(1),
@@ -52,9 +54,13 @@ export const registrationSubmissionInput = z
       .refine(value => value, "Indemnity consent is required."),
   })
   .superRefine((input, ctx) => {
-    const leadershipPosition = ["LCVP", "LCP", "MCVP", "MCP"].includes(
-      input.position
-    );
+    const leadershipPosition = [
+      "LCVP",
+      "LCP",
+      "MCVP",
+      "MCP",
+      "Text Holder",
+    ].includes(input.position);
     const stayNights = leadershipPosition ? 4 : 3;
     const expectedPrice =
       (leadershipPosition ? 90 : 65) + (input.singleRoom ? 20 * stayNights : 0);
@@ -95,6 +101,13 @@ export const registrationSubmissionInput = z
           message: "EP registrations must not include an entity name.",
         });
       }
+      if (input.mcPosition !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["mcPosition"],
+          message: "EP registrations must not include an MC position.",
+        });
+      }
       if (input.hostingLc === "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -117,20 +130,51 @@ export const registrationSubmissionInput = z
           message: "International AIESECer registrations require a department.",
         });
       }
-      const mcPosition = ["MCVP", "MCP"].includes(input.position);
+      const mcPosition = ["MCVP", "MCP", "Text Holder"].includes(
+        input.position
+      );
       if (!mcPosition && input.lcName === "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["lcName"],
           message:
-            "International AIESECer registrations require an LC name unless the position is MCVP or MCP.",
+            "International AIESECer registrations require an LC name unless the position is MCVP, MCP, or Text Holder.",
         });
       }
       if (mcPosition && input.lcName !== "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["lcName"],
-          message: "MCVP and MCP registrations must not include an LC name.",
+          message:
+            "MCVP, MCP, and Text Holder registrations must not include an LC name.",
+        });
+      }
+      if (input.mcPosition !== "None" && input.position === "MCP") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["mcPosition"],
+          message: "MCP registrations must not include an MC position.",
+        });
+      }
+      if (
+        ["MCVP", "Text Holder"].includes(input.position) &&
+        input.mcPosition === "None"
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["mcPosition"],
+          message: "MCVP and Text Holder registrations require an MC position.",
+        });
+      }
+      if (
+        !["MCVP", "Text Holder", "MCP"].includes(input.position) &&
+        input.mcPosition !== "None"
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["mcPosition"],
+          message:
+            "Only MCVP and Text Holder registrations may include an MC position.",
         });
       }
       if (input.entityName === "None") {
