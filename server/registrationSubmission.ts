@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { confirmSheetsDelivery } from "@shared/sheetsDelivery";
 
 const DEFAULT_SHEETS_WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec";
+const LEGACY_SHEETS_WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec";
 
 const documentUrl = z
@@ -211,10 +213,13 @@ export type RegistrationSubmissionInput = z.infer<
 export async function submitRegistrationToSheets(
   input: RegistrationSubmissionInput
 ) {
+  const configuredEndpoint =
+    process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
+  // Ignore the old deployment while retaining support for a future dashboard value.
   const endpoint =
-    process.env.VITE_SHEETS_WEB_APP_URL ||
-    process.env.SHEETS_WEB_APP_URL ||
-    DEFAULT_SHEETS_WEB_APP_URL;
+    configuredEndpoint && configuredEndpoint !== LEGACY_SHEETS_WEB_APP_URL
+      ? configuredEndpoint
+      : DEFAULT_SHEETS_WEB_APP_URL;
   if (!endpoint) {
     throw new TRPCError({
       code: "PRECONDITION_FAILED",
