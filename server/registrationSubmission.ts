@@ -279,7 +279,8 @@ export async function submitRegistrationToSheets(
 
     const confirmation = confirmSheetsDelivery(
       finalResponse.ok,
-      await finalResponse.text()
+      await finalResponse.text(),
+      finalResponse.url
     );
     return confirmation;
   } catch (error) {

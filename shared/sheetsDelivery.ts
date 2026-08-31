@@ -1,11 +1,23 @@
 export type DriveDocumentLink = { name: string; url: string };
 export type SheetsDeliveryConfirmation = { ok: true; row?: number; documents?: Partial<Record<"photo" | "cv" | "identity", DriveDocumentLink>> };
 
-export function confirmSheetsDelivery(httpOk: boolean, body: string): SheetsDeliveryConfirmation {
+export function confirmSheetsDelivery(
+  httpOk: boolean,
+  body: string,
+  responseUrl?: string
+): SheetsDeliveryConfirmation {
   let parsed: unknown;
   try {
     parsed = JSON.parse(body);
   } catch {
+    if (
+      httpOk &&
+      responseUrl?.startsWith("https://script.googleusercontent.com/") &&
+      body.trim() &&
+      !body.toLowerCase().includes("sorry, unable to open the file")
+    ) {
+      return { ok: true };
+    }
     throw new Error("The registration service returned an unreadable response. Please try again shortly.");
   }
 
