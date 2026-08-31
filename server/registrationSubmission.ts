@@ -3,10 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { confirmSheetsDelivery } from "@shared/sheetsDelivery";
 
 const DEFAULT_SHEETS_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbyS16hLcvvCg4eqj7OpjI3qZV8WLRa_33qBtmBT6DJLCpUfeE8NNZBBNDySBCR9hKHa/exec";
+  "https://script.google.com/macros/s/AKfycbykExcZ-IACxWONFqSMz-BQ4hg1dYF6zu_q-SgmYTp2auDyeuKeIrxWlYmoymi90RXB/exec";
 const LEGACY_SHEETS_WEB_APP_URLS = new Set([
   "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec",
   "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec",
+  "https://script.google.com/macros/s/AKfycbyS16hLcvvCg4eqj7OpjI3qZV8WLRa_33qBtmBT6DJLCpUfeE8NNZBBNDySBCR9hKHa/exec",
 ]);
 
 const documentUrl = z
