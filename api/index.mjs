@@ -54735,10 +54735,8 @@ function confirmSheetsDelivery(httpOk, body) {
 
 // server/registrationSubmission.ts
 var DEFAULT_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec";
-var publicUrl = external_exports.string().url().refine(
-  (value) => value.startsWith("https://"),
-  "Document URLs must use HTTPS."
-);
+var documentUrl = external_exports.string().trim().refine((value) => !value || value.startsWith("https://"), "Document URLs must use HTTPS.");
+var documentDataUrl = external_exports.string().trim().max(8e6).optional();
 var registrationSubmissionInput = external_exports.object({
   firstName: external_exports.string().trim().min(1),
   lastName: external_exports.string().trim().min(1),
@@ -54769,11 +54767,14 @@ var registrationSubmissionInput = external_exports.object({
   note: external_exports.string().trim().min(1),
   price: external_exports.number().int().nonnegative(),
   currency: external_exports.literal("EUR"),
-  photoUrl: publicUrl,
+  photoUrl: documentUrl,
+  photoDataUrl: documentDataUrl,
   photoName: external_exports.string().trim().min(1),
-  cvUrl: publicUrl,
+  cvUrl: documentUrl,
+  cvDataUrl: documentDataUrl,
   cvName: external_exports.string().trim().min(1),
-  identityUrl: publicUrl,
+  identityUrl: documentUrl,
+  identityDataUrl: documentDataUrl,
   identityName: external_exports.string().trim().min(1),
   indemnitySignature: external_exports.string().trim().min(1),
   indemnityAccepted: external_exports.boolean().refine((value) => value, "Indemnity consent is required.")
