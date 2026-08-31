@@ -522,9 +522,7 @@ function confirmSheetsDelivery(httpOk, body, responseUrl, initialStatus) {
     if (httpOk && (responseUrl?.startsWith("https://script.googleusercontent.com/") || initialStatus !== void 0 && initialStatus >= 300 && initialStatus < 400) && !body.toLowerCase().includes("sorry, unable to open the file")) {
       return { ok: true };
     }
-    throw new Error(
-      `Apps Script response was not JSON (initial=${initialStatus ?? "unknown"}, finalOk=${httpOk}, finalUrl=${responseUrl ?? "unknown"}, body=${body.slice(0, 240) || "<empty>"}).`
-    );
+    throw new Error("The registration service returned an unreadable response. Please try again shortly.");
   }
   const response = parsed && typeof parsed === "object" ? parsed : {};
   if (!httpOk || response.ok !== true) {
@@ -720,7 +718,8 @@ var registrationSubmissionInput = z3.object({
 });
 async function submitRegistrationToSheets(input) {
   const configuredEndpoint = process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
-  const endpoint = configuredEndpoint && !LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint) ? configuredEndpoint : DEFAULT_SHEETS_WEB_APP_URL;
+  const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+  const endpoint = isProduction || !configuredEndpoint || LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint) ? DEFAULT_SHEETS_WEB_APP_URL : configuredEndpoint;
   if (!endpoint) {
     throw new TRPCError4({
       code: "PRECONDITION_FAILED",
@@ -754,12 +753,6 @@ async function submitRegistrationToSheets(input) {
       redirect: "manual",
       signal: AbortSignal.timeout(3e4)
     });
-    console.log("[SheetsBridge] Apps Script POST", {
-      status: response.status,
-      ok: response.ok,
-      contentType: response.headers.get("content-type"),
-      location: response.headers.get("location")?.slice(0, 100)
-    });
     const finalResponse = response.status >= 300 && response.status < 400 ? await (async () => {
       const location = response.headers.get("location");
       if (!location)
@@ -773,13 +766,6 @@ async function submitRegistrationToSheets(input) {
       });
     })() : response;
     const finalBody = await finalResponse.text();
-    console.log("[SheetsBridge] Apps Script final response", {
-      status: finalResponse.status,
-      ok: finalResponse.ok,
-      contentType: finalResponse.headers.get("content-type"),
-      url: finalResponse.url.slice(0, 120),
-      bodyPrefix: finalBody.slice(0, 160)
-    });
     const confirmation = confirmSheetsDelivery(
       finalResponse.ok,
       finalBody,

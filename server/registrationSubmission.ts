@@ -218,11 +218,15 @@ export async function submitRegistrationToSheets(
 ) {
   const configuredEndpoint =
     process.env.VITE_SHEETS_WEB_APP_URL || process.env.SHEETS_WEB_APP_URL;
-  // Ignore the old deployment while retaining support for a future dashboard value.
+  // Production previously contained a stale Apps Script deployment that returned
+  // HTTP 404. Keep the verified live deployment authoritative in Vercel while
+  // retaining an override for local tests and non-production environments.
+  const isProduction =
+    process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
   const endpoint =
-    configuredEndpoint && !LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint)
-      ? configuredEndpoint
-      : DEFAULT_SHEETS_WEB_APP_URL;
+    isProduction || !configuredEndpoint || LEGACY_SHEETS_WEB_APP_URLS.has(configuredEndpoint)
+      ? DEFAULT_SHEETS_WEB_APP_URL
+      : configuredEndpoint;
   if (!endpoint) {
     throw new TRPCError({
       code: "PRECONDITION_FAILED",
@@ -261,12 +265,6 @@ export async function submitRegistrationToSheets(
       signal: AbortSignal.timeout(30_000),
     });
 
-    console.log("[SheetsBridge] Apps Script POST", {
-      status: response.status,
-      ok: response.ok,
-      contentType: response.headers.get("content-type"),
-      location: response.headers.get("location")?.slice(0, 100),
-    });
 
     const finalResponse =
       response.status >= 300 && response.status < 400
@@ -285,13 +283,6 @@ export async function submitRegistrationToSheets(
         : response;
 
     const finalBody = await finalResponse.text();
-    console.log("[SheetsBridge] Apps Script final response", {
-      status: finalResponse.status,
-      ok: finalResponse.ok,
-      contentType: finalResponse.headers.get("content-type"),
-      url: finalResponse.url.slice(0, 120),
-      bodyPrefix: finalBody.slice(0, 160),
-    });
     const confirmation = confirmSheetsDelivery(
       finalResponse.ok,
       finalBody,
