@@ -250,16 +250,32 @@ export async function submitRegistrationToSheets(
       method: "POST",
       headers: requestHeaders,
       body: requestBody,
-      // Apps Script executes doPost() at /exec and redirects its JSON response
-      // to the temporary content-service URL. Native redirect handling performs
-      // the required GET and preserves the final JSON response in Vercel.
-      redirect: "follow",
+      // Apps Script executes doPost() at /exec and returns a temporary
+      // content-service URL for the JSON response. Capture that redirect
+      // explicitly, then fetch the temporary URL as GET.
+      redirect: "manual",
       signal: AbortSignal.timeout(30_000),
     });
 
+    const finalResponse =
+      response.status >= 300 && response.status < 400
+        ? await (async () => {
+            const location = response.headers.get("location");
+            if (!location)
+              throw new Error(
+                "The registration service did not provide a response location."
+              );
+            return fetch(location, {
+              headers: { Accept: "application/json" },
+              redirect: "follow",
+              signal: AbortSignal.timeout(30_000),
+            });
+          })()
+        : response;
+
     const confirmation = confirmSheetsDelivery(
-      response.ok,
-      await response.text()
+      finalResponse.ok,
+      await finalResponse.text()
     );
     return confirmation;
   } catch (error) {

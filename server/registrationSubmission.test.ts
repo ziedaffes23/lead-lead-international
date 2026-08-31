@@ -164,10 +164,27 @@ describe("registration sheet submission bridge", () => {
   it("follows the Apps Script content-service redirect", async () => {
     process.env.VITE_SHEETS_WEB_APP_URL =
       "https://script.google.com/macros/s/test/exec";
+    let call = 0;
     globalThis.fetch = async (url, init) => {
-      expect(String(url)).toBe(process.env.VITE_SHEETS_WEB_APP_URL);
-      expect(init?.method).toBe("POST");
+      call += 1;
+      if (call === 1) {
+        expect(String(url)).toBe(process.env.VITE_SHEETS_WEB_APP_URL);
+        expect(init?.method).toBe("POST");
+        expect(init?.redirect).toBe("manual");
+        return new Response(null, {
+          status: 302,
+          headers: {
+            location:
+              "https://script.googleusercontent.com/macros/echo?token=test",
+          },
+        });
+      }
+      expect(String(url)).toContain(
+        "https://script.googleusercontent.com/macros/echo"
+      );
+      expect(init?.method).toBeUndefined();
       expect(init?.redirect).toBe("follow");
+      expect(init?.headers).toEqual({ Accept: "application/json" });
       return new Response(JSON.stringify({ ok: true, row: 13 }), {
         status: 200,
       });
