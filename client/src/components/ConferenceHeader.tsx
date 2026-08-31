@@ -21,7 +21,10 @@ export function ConferenceHeader({
   return (
     <header className="game-nav conference-nav">
       <a className="game-brand" href="/home" aria-label="Lead & Lead 2K26 home">
-        <img src="/assets/thyna-logo-white.png" alt="LC Thyna logo" />
+        <img
+          src="/assets/lead-lead-2k26-logo.png"
+          alt="Lead & Lead 2K26 logo"
+        />
         <span>
           <b>LEAD &amp; LEAD 2K26</b>
           <small>LC THYNA / WORLD HUB</small>
