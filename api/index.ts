@@ -14,6 +14,9 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 registerStorageProxy(app);
 registerOAuthRoutes(app);
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({ ok: true, service: "lead-lead-api" });
+});
 app.use(
   "/api/trpc",
   createExpressMiddleware({
@@ -23,4 +26,6 @@ app.use(
 );
 
 
-export default app;
+export default function handler(req: express.Request, res: express.Response) {
+  return app(req, res);
+}
