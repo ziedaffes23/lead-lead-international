@@ -2097,25 +2097,15 @@ async function submitRegistrationToSheets(input) {
       method: "POST",
       headers: requestHeaders,
       body: requestBody,
-      redirect: "manual",
+      // Apps Script executes doPost() at /exec and redirects its JSON response
+      // to the temporary content-service URL. Native redirect handling performs
+      // the required GET and preserves the final JSON response in Vercel.
+      redirect: "follow",
       signal: AbortSignal.timeout(3e4)
     });
-    const redirectStatuses = /* @__PURE__ */ new Set([301, 302, 303, 307, 308]);
-    const finalResponse = redirectStatuses.has(response.status) ? await (async () => {
-      const location = response.headers.get("location");
-      if (!location)
-        throw new Error(
-          "The registration service did not provide a response location."
-        );
-      return fetch(location, {
-        headers: { Accept: "application/json" },
-        redirect: "follow",
-        signal: AbortSignal.timeout(3e4)
-      });
-    })() : response;
     const confirmation = confirmSheetsDelivery(
-      finalResponse.ok,
-      await finalResponse.text()
+      response.ok,
+      await response.text()
     );
     return confirmation;
   } catch (error) {
