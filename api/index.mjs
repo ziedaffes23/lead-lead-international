@@ -534,7 +534,7 @@ function confirmSheetsDelivery(httpOk, body, responseUrl, initialStatus) {
 }
 
 // server/registrationSubmission.ts
-var DEFAULT_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykExcZ-IACxWONFqSMz-BQ4hg1dYF6zu_q-SgmYTp2auDyeuKeIrxWlYmoymi90RXB/exec";
+var DEFAULT_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwBGNDCCvxYAhnBBxetQBiUh0Pls9ZG2Id13cGFFBFg9Rt-ssgMFuUQj0zI9fyzRQU4/exec";
 var LEGACY_SHEETS_WEB_APP_URLS = /* @__PURE__ */ new Set([
   "https://script.google.com/macros/s/AKfycbxGWI8ZmEG80Hl8r0GciT4AnFGyCGc6QiQDzQ9kTyhkaDltfFtrddbtAMHGgV_m7lS4/exec",
   "https://script.google.com/macros/s/AKfycbxW5E8LFwz8FqDPSRovruq7mwi6LQ0BlLCIaSK4vADR-ZBTIeR8_F7n644FQGNqdn2b/exec",
