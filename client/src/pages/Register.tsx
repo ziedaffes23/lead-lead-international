@@ -1017,7 +1017,7 @@ export default function Register() {
                         onChange={event =>
                           update("firstName", event.target.value)
                         }
-                        placeholder="Foulen"
+                        placeholder="First Name"
                         required
                         aria-invalid={Boolean(errors.firstName)}
                       />
@@ -1030,7 +1030,7 @@ export default function Register() {
                         onChange={event =>
                           update("lastName", event.target.value)
                         }
-                        placeholder="Fouléni"
+                        placeholder="Last Name"
                         required
                         aria-invalid={Boolean(errors.lastName)}
                       />

@@ -28,8 +28,8 @@ describe("registration requirements and dark-only presentation", () => {
   });
 
   it("marks core registration inputs as required", () => {
-    expect(registerSource).toContain('placeholder="Foulen"');
-    expect(registerSource).toContain('placeholder="Fouléni"');
+    expect(registerSource).toContain('placeholder="First Name"');
+    expect(registerSource).toContain('placeholder="Last Name"');
     expect(registerSource).toContain(
       'placeholder="Enter your passport number"'
     );

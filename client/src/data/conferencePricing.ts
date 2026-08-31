@@ -64,13 +64,13 @@ export function getContribution(
     : 0;
   const price = basePrice + roomSurcharge;
   const roomNote = singleRoom
-    ? ` Single room selected: +${SINGLE_ROOM_PER_NIGHT_EUR} EUR/night for ${roomNights} nights (${roomSurcharge} EUR).`
-    : ` Shared room selected. Single room: ${SINGLE_ROOM_PER_NIGHT_EUR * roomNights} EUR for ${roomNights} nights.`;
+    ? ` Single room selected: +${SINGLE_ROOM_PER_NIGHT_EUR} EUR/day for ${roomNights} days (${roomSurcharge} EUR).`
+    : ` Shared room selected. Single room: ${SINGLE_ROOM_PER_NIGHT_EUR * roomNights} EUR for ${roomNights} days.`;
 
   return {
     price,
     currency: "EUR",
-    note: `${track}${position ? ` / ${position}` : ""} package: ${basePrice} EUR for ${durationDays} nights.${roomNote}`,
+    note: `${track}${position ? ` / ${position}` : ""} package: ${basePrice} EUR for ${durationDays} days.${roomNote}`,
   };
 }
 

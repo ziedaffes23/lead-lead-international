@@ -44,7 +44,7 @@ describe("conference pricing", () => {
     expect(getContribution("EP")).toMatchObject({ price: 65, currency: "EUR" });
   });
 
-  it("adds 20 EUR per night for a single room", () => {
+  it("adds the single-room charge by stay days", () => {
     expect(
       getContribution("International AIESECer", true, "Manager")
     ).toMatchObject({ price: 105, currency: "EUR" });
@@ -63,7 +63,7 @@ describe("conference pricing", () => {
     expect(getStayDurationDays("International AIESECer", "MCP")).toBe(4);
     expect(
       getContribution("International AIESECer", true, "MCP")?.note
-    ).toContain("+20 EUR/night for 3 nights");
+    ).toContain("+20 EUR/day for 3 days");
   });
 
   it("hides LC name only for MC positions", () => {
