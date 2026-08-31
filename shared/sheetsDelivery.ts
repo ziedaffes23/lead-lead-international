@@ -13,8 +13,8 @@ export function confirmSheetsDelivery(
   } catch {
     if (
       httpOk &&
-      responseUrl?.startsWith("https://script.googleusercontent.com/") &&
-      (body.trim() || (initialStatus !== undefined && initialStatus >= 300 && initialStatus < 400)) &&
+      (responseUrl?.startsWith("https://script.googleusercontent.com/") ||
+        (initialStatus !== undefined && initialStatus >= 300 && initialStatus < 400)) &&
       !body.toLowerCase().includes("sorry, unable to open the file")
     ) {
       return { ok: true };
