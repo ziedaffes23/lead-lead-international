@@ -32,7 +32,6 @@ export const registrationSubmissionInput = z
       "LCP",
       "MCVP",
       "MCP",
-      "Text Holder",
     ]),
     singleRoom: z.boolean(),
     department: z.string().trim().min(1),
@@ -62,7 +61,6 @@ export const registrationSubmissionInput = z
       "LCP",
       "MCVP",
       "MCP",
-      "Text Holder",
     ].includes(input.position);
     const stayNights = leadershipPosition ? 4 : 3;
     const expectedPrice =
@@ -133,15 +131,13 @@ export const registrationSubmissionInput = z
           message: "International AIESECer registrations require a department.",
         });
       }
-      const mcPosition = ["MCVP", "MCP", "Text Holder"].includes(
-        input.position
-      );
+      const mcPosition = ["MCVP", "MCP"].includes(input.position);
       if (!mcPosition && input.lcName === "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["lcName"],
           message:
-            "International AIESECer registrations require an LC name unless the position is MCVP, MCP, or Text Holder.",
+            "International AIESECer registrations require an LC name unless the position is MCVP or MCP.",
         });
       }
       if (mcPosition && input.lcName !== "None") {
@@ -149,7 +145,7 @@ export const registrationSubmissionInput = z
           code: z.ZodIssueCode.custom,
           path: ["lcName"],
           message:
-            "MCVP, MCP, and Text Holder registrations must not include an LC name.",
+            "MCVP and MCP registrations must not include an LC name.",
         });
       }
       if (input.mcPosition !== "None" && input.position === "MCP") {
@@ -160,24 +156,24 @@ export const registrationSubmissionInput = z
         });
       }
       if (
-        ["MCVP", "Text Holder"].includes(input.position) &&
+        input.position === "MCVP" &&
         input.mcPosition === "None"
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["mcPosition"],
-          message: "MCVP and Text Holder registrations require an MC position.",
+          message: "MCVP registrations require an MC position.",
         });
       }
       if (
-        !["MCVP", "Text Holder", "MCP"].includes(input.position) &&
+        !["MCVP", "MCP"].includes(input.position) &&
         input.mcPosition !== "None"
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["mcPosition"],
           message:
-            "Only MCVP and Text Holder registrations may include an MC position.",
+            "Only MCVP registrations may include an MC position.",
         });
       }
       if (input.entityName === "None") {

@@ -302,8 +302,7 @@ type Position =
   | "LCVP"
   | "LCP"
   | "MCVP"
-  | "MCP"
-  | "Text Holder";
+  | "MCP";
 type FormState = {
   firstName: string;
   lastName: string;
@@ -529,7 +528,7 @@ export default function Register() {
     if (
       fields.includes("mcPosition") &&
       form.track === "International AIESECer" &&
-      ["MCVP", "Text Holder"].includes(form.position) &&
+      ["MCVP"].includes(form.position) &&
       !form.mcPosition.trim()
     )
       next.mcPosition = "Enter your MC position.";
@@ -714,7 +713,7 @@ export default function Register() {
     const selectedEntityName = track === "EP" ? "None" : form.entityName.trim();
     const selectedMcPosition =
       track === "International AIESECer" &&
-      ["MCVP", "Text Holder"].includes(position)
+      ["MCVP"].includes(position)
         ? form.mcPosition.trim()
         : "None";
     const selectedCountryOfOrigin =
@@ -1195,9 +1194,7 @@ export default function Register() {
                             setForm(current => ({
                               ...current,
                               position,
-                              mcPosition: ["MCVP", "Text Holder"].includes(
-                                position
-                              )
+                              mcPosition: ["MCVP"].includes(position)
                                 ? current.mcPosition === "None"
                                   ? ""
                                   : current.mcPosition
@@ -1220,7 +1217,6 @@ export default function Register() {
                             "LCP",
                             "MCVP",
                             "MCP",
-                            "Text Holder",
                           ].map(position => (
                             <option key={position}>{position}</option>
                           ))}
@@ -1229,7 +1225,7 @@ export default function Register() {
                       </label>
                     )}
                     {form.track === "International AIESECer" &&
-                      ["MCVP", "Text Holder"].includes(form.position) && (
+                      ["MCVP"].includes(form.position) && (
                         <label>
                           MC position
                           <input
@@ -1607,7 +1603,7 @@ export default function Register() {
                           {shouldShowLcName(form.position) && (
                             <p>LC: {form.lcName || "LC pending"}</p>
                           )}
-                          {["MCVP", "Text Holder"].includes(form.position) && (
+                          {["MCVP"].includes(form.position) && (
                             <p>
                               MC position:{" "}
                               {form.mcPosition || "MC position pending"}

@@ -8,8 +8,7 @@ export type ConferencePosition =
   | "LCVP"
   | "LCP"
   | "MCVP"
-  | "MCP"
-  | "Text Holder";
+  | "MCP";
 
 export const STANDARD_BASE_PRICE_EUR = 65;
 export const LEADERSHIP_BASE_PRICE_EUR = 90;
@@ -28,7 +27,6 @@ const leadershipPositions: ConferencePosition[] = [
   "LCP",
   "MCVP",
   "MCP",
-  "Text Holder",
 ];
 
 export function getContribution(
@@ -67,7 +65,7 @@ export function isLeadershipPosition(position: ConferencePosition) {
 }
 
 export function shouldShowLcName(position: ConferencePosition) {
-  return !["MCVP", "MCP", "Text Holder"].includes(position);
+  return !["MCVP", "MCP"].includes(position);
 }
 
 export function getStayDurationDays(
@@ -95,7 +93,6 @@ export const POSITION_OPTIONS: Exclude<ConferencePosition, "" | "None">[] = [
   "LCP",
   "MCVP",
   "MCP",
-  "Text Holder",
 ];
 
 export const LEADERSHIP_POSITIONS = leadershipPositions;
