@@ -201,6 +201,11 @@ function setupSheet() {
   return { ok: true, sheet: sheet.getName(), headers: headers };
 }
 
+function setupDrive() {
+  const folder = getDriveFolder();
+  return { ok: true, folder: folder.getName(), folderUrl: folder.getUrl() };
+}
+
 function getRegistrationSheet() {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(
     REGISTRATIONS_SHEET_NAME
