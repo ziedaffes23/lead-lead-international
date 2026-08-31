@@ -15,7 +15,11 @@ import { ConferenceHeader } from "@/components/ConferenceHeader";
 import { ConferenceFooter } from "@/components/ConferenceFooter";
 import { CINEMATIC_ASSETS } from "@/game/assets";
 import { trpc } from "@/lib/trpc";
-import { getContribution } from "@/data/conferencePricing";
+import {
+  getContribution,
+  getSingleRoomSurcharge,
+  shouldShowLcName,
+} from "@/data/conferencePricing";
 import "@/styles/conference.css";
 import "@/styles/motion.css";
 import "@/styles/rooftop-chase-pages.css";
@@ -292,7 +296,7 @@ type Track = "" | "International AIESECer" | "EP";
 type Position =
   | ""
   | "None"
-  | "Member"
+  | "MMB"
   | "Manager"
   | "Team Leader"
   | "LCVP"
@@ -463,7 +467,10 @@ export default function Register() {
   }, [stage]);
   const uploadDocuments = trpc.registration.uploadDocuments.useMutation();
   const submitRegistration = trpc.registration.submit.useMutation();
-  const fee = useMemo(() => contribution(form), [form.track, form.singleRoom]);
+  const fee = useMemo(
+    () => contribution(form),
+    [form.track, form.singleRoom, form.position]
+  );
   const stageNumber = stage === "receipt" ? 4 : stage;
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
@@ -505,6 +512,7 @@ export default function Register() {
     if (
       fields.includes("lcName") &&
       form.track === "International AIESECer" &&
+      shouldShowLcName(form.position) &&
       !form.lcName.trim()
     )
       next.lcName = "Enter your LC name.";
@@ -688,7 +696,10 @@ export default function Register() {
         : form.department === "Other"
           ? otherDepartment.trim()
           : form.department;
-    const selectedLcName = track === "EP" ? "None" : form.lcName.trim();
+    const selectedLcName =
+      track === "EP" || !shouldShowLcName(position)
+        ? "None"
+        : form.lcName.trim();
     const selectedEntityName = track === "EP" ? "None" : form.entityName.trim();
     const selectedCountryOfOrigin =
       track === "EP" ? form.countryOfOrigin.trim() : "None";
@@ -1167,7 +1178,7 @@ export default function Register() {
                         >
                           <option value="">Select position</option>
                           {[
-                            "Member",
+                            "MMB",
                             "Manager",
                             "Team Leader",
                             "LCVP",
@@ -1213,38 +1224,39 @@ export default function Register() {
                       </>
                     )}
                   </div>
-                  {form.track === "International AIESECer" && (
-                    <div className="form-grid two">
-                      <label>
-                        LC name
-                        <input
-                          value={form.lcName}
-                          onChange={event =>
-                            update("lcName", event.target.value)
-                          }
-                          placeholder="Write your LC name"
-                          autoComplete="organization"
-                          required
-                          aria-invalid={Boolean(errors.lcName)}
-                        />
-                        {error("lcName")}
-                      </label>
-                      <label>
-                        Entity name
-                        <input
-                          value={form.entityName}
-                          onChange={event =>
-                            update("entityName", event.target.value)
-                          }
-                          placeholder="Write your entity name"
-                          autoComplete="organization"
-                          required
-                          aria-invalid={Boolean(errors.entityName)}
-                        />
-                        {error("entityName")}
-                      </label>
-                    </div>
-                  )}
+                  {form.track === "International AIESECer" &&
+                    shouldShowLcName(form.position) && (
+                      <div className="form-grid two">
+                        <label>
+                          LC name
+                          <input
+                            value={form.lcName}
+                            onChange={event =>
+                              update("lcName", event.target.value)
+                            }
+                            placeholder="Write your LC name"
+                            autoComplete="organization"
+                            required
+                            aria-invalid={Boolean(errors.lcName)}
+                          />
+                          {error("lcName")}
+                        </label>
+                        <label>
+                          Entity name
+                          <input
+                            value={form.entityName}
+                            onChange={event =>
+                              update("entityName", event.target.value)
+                            }
+                            placeholder="Write your entity name"
+                            autoComplete="organization"
+                            required
+                            aria-invalid={Boolean(errors.entityName)}
+                          />
+                          {error("entityName")}
+                        </label>
+                      </div>
+                    )}
                   {form.track && (
                     <label className="single-room-option">
                       <input
@@ -1256,7 +1268,10 @@ export default function Register() {
                       />
                       <span>
                         <strong>Single room</strong>
-                        <small>+50 EUR</small>
+                        <small>
+                          +{getSingleRoomSurcharge(form.position, form.track)}{" "}
+                          EUR total
+                        </small>
                       </span>
                     </label>
                   )}
@@ -1535,7 +1550,9 @@ export default function Register() {
                               ? otherDepartment || "Department pending"
                               : form.department || "Department pending"}
                           </p>
-                          <p>LC: {form.lcName || "LC pending"}</p>
+                          {shouldShowLcName(form.position) && (
+                            <p>LC: {form.lcName || "LC pending"}</p>
+                          )}
                           <p>Entity: {form.entityName || "Entity pending"}</p>
                         </>
                       ) : (
@@ -1551,7 +1568,10 @@ export default function Register() {
                       )}
                       <p>
                         {form.singleRoom
-                          ? "Single room · +50 EUR"
+                          ? `Single room · +${getSingleRoomSurcharge(
+                              form.position,
+                              form.track
+                            )} EUR total`
                           : "Shared room"}
                       </p>
                       <p>Contribution: {fee?.price ?? "—"} EUR</p>

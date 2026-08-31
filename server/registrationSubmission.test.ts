@@ -59,7 +59,7 @@ describe("registration sheet submission bridge", () => {
         countryOfOrigin: "Brazil",
         hostingLc: "LC Thyna",
         singleRoom: true,
-        price: 115,
+        price: 125,
         passportNumber: "P-AB 123/XY",
         phone: "00 55 (11) 99999-0000",
       }).success

@@ -22,7 +22,7 @@ export const registrationSubmissionInput = z
     track: z.enum(["International AIESECer", "EP"]),
     position: z.enum([
       "None",
-      "Member",
+      "MMB",
       "Manager",
       "Team Leader",
       "LCVP",
@@ -55,8 +55,9 @@ export const registrationSubmissionInput = z
     const leadershipPosition = ["LCVP", "LCP", "MCVP", "MCP"].includes(
       input.position
     );
+    const stayNights = leadershipPosition ? 4 : 3;
     const expectedPrice =
-      (leadershipPosition ? 90 : 65) + (input.singleRoom ? 50 : 0);
+      (leadershipPosition ? 90 : 65) + (input.singleRoom ? 20 * stayNights : 0);
     if (input.price !== expectedPrice) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -116,11 +117,20 @@ export const registrationSubmissionInput = z
           message: "International AIESECer registrations require a department.",
         });
       }
-      if (input.lcName === "None") {
+      const mcPosition = ["MCVP", "MCP"].includes(input.position);
+      if (!mcPosition && input.lcName === "None") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["lcName"],
-          message: "International AIESECer registrations require an LC name.",
+          message:
+            "International AIESECer registrations require an LC name unless the position is MCVP or MCP.",
+        });
+      }
+      if (mcPosition && input.lcName !== "None") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["lcName"],
+          message: "MCVP and MCP registrations must not include an LC name.",
         });
       }
       if (input.entityName === "None") {
