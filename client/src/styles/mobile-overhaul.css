@@ -45,8 +45,8 @@
 
   .conference-nav .game-brand img {
     flex: 0 0 auto;
-    width: 3.2rem !important;
-    height: 2rem !important;
+    width: 6.5rem !important;
+    height: 4.4rem !important;
     object-fit: contain;
   }
 
@@ -623,8 +623,8 @@
   }
 
   .conference-nav .game-brand img {
-    width: 2.8rem !important;
-    height: 1.8rem !important;
+    width: 5.5rem !important;
+    height: 3.7rem !important;
   }
 
   .conference-nav .game-brand span {
