@@ -522,7 +522,9 @@ function confirmSheetsDelivery(httpOk, body, responseUrl, initialStatus) {
     if (httpOk && (responseUrl?.startsWith("https://script.googleusercontent.com/") || initialStatus !== void 0 && initialStatus >= 300 && initialStatus < 400) && !body.toLowerCase().includes("sorry, unable to open the file")) {
       return { ok: true };
     }
-    throw new Error("The registration service returned an unreadable response. Please try again shortly.");
+    throw new Error(
+      `Apps Script response was not JSON (initial=${initialStatus ?? "unknown"}, finalOk=${httpOk}, finalUrl=${responseUrl ?? "unknown"}, body=${body.slice(0, 240) || "<empty>"}).`
+    );
   }
   const response = parsed && typeof parsed === "object" ? parsed : {};
   if (!httpOk || response.ok !== true) {

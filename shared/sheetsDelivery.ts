@@ -19,7 +19,9 @@ export function confirmSheetsDelivery(
     ) {
       return { ok: true };
     }
-    throw new Error("The registration service returned an unreadable response. Please try again shortly.");
+    throw new Error(
+      `Apps Script response was not JSON (initial=${initialStatus ?? "unknown"}, finalOk=${httpOk}, finalUrl=${responseUrl ?? "unknown"}, body=${body.slice(0, 240) || "<empty>"}).`
+    );
   }
 
   const response = parsed && typeof parsed === "object" ? parsed as { ok?: unknown; row?: unknown; error?: unknown; documents?: unknown } : {};
