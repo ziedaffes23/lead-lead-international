@@ -1109,7 +1109,7 @@ export default function Register() {
                         type="email"
                         value={form.email}
                         onChange={event => update("email", event.target.value)}
-                        placeholder="foulen.fouleni@mail.com"
+                        placeholder="name@example.com"
                         autoComplete="email"
                         required
                         aria-invalid={Boolean(errors.email)}

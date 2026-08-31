@@ -21,7 +21,7 @@ const dataSource = await readFile(
 describe("registration requirements and dark-only presentation", () => {
   it("uses a generic required email with the requested example", () => {
     expect(registerSource).toContain("Email");
-    expect(registerSource).toContain('placeholder="foulen.fouleni@mail.com"');
+    expect(registerSource).toContain('placeholder="name@example.com"');
     expect(registerSource).toContain("Use a valid email address.");
     expect(registerSource).not.toContain("@aiesec.net");
     expect(dataSource).not.toContain("@aiesec.net");
