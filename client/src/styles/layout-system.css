@@ -37,8 +37,16 @@ body {
 }
 
 .game-home > :not(.game-home__background):not(.home-route-atmosphere),
-.game-page > :not(.cinematic-background):not(.route-entry-wipe):not(.route-pressure-lines),
-.registration-site > :not(.cinematic-background):not(.route-entry-wipe):not(.route-pressure-lines):not(.register-backdrop):not(.register-rails):not(.dossier-relic-route):not(.register-relic-trace) {
+.game-page
+  > :not(.cinematic-background):not(.route-entry-wipe):not(
+    .route-pressure-lines
+  ),
+.registration-site
+  > :not(.cinematic-background):not(.route-entry-wipe):not(
+    .route-pressure-lines
+  ):not(.register-backdrop):not(.register-rails):not(.dossier-relic-route):not(
+    .register-relic-trace
+  ) {
   position: relative;
   z-index: 2;
 }
@@ -51,7 +59,10 @@ body {
   grid-template-columns: auto minmax(8rem, 1fr) auto !important;
   align-items: center !important;
   gap: clamp(0.8rem, 2.2vw, 2.5rem) !important;
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   min-height: 4.2rem !important;
   margin: 0 auto !important;
   padding: 0.75rem 0 !important;
@@ -68,8 +79,8 @@ body {
 
 .conference-nav .game-brand img {
   flex: 0 0 auto !important;
-  width: clamp(2rem, 3vw, 3.15rem) !important;
-  height: clamp(2rem, 3vw, 3.15rem) !important;
+  width: clamp(5rem, 7vw, 9rem) !important;
+  height: clamp(5rem, 7vw, 9rem) !important;
   object-fit: contain !important;
 }
 
@@ -227,7 +238,10 @@ body {
 
 /* Shared content pages */
 .conference-section-page__main {
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   min-height: 0 !important;
   margin: 0 auto !important;
   padding: clamp(4.5rem, 9vh, 7.5rem) 0 clamp(3.5rem, 8vh, 7rem) !important;
@@ -322,7 +336,10 @@ body {
 }
 
 .route-deck {
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   margin-right: auto !important;
   margin-left: auto !important;
   padding: clamp(3.4rem, 8vh, 6rem) 0 !important;
@@ -367,7 +384,10 @@ body {
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr) !important;
   align-items: end !important;
   gap: clamp(1.5rem, 5vw, 5rem) !important;
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   margin: 0 auto !important;
   padding: clamp(4rem, 8vh, 7rem) 0 clamp(2rem, 4vh, 3.5rem) !important;
 }
@@ -388,7 +408,10 @@ body {
 }
 
 .game-chase-frame {
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   margin: 0 auto !important;
 }
 
@@ -430,7 +453,10 @@ body {
   grid-template-columns: minmax(15rem, 0.58fr) minmax(0, 1.42fr) !important;
   align-items: start !important;
   gap: clamp(1.25rem, 4vw, 4rem) !important;
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
   margin: 0 auto !important;
   padding: clamp(3rem, 7vh, 6rem) 0 !important;
 }
@@ -869,8 +895,14 @@ body {
   max-width: 48rem;
   padding: clamp(1.25rem, 3vw, 2.2rem);
   border: 1px solid rgba(211, 164, 91, 0.42);
-  background: linear-gradient(145deg, rgba(9, 28, 43, 0.9), rgba(16, 43, 57, 0.72));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1.5rem 3rem rgba(0, 0, 0, 0.16);
+  background: linear-gradient(
+    145deg,
+    rgba(9, 28, 43, 0.9),
+    rgba(16, 43, 57, 0.72)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 1.5rem 3rem rgba(0, 0, 0, 0.16);
 }
 
 .indemnity-card h3 {
@@ -943,7 +975,10 @@ body {
 .game-chase-frame,
 .registration-site .register-layout,
 .game-home--single-screen > .world-hero {
-  width: min(calc(100% - 2 * var(--layout-gutter)), var(--layout-max)) !important;
+  width: min(
+    calc(100% - 2 * var(--layout-gutter)),
+    var(--layout-max)
+  ) !important;
 }
 
 .conference-section-page__main {
@@ -1236,7 +1271,11 @@ body:has(.registration-site) {
   padding: 0 !important;
   border: 1px solid rgba(231, 183, 100, 0.65) !important;
   border-bottom: 2px solid rgba(231, 183, 100, 0.9) !important;
-  background: linear-gradient(180deg, rgba(2, 11, 21, 0.92), rgba(7, 25, 39, 0.85)) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 11, 21, 0.92),
+    rgba(7, 25, 39, 0.85)
+  ) !important;
   touch-action: none !important;
   cursor: crosshair !important;
 }
@@ -1259,7 +1298,9 @@ body:has(.registration-site) {
   border: 1px solid rgba(158, 216, 244, 0.4);
   background: rgba(7, 22, 36, 0.8);
   color: var(--layout-cream);
-  font: 600 0.55rem/1 "IBM Plex Mono", monospace;
+  font:
+    600 0.55rem/1 "IBM Plex Mono",
+    monospace;
   letter-spacing: 0.12em;
   cursor: pointer;
 }
@@ -1338,8 +1379,19 @@ body:has(.registration-site) {
 .game-home:not(.chase-route)::after {
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(2, 8, 14, 0.9) 0%, rgba(4, 12, 18, 0.48) 23%, rgba(4, 10, 16, 0.7) 68%, rgba(2, 6, 11, 0.94) 100%),
-    linear-gradient(90deg, rgba(2, 7, 13, 0.78) 0%, rgba(3, 8, 13, 0.28) 52%, rgba(2, 7, 13, 0.76) 100%);
+    linear-gradient(
+      180deg,
+      rgba(2, 8, 14, 0.9) 0%,
+      rgba(4, 12, 18, 0.48) 23%,
+      rgba(4, 10, 16, 0.7) 68%,
+      rgba(2, 6, 11, 0.94) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(2, 7, 13, 0.78) 0%,
+      rgba(3, 8, 13, 0.28) 52%,
+      rgba(2, 7, 13, 0.76) 100%
+    );
 }
 
 .game-home:not(.chase-route) > .cinematic-background,
@@ -1394,7 +1446,11 @@ body:has(.registration-site) {
 .game-home:not(.chase-route) .faction-card,
 .game-home:not(.chase-route) .leaderboard-card,
 .game-home:not(.chase-route) .readiness-card {
-  background: linear-gradient(145deg, rgba(4, 21, 32, 0.9), rgba(2, 9, 16, 0.88)) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(4, 21, 32, 0.9),
+    rgba(2, 9, 16, 0.88)
+  ) !important;
   border-color: rgba(183, 211, 218, 0.34) !important;
   box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.34) !important;
 }
@@ -1420,7 +1476,12 @@ body:has(.registration-site) {
 
   .game-home:not(.chase-route)::after {
     background:
-      linear-gradient(180deg, rgba(2, 8, 14, 0.93) 0%, rgba(4, 12, 18, 0.6) 35%, rgba(2, 7, 12, 0.92) 100%),
+      linear-gradient(
+        180deg,
+        rgba(2, 8, 14, 0.93) 0%,
+        rgba(4, 12, 18, 0.6) 35%,
+        rgba(2, 7, 12, 0.92) 100%
+      ),
       linear-gradient(90deg, rgba(2, 7, 13, 0.72), rgba(2, 7, 13, 0.48));
   }
 }
@@ -1466,8 +1527,19 @@ body:has(.registration-site) {
 
 .conference-section-page:not(.chase-route)::after {
   background:
-    linear-gradient(180deg, rgba(5, 11, 18, 0.86) 0%, rgba(5, 12, 18, 0.38) 28%, rgba(4, 10, 15, 0.7) 72%, rgba(2, 6, 11, 0.94) 100%),
-    linear-gradient(90deg, rgba(3, 8, 14, 0.74), rgba(3, 8, 14, 0.2) 54%, rgba(3, 8, 14, 0.72));
+    linear-gradient(
+      180deg,
+      rgba(5, 11, 18, 0.86) 0%,
+      rgba(5, 12, 18, 0.38) 28%,
+      rgba(4, 10, 15, 0.7) 72%,
+      rgba(2, 6, 11, 0.94) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(3, 8, 14, 0.74),
+      rgba(3, 8, 14, 0.2) 54%,
+      rgba(3, 8, 14, 0.72)
+    );
 }
 
 .conference-section-page:not(.chase-route) .conference-section-page__main,
@@ -1617,7 +1689,6 @@ body:has(.registration-site),
   top: auto !important;
   overscroll-behavior: auto !important;
 }
-
 
 /* Registration one-scrollbar contract: the browser document is the only vertical scroller. */
 html:has(.registration-site),
