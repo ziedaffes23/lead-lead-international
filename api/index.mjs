@@ -752,6 +752,12 @@ async function submitRegistrationToSheets(input) {
       redirect: "manual",
       signal: AbortSignal.timeout(3e4)
     });
+    console.log("[SheetsBridge] Apps Script POST", {
+      status: response.status,
+      ok: response.ok,
+      contentType: response.headers.get("content-type"),
+      location: response.headers.get("location")?.slice(0, 100)
+    });
     const finalResponse = response.status >= 300 && response.status < 400 ? await (async () => {
       const location = response.headers.get("location");
       if (!location)
@@ -764,9 +770,17 @@ async function submitRegistrationToSheets(input) {
         signal: AbortSignal.timeout(3e4)
       });
     })() : response;
+    const finalBody = await finalResponse.text();
+    console.log("[SheetsBridge] Apps Script final response", {
+      status: finalResponse.status,
+      ok: finalResponse.ok,
+      contentType: finalResponse.headers.get("content-type"),
+      url: finalResponse.url.slice(0, 120),
+      bodyPrefix: finalBody.slice(0, 160)
+    });
     const confirmation = confirmSheetsDelivery(
       finalResponse.ok,
-      await finalResponse.text(),
+      finalBody,
       finalResponse.url,
       response.status
     );
