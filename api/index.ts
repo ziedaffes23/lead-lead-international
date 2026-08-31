@@ -1,4 +1,3 @@
-import { nodeHTTPRequestHandler } from "@trpc/server/adapters/node-http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 type VercelRequest = IncomingMessage & {
@@ -62,10 +61,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const [{ appRouter }, { createContext }] = await Promise.all([
-      import("../server/routers"),
-      import("../server/_core/context"),
-    ]);
+    const [{ nodeHTTPRequestHandler }, { appRouter }, { createContext }] =
+      await Promise.all([
+        import("@trpc/server/adapters/node-http"),
+        import("../server/routers"),
+        import("../server/_core/context"),
+      ]);
     const path = requestUrl.pathname.replace(/^\/api\/trpc\/?/, "");
     await nodeHTTPRequestHandler({
       req,
